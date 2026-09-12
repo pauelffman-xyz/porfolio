@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Everyone — Design Showcase · Paula Elffman</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F6F4ED;
+  --bg2:#EDEAE1;
+  --bg3:#D9D3C8;
+  --paper:#1A1815;
+  --ash:rgba(26,24,21,.5);
+  --ash2:rgba(26,24,21,.15);
+  --purple:#8B5CF6;
+  --purple-2:#964BFE;
+  --lemon:#D9F144;
+  --navy:#1A1815;
+  --green:#2ECC71;
+  --line:rgba(26,24,21,.08);
+  --line2:rgba(26,24,21,.14);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --ghost:#2C2C36;
+  --ghost-2:#32323E;
+  --line-md:rgba(244,244,246,.15);
+  --ash-2:rgba(244,244,246,.25);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ─── SHARED ─── */
+.mono{font-family:'Space Grotesk',sans-serif;}
+.purple{color:var(--purple);}
+.green{color:var(--green);}
+
+/* ─── SECTION WRAPPER ─── */
+.section{padding:5rem 4rem;}
+.section + .section{border-top:1px solid var(--line2);}
+
+/* ─── EYEBROW ─── */
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--purple);flex-shrink:0;}
+
+/* ─── BROWSER MOCKUP (desktop platform) ─── */
+.browser-wrap{display:flex;flex-direction:column;align-items:center;width:100%;position:relative;}
+.screen-divider{
+  display:flex;align-items:center;gap:1rem;
+  width:100%;margin:0 0 3rem;
+}
+.screen-divider .sd-line{flex:1;height:1px;background:var(--line2);}
+.screen-divider .sd-num{
+  font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;
+  color:var(--purple);background:var(--bg2);border:1px solid rgba(139,92,246,.25);
+  border-radius:100px;padding:.3rem .875rem;white-space:nowrap;
+}
+.browser-shell{
+  border-radius:10px;overflow:hidden;background:#fff;width:100%;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08), 0 16px 48px rgba(26,24,20,.14), 0 4px 12px rgba(26,24,20,.08);
+  position:relative;
+}
+.browser-shell .browser-bar{
+  height:28px;background:#EDEAE1;display:flex;align-items:center;gap:.3rem;padding:0 .75rem;
+  border-bottom:1px solid rgba(26,24,20,.06);
+}
+.browser-shell .b-dot{width:7px;height:7px;border-radius:50%;background:rgba(26,24,20,.15);}
+.browser-shell img{display:block;width:100%;height:auto;}
+.blabel{margin-top:1rem;text-align:center;max-width:340px;}
+.bl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:.375rem;}
+.bl-t{font-size:.875rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.25rem;}
+.bl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+.badge{
+  margin-top:-12px;position:relative;z-index:5;
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .875rem;border-radius:100px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
+}
+.badge-o{background:var(--purple);color:#fff;}
+.badge-g{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+.badge-gr{background:rgba(46,204,113,.12);color:var(--green);border:1px solid rgba(46,204,113,.2);}
+
+/* wire frame */
+.wire-shell{
+  border-radius:8px;overflow:hidden;
+  border:1px solid rgba(26,24,20,.12);
+  background:rgba(26,24,20,.03);
+}
+.wire-shell img{display:block;width:100%;height:auto;}
+
+/* flow arrow */
+.arrow-col{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.375rem;padding-top:5rem;
+}
+.arr-dot{width:5px;height:5px;border-radius:50%;background:var(--purple);}
+.arr-line{width:1px;height:28px;background:linear-gradient(to bottom,var(--purple),rgba(26,24,20,0));}
+.arr-lbl{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple);writing-mode:vertical-rl;margin-top:.25rem;
+}
+
+/* ─── SECTION 00: COVER ─── */
+.cover{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:4rem;
+  align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(5rem,11vw,12rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;
+  color:var(--paper);
+}
+.cover-title .dim{color:rgba(26,24,20,.15);}
+.cover-meta{
+  display:flex;flex-direction:column;gap:1.25rem;
+  padding-bottom:.5rem;
+}
+.cm-row{}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.25rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--paper);}
+.cover-rule{height:1px;background:var(--line2);margin:4rem 0 0;}
+
+/* ─── SECTION 01: OVERVIEW ─── */
+.overview-grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+.ov-left{}
+.ov-title{
+  font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:800;letter-spacing:-.04em;line-height:1;
+  margin-bottom:1.5rem;
+}
+.ov-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.ov-body strong{color:var(--paper);font-weight:500;}
+.stats-col{display:flex;flex-direction:column;gap:0;}
+.stat-item{
+  padding:1.25rem 0;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:.875rem;
+}
+.stat-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--paper);}
+.stat-lbl{font-size:.8125rem;color:var(--ash);line-height:1.4;}
+.accent-card{
+  background:var(--purple);
+  border-radius:8px;padding:2rem;
+}
+.ac-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.875rem;}
+.ac-val{font-size:2.25rem;font-weight:800;letter-spacing:-.05em;color:#fff;line-height:1.15;margin-bottom:.5rem;}
+.ac-desc{font-size:.8125rem;color:rgba(255,255,255,.8);line-height:1.6;}
+.ac-sub{
+  margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.2);
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+}
+.acsub-item .acsub-v{font-size:1.25rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
+.acsub-item .acsub-l{font-size:.625rem;color:rgba(255,255,255,.55);}
+
+/* ─── BENCHMARK GRID ─── */
+.wf-grid{
+  display:grid;
+  grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr;
+  gap:0;
+  align-items:start;
+  margin-top:3rem;
+}
+.wf-item{display:flex;flex-direction:column;align-items:center;}
+.wf-item .wire-shell{width:170px;}
+.wf-lbl{
+  margin-top:1.25rem;text-align:center;width:170px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);
+}
+.wf-lbl strong{display:block;font-size:.8125rem;font-family:'Geist',sans-serif;font-weight:700;letter-spacing:-.01em;color:var(--paper);margin-bottom:.25rem;text-transform:none;letter-spacing:normal;}
+
+.bench-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:3rem;}
+.bench-item{display:flex;flex-direction:column;}
+.bench-shell{border-radius:8px;overflow:hidden;border:1px solid var(--line2);background:#fff;aspect-ratio:4/5;}
+.bench-shell img{width:100%;height:100%;object-fit:cover;display:block;}
+.bench-name{margin-top:.875rem;font-size:.8125rem;font-weight:700;color:var(--paper);letter-spacing:-.01em;}
+
+/* stat pill grid */
+.trend-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.5rem;}
+.trend-item{background:var(--bg2);border-radius:8px;padding:1.5rem;text-align:center;}
+.trend-v{font-size:1.75rem;font-weight:800;letter-spacing:-.03em;}
+.trend-v.up{color:var(--green);}
+.trend-v.down{color:#E85050;}
+.trend-v.neutral{color:var(--paper);}
+.trend-d{font-size:.75rem;line-height:1.5;color:var(--ash);margin-top:.5rem;}
+.trend-d strong{color:var(--paper);}
+
+.quote-band{
+  margin-top:2.5rem;background:var(--bg2);border-radius:8px;padding:2rem 2.5rem;
+  text-align:center;font-size:1.0625rem;font-style:italic;color:var(--paper);line-height:1.6;
+}
+.quote-band strong{font-style:normal;font-weight:700;}
+
+/* Section divider label */
+.section-label{
+  display:flex;align-items:center;gap:1.5rem;
+  margin-bottom:3rem;
+}
+.sl-text{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);
+  white-space:nowrap;
+}
+.sl-line{flex:1;height:1px;background:var(--line);}
+
+/* ─── DECISIONS / GOALS GRID ─── */
+.decisions-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  margin-top:3rem;
+}
+.dec{background:var(--bg2);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ─── INSIGHTS ─── */
+.insights-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+  margin-top:3rem;
+}
+.ins{padding:1.75rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ─── DARK CALLOUT ─── */
+.callout{
+  background:var(--navy);border-radius:16px;padding:2.5rem;
+}
+.co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.6);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:2rem;flex-wrap:wrap;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:var(--purple);}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.4);margin-top:.125rem;}
+
+/* ─── FOOTER ─── */
+.footer{
+  padding:2rem 4rem;
+  border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-l,.footer-r{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);
+}
+
+/* Back nav */
+.back-nav{
+  position:sticky;
+  top:0;z-index:100;
+  background:rgba(246,244,237,0.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(26,24,20,.08);
+  padding:1rem 4rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--purple-2);
+  background:none;border:none;cursor:pointer;
+  text-decoration:none;
+  transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.back-nav-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(26,24,20,.4);
+}
+.back-nav-right{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ash);
+}
+
+/* ── PRODUCT GRID / DESIGN SYSTEM SECTION ── */
+.ds-intro { margin-bottom:3.5rem; }
+.ds-title {
+  font-family:'Geist',sans-serif;
+  font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:800;letter-spacing:-.04em;color:var(--paper);
+  line-height:.95;margin-bottom:1rem;
+}
+.ds-title em { font-style:normal;color:var(--purple); }
+.ds-sub {
+  font-family:'Muli',sans-serif;font-size:1rem;
+  line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;
+}
+
+.ds-group {
+  margin-bottom:4rem;
+  padding-bottom:4rem;
+  border-bottom:1px solid var(--line);
+}
+.ds-group-label {
+  display:flex;align-items:center;gap:.875rem;
+  font-family:'Geist',sans-serif;font-size:1.125rem;font-weight:700;
+  color:var(--paper);letter-spacing:-.02em;
+  margin-bottom:.875rem;
+}
+.ds-group-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5625rem;
+  letter-spacing:.12em;color:var(--purple);
+  border:1px solid rgba(139,92,246,.3);border-radius:100px;
+  padding:.2rem .625rem;
+}
+.ds-group-desc {
+  font-family:'Muli',sans-serif;font-size:.9375rem;
+  line-height:1.7;color:var(--ash);font-weight:300;
+  max-width:720px;margin-bottom:2rem;
+}
+
+.ds-comp-grid { display:grid;gap:1.5rem; }
+.ds-2col { grid-template-columns:1fr 1fr; }
+.ds-3col { grid-template-columns:repeat(3,1fr); }
+.ds-4col { grid-template-columns:repeat(4,1fr); }
+
+.ds-comp {
+  background:var(--bg2);border:1px solid var(--line2);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .3s;
+}
+.ds-comp:hover { border-color:rgba(26,24,20,.25); }
+.ds-comp-label {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ash);padding:.875rem 1.25rem;
+  border-bottom:1px solid var(--line2);
+}
+.ds-comp-img {
+  padding:1.25rem;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.ds-comp-img img {
+  max-width:100%;height:auto;display:block;border-radius:8px;
+}
+.ds-comp-img-wide img { max-width:100%; }
+.ds-comp-meta {
+  display:flex;flex-wrap:wrap;gap:.375rem;
+  padding:.875rem 1.25rem;
+}
+
+.ds-tag {
+  padding:.25rem .75rem;border-radius:100px;
+  border:1px solid var(--line2);
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ash);
+}
+.ds-tag-accent { border-color:rgba(139,92,246,.3);color:var(--purple); }
+.ds-tag-green { border-color:rgba(46,204,113,.3);color:#2ECC71; }
+.ds-tag-red { border-color:rgba(232,80,80,.3);color:#E85050; }
+
+/* color swatches */
+.swatch-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:.75rem;margin-top:1.5rem;}
+.swatch{border-radius:8px;border:1px solid var(--line2);overflow:hidden;}
+.swatch-fill{aspect-ratio:1/1;}
+.swatch-lbl{padding:.5rem .625rem;font-size:.625rem;font-weight:600;color:var(--paper);background:#fff;}
+
+/* DS Principles */
+.ds-principles {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-radius:8px;overflow:hidden;margin-top:3rem;
+}
+.ds-principle { background:var(--bg2);padding:2rem; }
+.dsp-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.12em;color:var(--purple);margin-bottom:.875rem;
+}
+.dsp-title {
+  font-family:'Geist',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;
+}
+.dsp-desc {
+  font-family:'Muli',sans-serif;font-size:.8125rem;
+  line-height:1.65;color:var(--ash);font-weight:300;
+}
+
+/* checkout flow grid */
+.flow-grid{
+  display:grid;
+  grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;
+  gap:0;
+  align-items:start;
+  margin-top:3rem;
+}
+.flow-item{display:flex;flex-direction:column;align-items:center;width:100%;}
+.flow-item .browser-shell{width:100%;}
+
+@media(max-width:900px){
+  .overview-grid{grid-template-columns:1fr;}
+  .wf-grid,.flow-grid{grid-template-columns:1fr;}
+  .arrow-col{padding:1rem 0;transform:rotate(90deg);}
+  .bench-grid,.trend-grid{grid-template-columns:repeat(2,1fr);}
+  .decisions-grid,.insights-grid,.ds-principles{grid-template-columns:1fr;}
+  .ds-2col,.ds-3col,.ds-4col{grid-template-columns:1fr;}
+  .swatch-grid{grid-template-columns:repeat(4,1fr);}
+  .cover{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="back-nav-title">Everyone · Case Study</div>
+  <div class="back-nav-right">Paula Elffman · Sr Product Designer</div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">E-commerce Website · Multi-brand Retailer · Team Project · 2024</div>
+    <div class="cover-title">
+      every<span class="dim">one</span>
+    </div>
+  </div>
+  <div class="cover-meta">
+    <div class="cm-row"><div class="cm-label">Company</div><div class="cm-val">Everyone · Multi-brand Sports Retailer</div></div>
+    <div class="cm-row"><div class="cm-label">Role</div><div class="cm-val">Senior Product Designer · Team Lead</div></div>
+    <div class="cm-row"><div class="cm-label">Time</div><div class="cm-val">17h · Wed 2h / Sat 10h / Sun 5h</div></div>
+    <div class="cm-row"><div class="cm-label">Team</div><div class="cm-val">Sr PD + Jr PD + Project Manager</div></div>
+    <div class="cm-row"><div class="cm-label">Platform</div><div class="cm-val">Desktop</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 01 — OVERVIEW & CHALLENGE
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Overview & Challenge</div>
+  <div class="overview-grid">
+    <div class="ov-left">
+      <div class="ov-title">A catalog of brands.<br><span class="purple">One coherent voice.</span></div>
+      <p class="ov-body">Everyone is a multi-brand retailer selling footwear, apparel and accessories from Nike, Adidas, Columbia, CAT, Under Armour, Hush Puppies and Victoria's Secret. The scenario: a two-person design team — myself as Senior Product Designer and a Jr Designer — hired to redesign an outdated site that <strong>didn't reflect the brand or meet the needs of a diverse customer base.</strong><br><br>Before opening Figma, I framed the brief as three open questions to the client: what does the current brand look like, what are the real user pains today, and what do the current conversion metrics say. <strong style="color:var(--paper);font-weight:500">Design starts with the right questions, not the first screen.</strong></p>
+    </div>
+    <div class="stats-col">
+      <div class="stat-item"><div class="stat-val">17h</div><div class="stat-lbl">Total time · Wed 2h, Sat 10h, Sun 5h</div></div>
+      <div class="stat-item"><div class="stat-val">3</div><div class="stat-lbl">Team · Sr PD, Jr PD, PM</div></div>
+      <div class="stat-item"><div class="stat-val">7+</div><div class="stat-lbl">Brands in catalog</div></div>
+      <div class="stat-item"><div class="stat-val">2</div><div class="stat-lbl">Sprint weeks · Research + Ideation</div></div>
+    </div>
+    <div class="accent-card">
+      <div class="ac-lbl">My role as team lead</div>
+      <div class="ac-val">Organize.<br>Prioritize.<br>Uphold quality.</div>
+      <div class="ac-desc">Distributed tasks between research, wireframes and UI. Ran quality checks on the Jr Designer's output against system standards while supporting their growth.</div>
+      <div class="ac-sub">
+        <div class="acsub-item"><div class="acsub-v">3</div><div class="acsub-l">Discovery questions</div></div>
+        <div class="acsub-item"><div class="acsub-v">Daily</div><div class="acsub-l">10:30am syncs</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 02 — VISION & STRATEGY
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Project Vision & Strategy</div>
+  <div class="section-label">
+    <div class="sl-text">Three main goals</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">UX · Conversion · Loyalty</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;">
+    <div style="padding:2rem 1.75rem;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;">
+      <div class="dec-n" style="margin-bottom:1rem;">Goal 01</div>
+      <div class="dec-t" style="font-size:1.125rem;">Improve the User Experience</div>
+      <div class="dec-d">Design an intuitive, easy-to-navigate website with an efficient category structure and filters that let users find products fast.</div>
+    </div>
+    <div style="padding:2rem 1.75rem;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;">
+      <div class="dec-n" style="margin-bottom:1rem;">Goal 02</div>
+      <div class="dec-t" style="font-size:1.125rem;">Increase Conversions</div>
+      <div class="dec-d">Optimise the checkout process to reduce cart abandonment, simplifying steps and improving product information.</div>
+    </div>
+    <div style="padding:2rem 1.75rem;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;">
+      <div class="dec-n" style="margin-bottom:1rem;">Goal 03</div>
+      <div class="dec-t" style="font-size:1.125rem;">Reinforce Brand Loyalty</div>
+      <div class="dec-d">Convey trust and professionalism through modern design, excellent support and a transparent return policy.</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:4rem;">
+    <div class="sl-text">Key elements of the redesign</div>
+    <div class="sl-line"></div>
+  </div>
+  <div class="decisions-grid" style="margin-top:0;">
+    <div class="dec">
+      <div class="dec-n">Element 01</div>
+      <div class="dec-t">Modern & Attractive Design</div>
+      <div class="dec-d">Update the aesthetics to reflect the modernity and identity of Everyone, with a clean design and fonts that appeal to the target audience.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Element 02</div>
+      <div class="dec-t">Mobile Optimisation</div>
+      <div class="dec-d">A coherent version that looks amazing on mobile — since 70% of sales happen there.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Element 03</div>
+      <div class="dec-t">Intuitive Navigation</div>
+      <div class="dec-d">Revised flows and navigation accessible to all, with limited, simple steps. Filter section rethought from scratch.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Element 04</div>
+      <div class="dec-t">Detailed Product Content</div>
+      <div class="dec-d">Detailed descriptions, high-quality images and customer reviews to improve trust and purchasing decisions.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Element 05</div>
+      <div class="dec-t">Enhanced Customer Support</div>
+      <div class="dec-d">Live chat, email assistance and a comprehensive FAQ section to resolve queries efficiently.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Element 06</div>
+      <div class="dec-t">Security & Confidence</div>
+      <div class="dec-d">Security seals and visible trust certifications so users feel their data is protected during transactions.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 03 — RESEARCH & STRATEGY (BENCHMARK)
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Research & Strategy · Benchmark</div>
+  <div class="section-label">
+    <div class="sl-text">Competitive landscape</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">4 sports retailers analysed</div>
+  </div>
+  <div class="bench-grid">
+    <div class="bench-item">
+      <div class="bench-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1180 1500'%3E%3Crect width='1180' height='1500' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_001" alt="Decathlon benchmark"></div>
+      <div class="bench-name">Decathlon</div>
+    </div>
+    <div class="bench-item">
+      <div class="bench-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1180 1500'%3E%3Crect width='1180' height='1500' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_002" alt="Sports Direct benchmark"></div>
+      <div class="bench-name">Sports Direct</div>
+    </div>
+    <div class="bench-item">
+      <div class="bench-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1180 1500'%3E%3Crect width='1180' height='1500' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_003" alt="Stadium Goods benchmark"></div>
+      <div class="bench-name">Stadium Goods</div>
+    </div>
+    <div class="bench-item">
+      <div class="bench-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1094 1500'%3E%3Crect width='1094' height='1500' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_004" alt="PS PRO benchmark"></div>
+      <div class="bench-name">PS PRO</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:4rem;">
+    <div class="sl-text">General trends in online sports shopping</div>
+    <div class="sl-line"></div>
+  </div>
+  <div class="trend-grid">
+    <div class="trend-item"><div class="trend-v up">+8-10%</div><div class="trend-d">Expected CAGR growth in the coming years.</div></div>
+    <div class="trend-item"><div class="trend-v neutral">Mobile first</div><div class="trend-d">A high % of users buy from mobile — critical to optimise that experience.</div></div>
+    <div class="trend-item"><div class="trend-v neutral">70%</div><div class="trend-d">Of users check <strong>reviews</strong> of other customers before purchasing.</div></div>
+    <div class="trend-item"><div class="trend-v down">69.8%</div><div class="trend-d">Online cart abandonment rates can reach this figure.</div></div>
+  </div>
+  <div class="trend-grid" style="margin-top:1rem;">
+    <div class="trend-item"><div class="trend-v neutral">€50-150</div><div class="trend-d">Estimated average purchase ticket on sports sites.</div></div>
+    <div class="trend-item"><div class="trend-v up">14M</div><div class="trend-d">Sporting goods transactions in the first six months of last year alone.</div></div>
+    <div class="trend-item"><div class="trend-v up">25.1%</div><div class="trend-d">Sporting goods e-commerce growth to September 2023.</div></div>
+  </div>
+  <div class="quote-band">"<strong>Simplifying the checkout process</strong> can help reduce this number of abandoned purchases."</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 04 — PROCESS TIMELINE
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Process · Two-Week Sprint</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+    <div>
+      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">Daily syncs.<br>Clear <span class="purple">ownership.</span></div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">With only 17 hours of hands-on time, the team ran a tight cadence: a kickoff meeting to assign tasks, a 10:30am daily standup to unblock and re-prioritise, and two clearly scoped weeks — Research, then Ideation & Validation.</p>
+    </div>
+    <div style="padding:2rem;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.25rem;">Daily standup — 10:30am</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem;">
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--purple);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Progress?</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--purple);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Blockages?</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;"><div style="width:5px;height:5px;border-radius:50%;background:var(--purple);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Next steps</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="decisions-grid" style="grid-template-columns:1fr 1fr;">
+    <div class="dec">
+      <div class="dec-n">Week 01 · Research</div>
+      <div class="dec-t">Data, survey & flows</div>
+      <div class="dec-d">PM collects & analyses existing site data and runs a survey on shopping pains. Designers map current user flows and run a competitive benchmark. Results are synthesised into a report ahead of the client sync.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Week 02 · Ideation & Validation</div>
+      <div class="dec-t">Wireframes → UI → Prototype → Test</div>
+      <div class="dec-d">Wireframes and design schemes based on defined flows, then visual design (colour, typography, graphic style) and the main screens: Home, shopping flow, Login + onboarding. Testing script built for checkout and filters; insights fold back into iteration before the MVP ships.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 05 — PROPOSAL & DESIGN PRINCIPLES
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Proposal · Design Direction</div>
+  <div class="ds-intro">
+    <h2 class="ds-title">Design a trendy, clean<br>and usable website for <em>Everyone.</em></h2>
+    <p class="ds-sub">Six principles anchored every screen decision — from the category grid down to the toast on an "add to bag" action.</p>
+  </div>
+  <div class="ds-principles">
+    <div class="ds-principle">
+      <div class="dsp-num">01</div>
+      <div class="dsp-title">Minimalist & Trendy</div>
+      <div class="dsp-desc">Neutral colours with touches of vibrant colour to highlight important elements.</div>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">02</div>
+      <div class="dsp-title">Clear Typography</div>
+      <div class="dsp-desc">Modern, legible type — Inter — with different weights to prioritise information.</div>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">03</div>
+      <div class="dsp-title">High-Quality Images</div>
+      <div class="dsp-desc">High-resolution product photography and styles that reflect fashion and sport function.</div>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">04</div>
+      <div class="dsp-title">Intuitive Navigation</div>
+      <div class="dsp-desc">Clear, simple navigation with well-defined categories and an efficient search engine.</div>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">05</div>
+      <div class="dsp-title">Filtering & Searching</div>
+      <div class="dsp-desc">Advanced filters to search by sport type, brand, price and more.</div>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">06</div>
+      <div class="dsp-title">Interactivity</div>
+      <div class="dsp-desc">Hover effects, smooth animations and transitions that enhance the shopping experience.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 06 — FINAL UI · HOME
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Final UI · Home</div>
+  <div class="section-label">
+    <div class="sl-text">Desktop · High fidelity</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Hero → Catalog → Cross-sell → Footer</div>
+  </div>
+  <div class="screen-divider" style="margin-top:0;">
+    <div class="sd-line"></div>
+    <div class="sd-num">SCREEN 01 · Hero</div>
+    <div class="sd-line"></div>
+  </div>
+  <div class="browser-wrap">
+    <div class="browser-shell">
+      <div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 845'%3E%3Crect width='1800' height='845' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_007" alt="Everyone home hero">
+    </div>
+    <div class="blabel">
+      <div class="bl-n">Hero</div>
+      <div class="bl-t">"Take Your Running Further with Everyone"</div>
+      <div class="bl-d">Full-bleed lifestyle photography, single clear CTA and brand logo strip below the fold to build trust immediately.</div>
+    </div>
+  </div>
+
+  <div class="screen-divider" style="margin-top:6rem;">
+    <div class="sd-line"></div>
+    <div class="sd-num">SCREEN 02 · Catalog</div>
+    <div class="sd-line"></div>
+  </div>
+  <div class="browser-wrap">
+    <div class="browser-shell">
+      <div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1056'%3E%3Crect width='1800' height='1056' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_008" alt="Everyone product grid">
+    </div>
+    <div class="blabel">
+      <div class="bl-n">Catalog</div>
+      <div class="bl-t">"Less than 50% OFF" — brand strip + product grid</div>
+      <div class="bl-d">Brand logos give instant multi-brand credibility. Cards keep name, gender, colour count and price scannable at a glance.</div>
+    </div>
+  </div>
+
+  <div class="screen-divider" style="margin-top:6rem;">
+    <div class="sd-line"></div>
+    <div class="sd-num">SCREEN 03 · Cross-sell</div>
+    <div class="sd-line"></div>
+  </div>
+  <div class="browser-wrap">
+    <div class="browser-shell">
+      <div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 633'%3E%3Crect width='1800' height='633' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_009" alt="Dive into sports">
+    </div>
+    <div class="blabel">
+      <div class="bl-n">Cross-sell</div>
+      <div class="bl-t">"Dive into Sports. Find Your Game with Everyone"</div>
+      <div class="bl-d">Editorial photography per sport category drives discovery beyond the brand-first mental model.</div>
+    </div>
+  </div>
+
+  <div class="screen-divider" style="margin-top:6rem;">
+    <div class="sd-line"></div>
+    <div class="sd-num">SCREEN 04 · Loyalty</div>
+    <div class="sd-line"></div>
+  </div>
+  <div class="browser-wrap">
+    <div class="browser-shell">
+      <div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1309'%3E%3Crect width='1800' height='1309' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_010" alt="Member shop grid">
+    </div>
+    <div class="blabel">
+      <div class="bl-n">Loyalty</div>
+      <div class="bl-t">"Member Shop" — exclusive pricing grid</div>
+      <div class="bl-d">A second, denser grid rewards logged-in members — reinforcing the brand loyalty goal from the brief.</div>
+    </div>
+  </div>
+
+  <div class="screen-divider" style="margin-top:6rem;">
+    <div class="sd-line"></div>
+    <div class="sd-num">SCREEN 05 · Closing & Footer</div>
+    <div class="sd-line"></div>
+  </div>
+  <div class="browser-wrap">
+    <div class="browser-shell">
+      <div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 760'%3E%3Crect width='1800' height='760' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_011" alt="Everyone CTA and footer">
+    </div>
+    <div class="blabel">
+      <div class="bl-n">Closing & Footer</div>
+      <div class="bl-t">"It's Time to Go Further. Challenge Your Limits"</div>
+      <div class="bl-d">Bold outline wordmark as a closing statement, followed by a full-service footer: support, account, currency and social.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 07 — PRODUCT GRID & DESIGN SYSTEM
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Design System · Product Grid & Cards</div>
+  <div class="ds-intro">
+    <h2 class="ds-title">Adaptable design.<br><em>One card, every context.</em></h2>
+    <p class="ds-sub">The product card is the single most repeated component on Everyone — it had to adapt from a 4-column grid to a 3-column sidebar without losing hierarchy.</p>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">01</span>
+      Product Card · Adaptable Grid
+    </div>
+    <p class="ds-group-desc">The same card renders cleanly whether it sits in a full-width catalog grid or a narrower filtered results column — name, gender, colour count and price stay legible at every size.</p>
+    <div class="ds-comp">
+      <div class="ds-comp-label">Trainers · Grid vs. filtered column</div>
+      <div class="ds-comp-img ds-comp-img-wide">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1796'%3E%3Crect width='1800' height='1796' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_012" alt="Product grid trainers">
+      </div>
+      <div class="ds-comp-meta">
+        <span class="ds-tag ds-tag-accent">Wishlist heart</span>
+        <span class="ds-tag">Name + category</span>
+        <span class="ds-tag">Colour count</span>
+        <span class="ds-tag">Price</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">02</span>
+      Category Cards · Sport Discovery
+    </div>
+    <p class="ds-group-desc">Full-bleed photography with a lower-left label — Futbol, Tenis, Basketball, Crossfit — turns a text-based sport filter into a visual, tappable entry point.</p>
+    <div class="ds-comp">
+      <div class="ds-comp-label">Dive into Sports · 4-up category rail</div>
+      <div class="ds-comp-img ds-comp-img-wide">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 743'%3E%3Crect width='1800' height='743' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_013" alt="Sports category cards">
+      </div>
+      <div class="ds-comp-meta">
+        <span class="ds-tag">Full-bleed photo</span>
+        <span class="ds-tag">Bottom-left label</span>
+        <span class="ds-tag">Hover zoom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-group" style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
+    <div class="ds-group-label">
+      <span class="ds-group-num">03</span>
+      Colour System
+    </div>
+    <p class="ds-group-desc">A restrained neutral scale carries 90% of the UI, with a single purple gradient as the primary action colour and a lemon accent reserved for promotional highlights.</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-fill" style="background:#FFFFFF;"></div><div class="swatch-lbl">Neutral/100</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#F6F4ED;"></div><div class="swatch-lbl">Neutral/200</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#D9D3C8;"></div><div class="swatch-lbl">Neutral/300</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#726D64;"></div><div class="swatch-lbl">Neutral/400</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#2C2925;"></div><div class="swatch-lbl">Neutral/500</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#1A1815;"></div><div class="swatch-lbl">Neutral/600</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:linear-gradient(180deg,#964BFE,#8678F3);"></div><div class="swatch-lbl">Gradient</div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#D9F144;"></div><div class="swatch-lbl">Lemon</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 08 — CHECKOUT FLOW
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Core Flow · Checkout</div>
+  <div class="section-label">
+    <div class="sl-text">From PDP to confirmation</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Final UI · 4 states</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+    <div>
+      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">Fewer steps.<br><span class="purple">Fewer drop-offs.</span></div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">Product detail → bag → billing/shipping → payment. Reviews and social proof surface early on the PDP; the bag stays a lightweight drawer instead of a full page redirect, keeping the user in context all the way to confirmation.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--line2);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;">State 01</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Product Detail</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Reviews · 5.7 based on 2300</div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--line2);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;">State 02</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Shipping Bag</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Drawer overlay · keep shopping</div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid rgba(139,92,246,.2);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem;">State 03</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Billing & Shipping</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Rewards banner · Essentials upsell</div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem;">State 04</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Payment & Confirmation</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Order number · email confirmation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-grid">
+    <div class="flow-item">
+      <div class="browser-shell"><div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1168'%3E%3Crect width='1800' height='1168' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_015" alt="Product detail page"></div>
+      <div class="badge badge-o">Product Detail</div>
+      <div class="blabel">
+        <div class="bl-n">01</div>
+        <div class="bl-t">Nike Dunk Low Twist</div>
+        <div class="bl-d">Breadcrumbs, gallery, size selector and review highlights above the fold.</div>
+      </div>
+    </div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="flow-item">
+      <div class="browser-shell"><div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1075'%3E%3Crect width='1800' height='1075' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_016" alt="Shipping bag drawer"></div>
+      <div class="badge badge-g">Add to bag</div>
+      <div class="blabel">
+        <div class="bl-n">02</div>
+        <div class="bl-t">Shipping bag</div>
+        <div class="bl-d">Drawer keeps the PDP visible behind it — no full-page redirect breaking context.</div>
+      </div>
+    </div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="flow-item">
+      <div class="browser-shell"><div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1335'%3E%3Crect width='1800' height='1335' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_017" alt="Billing and shipping"></div>
+      <div class="badge badge-g">Billing & Shipping</div>
+      <div class="blabel">
+        <div class="bl-n">03</div>
+        <div class="bl-t">Address & delivery</div>
+        <div class="bl-d">First-purchase rewards banner plus an Essentials upsell carousel beside the order summary.</div>
+      </div>
+    </div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div><div class="arr-lbl">Confirma</div></div>
+    <div class="flow-item">
+      <div class="browser-shell"><div class="browser-bar"><div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1335'%3E%3Crect width='1800' height='1335' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_018" alt="Payment and order confirmed"></div>
+      <div class="badge badge-gr">Order Confirmed</div>
+      <div class="blabel">
+        <div class="bl-n">04</div>
+        <div class="bl-t">"With love, Everyone team"</div>
+        <div class="bl-d">Payment method entry resolves into an order-confirmed modal with order number and next-step messaging.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 09 — NEXT STEPS · FILTERS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Next Steps · Filters</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-bottom:3rem;">
+    <div>
+      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">One open question:<br><span class="purple">which shape wins?</span></div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">The filter section is the next thing to validate. Two structurally different directions were wireframed to be tested head-to-head rather than decided by opinion.</p>
+    </div>
+    <div class="decisions-grid" style="grid-template-columns:1fr;margin-top:0;">
+      <div class="dec">
+        <div class="dec-n">Next 01</div>
+        <div class="dec-t">Create both versions & test with users</div>
+        <div class="dec-d">Build the horizontal and vertical filter versions and understand which one performs better with real users.</div>
+      </div>
+      <div class="dec">
+        <div class="dec-n">Next 02</div>
+        <div class="dec-t">Launch an A/B test</div>
+        <div class="dec-d">Measure both final versions with real traffic and compare performance.</div>
+      </div>
+      <div class="dec">
+        <div class="dec-n">Next 03</div>
+        <div class="dec-t">Sync with the client</div>
+        <div class="dec-d">Show the results and define next steps together.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2080 1112'%3E%3Crect width='2080' height='1112' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_005" alt="Horizontal filter version"></div>
+    <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2080 2222'%3E%3Crect width='2080' height='2222' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="everyone_case_006" alt="Vertical filter version"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1rem;">
+    <div class="wf-lbl" style="width:100%;text-align:left;"><strong>Horizontal version</strong>Filter bar on top, results grid below</div>
+    <div class="wf-lbl" style="width:100%;text-align:left;"><strong>Vertical version</strong>Sticky sidebar with filter groups, results beside it</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 10 — LEARNINGS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Learnings</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+    <div class="insights-grid" style="grid-template-columns:1fr;">
+      <div class="ins">
+        <div class="ins-n">Learning 01</div>
+        <div class="ins-t">Discovery questions beat assumptions</div>
+        <div class="ins-d">Framing the brief as branding, UX and metrics questions before designing surfaced real constraints the team would have otherwise guessed at.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Learning 02</div>
+        <div class="ins-t">Leading a Jr Designer is a design skill too</div>
+        <div class="ins-d">Distributing tasks by strength, running quality checks and supporting growth took as much intention as any screen decision.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Learning 03</div>
+        <div class="ins-t">Mobile-first isn't optional at 70%</div>
+        <div class="ins-d">With the majority of sales on mobile, every desktop decision was cross-checked against how it would collapse — filters especially.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="co-lbl">The core principle</div>
+      <div class="co-t">"A multi-brand catalog only feels premium when the layer holding it together is invisible."</div>
+      <div class="co-d">Nike, Adidas, Under Armour and Victoria's Secret each carry their own visual language. Everyone's job was never to compete with that — it was to give all of it one calm, trustworthy frame.</div>
+      <div class="co-stats">
+        <div><div class="cos-v">69.8%</div><div class="cos-l">Cart abandonment to solve for</div></div>
+        <div><div class="cos-v">70%</div><div class="cos-l">Sales on mobile</div></div>
+        <div><div class="cos-v">2</div><div class="cos-l">Filter directions to test</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">Everyone · Multi-brand E-commerce · Team Project · 2024</div>
+  <div class="footer-r">Sr Product Designer · Paula Elffman</div>
+</div>
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function coverFrom(x,y,dark,cb){
+    overlay.classList.toggle('dark',!!dark);
+    overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    });
+    setTimeout(cb,600);
+  }
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      coverFrom(x,y,true,function(){ window.location.href='index.html'; });
+    });
+  }
+})();
+</script>
+
+<script>
+/* LAZY LOAD IMAGES */
+(function(){
+  var IMG_STORE = window.EVERYONE_CASE_IMAGES;
+  function applyImages(){
+    if(!window.EVERYONE_CASE_IMAGES) return;
+    IMG_STORE = window.EVERYONE_CASE_IMAGES;
+    document.querySelectorAll('[data-img-id]').forEach(function(el){
+      if(el.__loaded) return;
+      var id = el.getAttribute('data-img-id');
+      var src = IMG_STORE[id];
+      if(!src) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            el.src = src;
+            el.__loaded = true;
+            io.disconnect();
+          }
+        });
+      }, {rootMargin:'400px 0px'});
+      io.observe(el);
+    });
+  }
+  if(window.EVERYONE_CASE_IMAGES){
+    applyImages();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'everyone-case-images.js';
+    s.onload = applyImages;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --ash2:rgba(244,244,246,0.15);
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  /* --purple:#8B5CF6 was ~3.6:1 on this dark bg -- fails AA. --purple-2 (a punchier,
+     more-magenta secondary shade in light) had the same problem; lightened proportionally. */
+  --purple:#C6A6F6; --purple-2:#D6B6FF;
+  background:var(--bg); color:var(--paper);
+}
+/* .back-nav bg is hardcoded to the light cream value with no dark counterpart -- fixed per portfolio-bible.md dark-mode audit (Sep 2026). */
+body.dark-mode .back-nav{background:rgba(30,30,38,.85);}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+</body>
+</html>

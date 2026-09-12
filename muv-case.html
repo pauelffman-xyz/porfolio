@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>muv — Design Showcase · Paula Elffman</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F5F4F0;
+  --bg2:#EDEAE4;
+  --bg3:#E4E1DA;
+  --paper:#1A1814;
+  --ash:rgba(26,24,20,.5);
+  --ash2:rgba(26,24,20,.15);
+  --orange:#FF6B2C;
+  --navy:#1A2F5A;
+  --green:#1aac79;
+  --line:rgba(26,24,20,.08);
+  --line2:rgba(26,24,20,.14);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  /* aliases - Design System block below was authored with these names, keep them wired to the tokens above */
+  --ghost:var(--bg2);
+  --ghost-2:var(--bg3);
+  --accent:var(--orange);
+  --line-md:var(--line2);
+  --ash-2:var(--ash2);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ─── SHARED ─── */
+.mono{font-family:'Space Grotesk',sans-serif;}
+.orange{color:var(--orange);}
+.green{color:var(--green);}
+
+/* ─── SECTION WRAPPER ─── */
+.section{padding:5rem 4rem;}
+.section + .section{border-top:1px solid var(--line2);}
+
+/* ─── EYEBROW ─── */
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--orange);flex-shrink:0;}
+
+/* ─── PHONES ─── */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;}
+.phone-shell{
+  border-radius:16px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08), 0 16px 48px rgba(26,24,20,.14), 0 4px 12px rgba(26,24,20,.08);
+  position:relative;
+}
+.phone-shell img{display:block;width:100%;height:auto;}
+.phone-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:72px;height:22px;background:#000;
+  border-radius:0 0 14px 14px;z-index:3;
+}
+.badge{
+  margin-top:1rem;position:relative;z-index:5;
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .875rem;border-radius:100px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
+  animation:badgeBreathe 2.6s var(--ease) infinite;
+}
+.badge-o{background:var(--orange);color:#fff;}
+.badge-g{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+.badge-gr{background:rgba(38,216,151,.12);color:var(--green);border:1px solid rgba(38,216,151,.2);}
+@keyframes badgeBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
+@media (prefers-reduced-motion:reduce){ .badge{animation:none;} }
+
+.plabel{margin-top:1.5rem;text-align:center;max-width:190px;}
+.pl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:.375rem;}
+.pl-t{font-size:.875rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.25rem;}
+.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+/* skeleton pulse */
+.sk-row{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:.75rem;}
+.sk-dot{width:4px;height:4px;border-radius:50%;background:rgba(26,24,20,.2);animation:skp 1.4s ease-in-out infinite;}
+.sk-dot:nth-child(2){animation-delay:.2s;}
+.sk-dot:nth-child(3){animation-delay:.4s;}
+@keyframes skp{0%,100%{opacity:.2;}50%{opacity:1;}}
+
+/* wire frame */
+.wire-shell{
+  border-radius:8px;overflow:hidden;
+  border:1px solid rgba(242,239,232,.1);
+  background:rgba(242,239,232,.04);
+}
+.wire-shell img{display:block;width:100%;height:auto;}
+
+/* flow arrow */
+.arrow-col{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.375rem;padding-top:5rem;
+}
+.arr-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);}
+.arr-line{width:1px;height:28px;background:linear-gradient(to bottom,var(--orange),rgba(26,24,20,0));position:relative;overflow:visible;}
+.arr-line::after{
+  content:'';position:absolute;left:50%;top:0;
+  width:3px;height:3px;border-radius:50%;background:var(--orange);
+  transform:translate(-50%,0);
+  animation:arrFlow 1.8s linear infinite;
+}
+@keyframes arrFlow{
+  0%{top:0;opacity:0;}
+  15%{opacity:1;}
+  85%{opacity:1;}
+  100%{top:100%;opacity:0;}
+}
+.arr-lbl{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--orange);writing-mode:vertical-rl;margin-top:.25rem;
+}
+@media (prefers-reduced-motion:reduce){ .arr-line::after{animation:none;} }
+
+/* reveal on scroll — flow/wireframe items cascade in */
+.flow-item,.wf-item,.phone-wrap{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .7s var(--ease),transform .7s var(--ease);
+}
+.flow-item.in-view,.wf-item.in-view,.phone-wrap.in-view{
+  opacity:1;transform:translateY(0);
+}
+@media (prefers-reduced-motion:reduce){
+  .flow-item,.wf-item,.phone-wrap{opacity:1;transform:none;transition:none;}
+}
+
+/* ─── SECTION 00: COVER ─── */
+.cover{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:4rem;
+  align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(5rem,11vw,12rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;
+  color:var(--paper);
+}
+.cover-title .dim{color:rgba(26,24,20,.15);}
+.cover-meta{
+  display:flex;flex-direction:column;gap:1.25rem;
+  padding-bottom:.5rem;
+}
+.cm-row{}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.25rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--paper);}
+.cover-rule{height:1px;background:var(--line2);margin:4rem 0 0;}
+
+/* ─── SECTION 01: OVERVIEW ─── */
+.overview-grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+.ov-left{}
+.ov-title{
+  font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:800;letter-spacing:-.04em;line-height:1;
+  margin-bottom:1.5rem;
+}
+.ov-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.ov-body strong{color:var(--paper);font-weight:500;}
+.stats-col{display:flex;flex-direction:column;gap:0;}
+.stat-item{
+  padding:1.25rem 0;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:.875rem;
+}
+.stat-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--paper);}
+.stat-lbl{font-size:.8125rem;color:var(--ash);line-height:1.4;}
+.accent-card{
+  background:var(--orange);
+  border-radius:8px;padding:2rem;
+}
+.ac-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.875rem;}
+.ac-val{font-size:3rem;font-weight:800;letter-spacing:-.05em;color:#fff;line-height:1;margin-bottom:.5rem;}
+.ac-desc{font-size:.8125rem;color:rgba(255,255,255,.8);line-height:1.6;}
+.ac-sub{
+  margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.2);
+  display:flex;gap:1.5rem;
+}
+.acsub-item .acsub-v{font-size:1.5rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
+.acsub-item .acsub-l{font-size:.625rem;color:rgba(255,255,255,.55);}
+
+/* ─── SECTION 02: WIREFRAMES ─── */
+.wf-grid{
+  display:grid;
+  grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr;
+  gap:0;
+  align-items:start;
+  margin-top:3rem;
+}
+.wf-item{display:flex;flex-direction:column;align-items:center;}
+.wf-item .wire-shell{width:170px;}
+.wf-lbl{
+  margin-top:1.25rem;text-align:center;width:170px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);
+}
+.wf-lbl strong{display:block;font-size:.8125rem;font-family:'Geist',sans-serif;font-weight:700;letter-spacing:-.01em;color:var(--paper);margin-bottom:.25rem;text-transform:none;letter-spacing:normal;}
+
+/* Section divider label */
+.section-label{
+  display:flex;align-items:center;gap:1.5rem;
+  margin-bottom:3rem;
+}
+.sl-text{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);
+  white-space:nowrap;
+}
+.sl-line{flex:1;height:1px;background:var(--line);}
+
+/* ─── SECTION 03: TRIP FLOW ─── */
+.flow-grid{
+  display:grid;
+  grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;
+  gap:0;
+  align-items:start;
+  margin-top:3rem;
+}
+.flow-item{display:flex;flex-direction:column;align-items:center;}
+.flow-item .phone-shell{width:180px;border-radius:16px;}
+
+/* ─── SECTION 04: DECISIONS ─── */
+.decisions-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  margin-top:3rem;
+}
+.dec{background:var(--bg2);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ─── SECTION 05: INSIGHTS ─── */
+.insights-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+  margin-top:3rem;
+}
+.ins{padding:1.75rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ─── NAVY CALLOUT ─── */
+.callout{
+  background:var(--navy);border-radius:16px;padding:2.5rem;
+}
+.co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.6);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:2rem;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:var(--orange);}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.4);margin-top:.125rem;}
+
+/* ─── FOOTER ─── */
+.footer{
+  padding:2rem 4rem;
+  border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-l,.footer-r{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);
+}
+
+
+/* Back nav */
+.back-nav{
+  position:sticky;
+  top:0;z-index:100;
+  background:rgba(245,244,240,0.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(26,24,20,.08);
+  padding:1rem 4rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#FF6B2C;
+  background:none;border:none;cursor:pointer;
+  text-decoration:none;
+  transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.back-nav-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(26,24,20,.4);
+}
+.back-nav-right{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(26,24,20,.3);
+}
+
+/* Push Notifications 2-col layout */
+.ds-pn-layout {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+.ds-pn-left { padding-top:.5rem; }
+.ds-pn-items { display:flex;flex-direction:column;gap:1.5rem;margin-top:1.5rem; }
+.ds-pn-item { display:flex;gap:.875rem;align-items:flex-start; }
+.ds-pn-dot {
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);flex-shrink:0;margin-top:.4rem;
+}
+.ds-pn-title {
+  font-family:'Geist',sans-serif;font-size:.875rem;
+  font-weight:700;color:var(--paper);margin-bottom:.25rem;
+}
+.ds-pn-desc {
+  font-family:'Muli',sans-serif;font-size:.8125rem;
+  line-height:1.65;color:var(--ash);font-weight:300;
+}
+.ds-pn-right {
+  display:flex;flex-direction:column;gap:.875rem;
+}
+.ds-pn-img-wrap {
+  background:var(--ghost);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+}
+.ds-pn-img-area {
+  padding:1.25rem;background:var(--ghost-2);
+  display:flex;align-items:center;justify-content:center;
+}
+.ds-pn-img-area img {
+  max-width:50%;height:auto;display:block;border-radius:6px;
+}
+@media(max-width:768px){
+  .ds-pn-layout { grid-template-columns:1fr; }
+}
+
+</style>
+
+<style>
+/* ── DESIGN SYSTEM SECTION ── */
+.ds-intro { margin-bottom:3.5rem; }
+.ds-title {
+  font-family:'Geist',sans-serif;
+  font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:800;letter-spacing:-.04em;color:var(--paper);
+  line-height:.95;margin-bottom:1rem;
+}
+.ds-title em { font-style:normal;color:var(--accent); }
+.ds-sub {
+  font-family:'Muli',sans-serif;font-size:1rem;
+  line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;
+}
+
+.ds-group {
+  margin-bottom:4rem;
+  padding-bottom:4rem;
+  border-bottom:1px solid var(--line);
+}
+.ds-group-label {
+  display:flex;align-items:center;gap:.875rem;
+  font-family:'Geist',sans-serif;font-size:1.125rem;font-weight:700;
+  color:var(--paper);letter-spacing:-.02em;
+  margin-bottom:.875rem;
+}
+.ds-group-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5625rem;
+  letter-spacing:.12em;color:var(--accent);
+  border:1px solid rgba(202,255,37,.3);border-radius:100px;
+  padding:.2rem .625rem;
+}
+.ds-group-desc {
+  font-family:'Muli',sans-serif;font-size:.9375rem;
+  line-height:1.7;color:var(--ash);font-weight:300;
+  max-width:720px;margin-bottom:2rem;
+}
+
+.ds-comp-grid { display:grid;gap:1.5rem; }
+.ds-2col { grid-template-columns:1fr 1fr; }
+.ds-3col { grid-template-columns:1fr 1fr 1fr; }
+
+.ds-comp {
+  background:var(--ghost);border:1px solid var(--line);
+  border-radius:12px;overflow:hidden;
+  transition:border-color .3s;
+}
+.ds-comp:hover { border-color:var(--line-md); }
+.ds-comp-label {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ash);padding:.875rem 1.25rem;
+  border-bottom:1px solid var(--line);
+}
+.ds-comp-img {
+  padding:1.25rem;background:var(--ghost-2);
+  display:flex;align-items:center;justify-content:center;
+}
+.ds-comp-img img {
+  max-width:min(50%, 340px);height:auto;display:block;border-radius:8px;
+}
+.ds-comp-img-wide img { max-width:min(60%, 420px); }
+.ds-comp-meta {
+  display:flex;flex-wrap:wrap;gap:.375rem;
+  padding:.875rem 1.25rem;
+}
+
+.ds-tag {
+  padding:.25rem .75rem;border-radius:100px;
+  border:1px solid rgba(26,24,20,.2);
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(26,24,20,.68);
+}
+.ds-tag-accent { border-color:rgba(202,255,37,.3);color:var(--accent); }
+.ds-tag-green { border-color:rgba(46,204,113,.3);color:#2ECC71; }
+.ds-tag-red { border-color:rgba(232,80,80,.3);color:#E85050; }
+.ds-tag-yellow { border-color:rgba(230,168,23,.35);color:#C98A0F; }
+
+/* DS Principles */
+.ds-principles {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-radius:8px;overflow:hidden;margin-top:3rem;
+}
+.ds-principle { background:var(--ghost);padding:2rem; }
+.dsp-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.12em;color:var(--accent);margin-bottom:.875rem;
+}
+.dsp-title {
+  font-family:'Geist',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;
+}
+.dsp-desc {
+  font-family:'Muli',sans-serif;font-size:.8125rem;
+  line-height:1.65;color:var(--ash);font-weight:300;
+}
+
+@media(max-width:768px){
+  .ds-2col { grid-template-columns:1fr; }
+  .ds-3col { grid-template-columns:1fr; }
+  .ds-principles { grid-template-columns:1fr; }
+}
+</style>
+
+<style>
+/* ═══════════════════════════════════════════
+   MOBILE PASS — muv-case.html · max-width:768px
+   Regla: padding horizontal de contenedores = 20px.
+   Todos los grids multi-columna colapsan a 1 columna
+   desde ese padding hacia adentro.
+═══════════════════════════════════════════ */
+@media(max-width:768px){
+
+  /* ── Contenedores / padding base ── */
+  .section{ padding:3rem 20px; }
+  .cover{
+    grid-template-columns:1fr;
+    align-items:start;
+    gap:2rem;
+    padding:2.5rem 20px 2rem;
+  }
+  .back-nav{ padding:1rem 20px; }
+  .footer{
+    padding:1.5rem 20px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:.5rem;
+  }
+  .cs-showcase{ padding:2rem 20px !important; }
+
+  /* ── Grids nombrados ── */
+  .overview-grid{ grid-template-columns:1fr; gap:2rem; }
+  .wf-grid, .flow-grid{ grid-template-columns:1fr; gap:2.5rem; }
+  .decisions-grid{ grid-template-columns:1fr; }
+  .insights-grid{ grid-template-columns:1fr; }
+
+  /* Conector entre items apilados (wf-grid / flow-grid):
+     ya es una marca vertical (punto-línea-punto), no una flecha —
+     no hace falta rotarlo, solo achicar el padding que asumía
+     estar centrado junto a columnas altas, y des-rotar el label. */
+  .arrow-col{ padding:.75rem 0; }
+  .arr-lbl{ writing-mode:horizontal-tb; margin-top:.25rem; }
+
+  /* ── Grids inline promovidos a clase ── */
+  .cs-grid2{ grid-template-columns:1fr !important; gap:2rem !important; }
+  .cs-grid2-tight{ grid-template-columns:1fr !important; }
+}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="back-nav-title">muv · Case Study</div>
+  <div class="back-nav-right">Paula Elffman · Sr Product Designer</div>
+</nav>
+
+
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Passenger App · Ride-Hailing · Itti · 2025–2026</div>
+    <div class="cover-title">
+      muv<br><span class="dim">design</span>
+    </div>
+  </div>
+  <div class="cover-meta">
+    <div class="cm-row"><div class="cm-label">Company</div><div class="cm-val">🇵🇾 muv</div></div>
+    <div class="cm-row"><div class="cm-label">Role</div><div class="cm-val">Sr Product Designer (end-to-end)</div></div>
+    <div class="cm-row"><div class="cm-label">Time</div><div class="cm-val">1 Quarter · Research · Design · Test</div></div>
+    <div class="cm-row"><div class="cm-label">Scope</div><div class="cm-val">Discovery → Delivery</div></div>
+    <div class="cm-row"><div class="cm-label">Launch</div><div class="cm-val">February 2026</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- ══════════════════════════════════════════
+     SHOWCASE OVERVIEW — Hero visual
+══════════════════════════════════════════ -->
+<div class="cs-showcase" style="position:relative;padding:3.5rem 4rem;background:var(--bg2);">
+  <div style="max-width:1100px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(26,24,20,.14);">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1404 898'%3E%3Crect width='1404' height='898' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_img_0" alt="muv app showcase overview — home and trip category selection" style="width:100%;height:auto;display:block;">
+  </div>
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 01 — OVERVIEW & METRICS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Overview & Impact</div>
+  <div class="overview-grid">
+    <div class="ov-left">
+      <div class="ov-title">Real-time marketplace.<br><span class="orange">Redesigned.</span></div>
+      <p class="ov-body">MUV operates a ride-hailing platform where passengers and drivers interact through a real-time system with multiple states and edge cases.<br><br>The existing experience showed <strong>friction in key moments</strong> — onboarding, ride request and status feedback. This generated confusion, slower time to first ride and higher cognitive load.<br><br>One quarter. End-to-end design. From discovery to production.</p>
+    </div>
+    <div class="stats-col">
+      <div class="stat-item"><div class="stat-val">2.2M<span style="font-size:1.25rem">+</span></div><div class="stat-lbl">Trips Q4 · Baseline<br>30K in 2024</div></div>
+      <div class="stat-item"><div class="stat-val">6K<span style="font-size:1.25rem">+</span></div><div class="stat-lbl">Active drivers · Baseline<br>1K in 2024</div></div>
+      <div class="stat-item"><div class="stat-val">39K</div><div class="stat-lbl">Passengers Q4 · Baseline<br>2K in 2024</div></div>
+      <div class="stat-item"><div class="stat-val">60%</div><div class="stat-lbl">Completion rate</div></div>
+    </div>
+    <div class="accent-card">
+      <div class="ac-lbl">Onboarding optimization</div>
+      <div class="ac-val">21→6</div>
+      <div class="ac-desc">Steps reduced · Completion rate from 25% to 36%</div>
+      <div class="ac-sub">
+        <div class="acsub-item"><div class="acsub-v">+13pp</div><div class="acsub-l">Conversion</div></div>
+        <div class="acsub-item"><div class="acsub-v">+49%</div><div class="acsub-l">New users</div></div>
+        <div class="acsub-item"><div class="acsub-v">40.1M</div><div class="acsub-l">GMV Q4 (Gs.)</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 02 — WIREFRAMES
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Process · Wireframes</div>
+  <div class="section-label">
+    <div class="sl-text">Low-fidelity validation</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Logic before pixels</div>
+  </div>
+  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+    <div>
+      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">Wireframes validated<br>the <span class="orange">thinking.</span></div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">Before moving into visual design, I focused on validating hierarchy, information priority and state transitions through low-fidelity wireframes. This step helped identify edge cases early and <strong style="color:var(--paper);font-weight:500">reduced rework during UI implementation.</strong></p>
+    </div>
+    <div style="padding:2rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.25rem;">Key wireframe insights</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem;">
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Map-first home — clear winner over photo-based</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Bottom sheet for trip details — better than full screen</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Recomendado tag reduces decision friction</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Review with preset tags → richer feedback, less effort</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 wireframes -->
+  <div class="wf-grid">
+    <div class="wf-item">
+      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 801 1791'%3E%3Crect width='801' height='1791' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_001" alt="Home wireframe"></div>
+      <div class="wf-lbl"><strong>Home · Map-first</strong>Map with location, search bar, services, promotions</div>
+    </div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item">
+      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 779 1911'%3E%3Crect width='779' height='1911' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_002" alt="Trip wireframe"></div>
+      <div class="wf-lbl"><strong>Trip · Category selection</strong>Route on map + category list + payment</div>
+    </div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item">
+      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 782 1512'%3E%3Crect width='782' height='1512' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_003" alt="Categorias wireframe"></div>
+      <div class="wf-lbl"><strong>Driver · In-trip state</strong>Driver info, route, payment, cancel</div>
+    </div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item">
+      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 769 1929'%3E%3Crect width='769' height='1929' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_004" alt="Review wireframe"></div>
+      <div class="wf-lbl"><strong>Review system</strong>Rating + preset tags + free text comment</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 03 — TRIP REQUEST FLOW (Final UI)
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Core Flow 01 · Trip Request</div>
+  <div class="section-label">
+    <div class="sl-text">From intent to confirmation</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Final UI · 4 states</div>
+  </div>
+  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+    <div>
+      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">Intent to trip<br>in <span class="orange">3 taps.</span></div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">The entire trip request flow was designed to eliminate decision friction. Origin → destination → category → confirm. Every state communicates clearly. No surprises at checkout.</p>
+    </div>
+    <div class="cs-grid2-tight" style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--line);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;">State 01</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Origen & Destino</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Autocomplete + km distance</div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--line);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;">State 02</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Skeleton loading</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Route on map · calculating</div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid rgba(38,216,151,.15);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem;">State 03</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Categorías listas</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Económico · Muv · Comfort</div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;background:rgba(255,107,44,.08);border:1px solid rgba(255,107,44,.2);border-radius:8px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.5rem;">State 04</div>
+        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Listo para confirmar</div>
+        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Recomendado · payment · CTA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 final UI phones -->
+  <div class="flow-grid">
+    <div class="flow-item">
+      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_005" alt="Origen"></div>
+      <div class="badge badge-o">Ingresando destino</div>
+      <div class="plabel">
+        <div class="pl-n">01</div>
+        <div class="pl-t">Origen & Destino</div>
+        <div class="pl-d">Mi casa → Av. Aviadores del Chaco. Autocomplete con distancia en km.</div>
+      </div>
+    </div>
+    <div class="arrow-col">
+      <div class="arr-dot"></div>
+      <div class="arr-line"></div>
+      <div class="arr-dot"></div>
+      <div class="arr-lbl">Confirma</div>
+    </div>
+    <div class="flow-item">
+      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_006" alt="Skeleton"></div>
+      <div class="badge badge-g">Calculando...</div>
+      <div class="plabel">
+        <div class="pl-n">02</div>
+        <div class="pl-t">Ruta en mapa</div>
+        <div class="pl-d">Ruta visualizada. Skeleton loader mientras el backend calcula disponibilidad.</div>
+        <div class="sk-row"><div class="sk-dot"></div><div class="sk-dot"></div><div class="sk-dot"></div></div>
+      </div>
+    </div>
+    <div class="arrow-col">
+      <div class="arr-dot"></div>
+      <div class="arr-line"></div>
+      <div class="arr-dot"></div>
+      <div class="arr-lbl">Carga</div>
+    </div>
+    <div class="flow-item">
+      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_007" alt="Categorias"></div>
+      <div class="badge badge-gr">Categorías listas</div>
+      <div class="plabel">
+        <div class="pl-n">03</div>
+        <div class="pl-t">Categorías disponibles</div>
+        <div class="pl-d">Económico, Muv, Comfort. Tiempo · plazas · precio · Ueno rebate visible.</div>
+      </div>
+    </div>
+    <div class="arrow-col">
+      <div class="arr-dot"></div>
+      <div class="arr-line"></div>
+      <div class="arr-dot"></div>
+      <div class="arr-lbl">Selecciona</div>
+    </div>
+    <div class="flow-item">
+      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_008" alt="Recomendado"></div>
+      <div class="badge badge-o">Listo para confirmar</div>
+      <div class="plabel">
+        <div class="pl-n">04</div>
+        <div class="pl-t">Categoría seleccionada</div>
+        <div class="pl-d">"Recomendado" preseleccionado. Método de pago + cupón + CTA destacado.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 04 — FINAL UI HIGHLIGHT
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Final UI · Driver Confirmed State</div>
+  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+    <div>
+      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">Every state.<br><span class="orange">Explicitly</span><br>communicated.</div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;">To reduce uncertainty, the interface always communicates the current ride state — even during waiting periods.</p>
+      <div style="display:flex;flex-direction:column;gap:.625rem;">
+        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--orange);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Esperando confirmación del conductor..."</div>
+        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--orange);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Ampliando radio de búsqueda"</div>
+        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--green);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Driver confirmado ✨ · Juan está en camino · ACG 546TY"</div>
+        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--green);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Juan empezó tu viaje · 10 min para llegar"</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;">
+      <div class="phone-wrap">
+        <div class="phone-shell" style="width:240px;border-radius:16px;">
+          <div class="phone-notch"></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1710'%3E%3Crect width='786' height='1710' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_009" alt="Driver confirmed">
+        </div>
+        <div class="badge badge-gr">Driver confirmado ✨</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:3.5rem;max-width:60%;margin-left:auto;margin-right:auto;border-radius:16px;overflow:hidden;background:#0A0A10;box-shadow:0 16px 48px rgba(26,24,20,.16);">
+    <img src="muv-search.gif" alt="Searching for driver — live state animation" style="width:100%;height:auto;display:block;">
+  </div>
+  <div style="margin-top:1rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);text-align:center;">Live state · Searching for driver — "Ampliando radio de búsqueda"</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 05 — KEY DECISIONS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Key Design Decisions</div>
+  <div class="decisions-grid">
+    <div class="dec">
+      <div class="dec-n">Decision 01</div>
+      <div class="dec-t">Explicit ride state feedback</div>
+      <div class="dec-d">The interface always communicates the current backend state — even during waiting. Eliminates anxiety through information.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 02</div>
+      <div class="dec-t">Color system 60/30/10</div>
+      <div class="dec-d">60% neutral · 30% primary orange · 10% secondary navy. The previous system lacked balance — rebuilt for harmony.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 03</div>
+      <div class="dec-t">Component-driven layout</div>
+      <div class="dec-d">Every screen built from reusable components. Typography, icons, tokens, motion, photography — all part of the system.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 04</div>
+      <div class="dec-t">Skeleton loading state</div>
+      <div class="dec-d">Communicates that something is happening — reduces perceived wait time and eliminates confusion during availability calculation.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 05</div>
+      <div class="dec-t">"Recomendado" preselection</div>
+      <div class="dec-d">Preselecting the Económico option reduces decisional friction. User can confirm in one tap. Business steers toward preferred category.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 06</div>
+      <div class="dec-t">Ueno Bank rebate always visible</div>
+      <div class="dec-d">40% con crédito · 20% con débito — visible on the category screen. Ecosystem integration as competitive advantage.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 06 — INSIGHTS
+══════════════════════════════════════════ -->
+
+<!-- ══════════════════════════════════════════
+     SECTION — DESIGN SYSTEM
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Design System · Components</div>
+  <div class="ds-intro">
+    <h2 class="ds-title">Built to scale.<br><em>Documented to ship.</em></h2>
+    <p class="ds-sub">Every component was designed with clear states, real content and system logic. The design system ensures consistency across the passenger app — from the first trip request to the post-ride review.</p>
+  </div>
+
+  <!-- FLOW OVERVIEW -->
+  <div class="ds-flow-img" style="margin-top:3rem;width:72%;margin-left:auto;margin-right:auto;">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2012 926'%3E%3C/svg%3E" data-img-id="muv_case_flow" alt="Passenger app flow overview" style="display:block;width:100%;height:auto;">
+  </div>
+
+  <!-- CONDUCTOR CARDS -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">01</span>
+      Driver Card · States
+    </div>
+    <p class="ds-group-desc">The driver card communicates all key information during the matching and in-trip states. Two visual variants adapt based on the ride phase — waiting for driver confirmation (with free-cancellation countdown) and in-transit (with live ETA).</p>
+    <div class="ds-comp-grid ds-2col">
+      <div class="ds-comp">
+        <div class="ds-comp-label">Driver card · Waiting (5-min free cancellation)</div>
+        <div class="ds-comp-img">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 404 690'%3E%3Crect width='404' height='690' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_010" alt="Driver card - waiting for confirmation">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag">Countdown · 5 min free</span>
+          <span class="ds-tag">Driver photo + rating</span>
+          <span class="ds-tag">Message CTA</span>
+          <span class="ds-tag">Trip & payment summary</span>
+        </div>
+      </div>
+      <div class="ds-comp">
+        <div class="ds-comp-label">Driver card · Trip in progress (ETA)</div>
+        <div class="ds-comp-img">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 590'%3E%3Crect width='360' height='590' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_011" alt="Driver card - trip in progress">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag">ETA highlight</span>
+          <span class="ds-tag">Payment summary</span>
+          <span class="ds-tag">Route detail</span>
+          <span class="ds-tag">Message + cancel CTA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY CARDS -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">02</span>
+      Category Card · States
+    </div>
+    <p class="ds-group-desc">The category card is the core decision unit of the trip request flow. Two states — selected (Recomendado, navy highlight) and unselected (with promotional discount badge) — guide the user toward the optimal choice while showing price, ETA, seats and perks at a glance.</p>
+    <div class="ds-comp-grid ds-2col" style="align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="ds-comp">
+          <div class="ds-comp-label">Category card · Selected (Recomendado)</div>
+          <div class="ds-comp-img ds-comp-img-wide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 731 194'%3E%3Crect width='731' height='194' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_012" alt="Category card selected">
+          </div>
+          <div class="ds-comp-meta">
+            <span class="ds-tag ds-tag-accent">Recomendado badge</span>
+            <span class="ds-tag">Navy border highlight</span>
+            <span class="ds-tag">Price emphasis</span>
+            <span class="ds-tag">ETA + seats</span>
+          </div>
+        </div>
+        <div class="ds-comp">
+          <div class="ds-comp-label">Category card · Unselected (with promo)</div>
+          <div class="ds-comp-img ds-comp-img-wide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 740 186'%3E%3Crect width='740' height='186' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_013" alt="Category card unselected">
+          </div>
+          <div class="ds-comp-meta">
+            <span class="ds-tag">Discount badge</span>
+            <span class="ds-tag">Strikethrough original price</span>
+            <span class="ds-tag">Feature note</span>
+            <span class="ds-tag">Neutral border</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full category list -->
+      <div class="ds-comp">
+        <div class="ds-comp-label">Category listing · All options</div>
+        <div class="ds-comp-img">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 580'%3E%3Crect width='780' height='580' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_014" alt="Category listing" style="max-width:min(85%, 560px);">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag">Económico · Muv · Comfort</span>
+          <span class="ds-tag">Price per category</span>
+          <span class="ds-tag">ETA + seats</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- PUSH NOTIFICATIONS / ALERTS -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">03</span>
+      Push Notifications · Real-time States
+    </div>
+    <div class="ds-pn-layout">
+      <!-- LEFT: text -->
+      <div class="ds-pn-left">
+        <p class="ds-group-desc">Push notifications communicate ride state changes in real time — even when the app is backgrounded. Each state has a distinct message and visual hierarchy that reduces user anxiety during waiting periods.</p>
+        <div class="ds-pn-items">
+          <div class="ds-pn-item">
+            <div class="ds-pn-dot"></div>
+            <div>
+              <div class="ds-pn-title">Searching</div>
+              <div class="ds-pn-desc">"Esperando confirmación del conductor... Ampliando radio de búsqueda" — animated progress bar communicates active search.</div>
+            </div>
+          </div>
+          <div class="ds-pn-item">
+            <div class="ds-pn-dot"></div>
+            <div>
+              <div class="ds-pn-title">In transit</div>
+              <div class="ds-pn-desc">"10 min para llegar a la parada · Juan empezó tu viaje" — car icon moves along progress bar with real ETA.</div>
+            </div>
+          </div>
+          <div class="ds-pn-item">
+            <div class="ds-pn-dot"></div>
+            <div>
+              <div class="ds-pn-title">Permission request</div>
+              <div class="ds-pn-desc">"¿Querés recibir alertas del viaje en tiempo real?" — surfaces at the right moment to maximize opt-in rate.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: 3 images stacked -->
+      <div class="ds-pn-right">
+        <div class="ds-pn-img-wrap">
+          <div class="ds-comp-label">State · Searching</div>
+          <div class="ds-pn-img-area"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 334 156'%3E%3Crect width='334' height='156' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_015" alt="Loading state"></div>
+        </div>
+        <div class="ds-pn-img-wrap">
+          <div class="ds-comp-label">State · In transit</div>
+          <div class="ds-pn-img-area"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 334 152'%3E%3Crect width='334' height='152' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_016" alt="En camino state"></div>
+        </div>
+        <div class="ds-pn-img-wrap">
+          <div class="ds-comp-label">Alert · Permission request</div>
+          <div class="ds-pn-img-area"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 334 149'%3E%3Crect width='334' height='149' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_017" alt="Permission alert"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- TOAST / FEEDBACK -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">04</span>
+      Toast Alerts · Feedback System
+    </div>
+    <p class="ds-group-desc">Toast alerts provide instant feedback for payment and system events. Three semantic variants — error (red), warning (yellow) and success (green) — follow a consistent structure: icon + message + optional inline action.</p>
+    <div class="ds-comp-grid ds-3col">
+      <div class="ds-comp">
+        <div class="ds-comp-label">Toast · Error</div>
+        <div class="ds-comp-img ds-comp-img-wide">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 722 106'%3E%3Crect width='722' height='106' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_019" alt="Error toast">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag ds-tag-red">Red · Error</span>
+          <span class="ds-tag">Payment failed</span>
+          <span class="ds-tag">Inline "Modificar" action</span>
+        </div>
+      </div>
+      <div class="ds-comp">
+        <div class="ds-comp-label">Toast · Warning</div>
+        <div class="ds-comp-img ds-comp-img-wide">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 722 116'%3E%3Crect width='722' height='116' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_020" alt="Warning toast">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag ds-tag-yellow">Yellow · Warning</span>
+          <span class="ds-tag">Outstanding debt notice</span>
+          <span class="ds-tag">Inline "Mostrar deuda" action</span>
+        </div>
+      </div>
+      <div class="ds-comp">
+        <div class="ds-comp-label">Toast · Success</div>
+        <div class="ds-comp-img ds-comp-img-wide">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 722 138'%3E%3Crect width='722' height='138' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_018" alt="Success toast">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag ds-tag-green">Green · Success</span>
+          <span class="ds-tag">Checkmark icon</span>
+          <span class="ds-tag">Dismissible (X)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DS PRINCIPLES -->
+  <div class="ds-principles">
+    <div class="ds-principle">
+      <div class="dsp-num">01</div>
+      <div class="dsp-title">State-driven</div>
+      <p class="dsp-desc">Every component maps directly to a backend state. No ambiguity between UI and system logic.</p>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">02</div>
+      <div class="dsp-title">Information hierarchy</div>
+      <p class="dsp-desc">Critical info (driver, ETA, plate) is always prominent. Secondary data (payment, route) is contextual.</p>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">03</div>
+      <div class="dsp-title">Reusable by design</div>
+      <p class="dsp-desc">Every component supports multiple states via props — not separate components. Scalable from day one.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">Learnings</div>
+  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+    <div class="insights-grid" style="grid-template-columns:1fr;">
+      <div class="ins">
+        <div class="ins-n">Learning 01</div>
+        <div class="ins-t">State management IS the design</div>
+        <div class="ins-d">Mapping every possible state before opening Figma saved weeks of rework and produced a more coherent experience end-to-end.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Learning 02</div>
+        <div class="ins-t">Test direction, not detail</div>
+        <div class="ins-d">The map vs photo test wasn't about visual preference — it was about mental model. Users think spatially about transportation.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Learning 03</div>
+        <div class="ins-t">Visual QA in Dev Mode = collaboration</div>
+        <div class="ins-d">Annotating design vs implementation in Figma Dev Mode turned QA from confrontation into collaboration. Measurable quality improvement.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="co-lbl">The core principle</div>
+      <div class="co-t">"Simplicity is the hardest design decision."</div>
+      <div class="co-d">Every stakeholder wanted to add. Every user wanted less. Holding the line — and proving it with data — is a design skill as important as any visual craft. The numbers proved it right.</div>
+      <div class="co-stats">
+        <div><div class="cos-v">2.2M+</div><div class="cos-l">Trips Q4</div></div>
+        <div><div class="cos-v">59%</div><div class="cos-l">First trip</div></div>
+        <div><div class="cos-v">52%</div><div class="cos-l">4th trip retained</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION — THE EXPERIENCE (closing showcase)
+══════════════════════════════════════════ -->
+<div class="section" style="text-align:center;">
+  <div class="eyebrow" style="justify-content:center;">The Experience</div>
+  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.15;max-width:640px;margin:0 auto 1rem;">Every screen, one coherent trip.</div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:520px;margin:0 auto 2.5rem;">From opening the app to rating the ride — every state was designed to feel like part of the same story.</p>
+  <div style="max-width:60%;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(26,24,20,.14);">
+    <div id="muv-experience-lottie" role="img" aria-label="muv — full passenger experience, screen by screen" style="width:100%;aspect-ratio:800/600;background:var(--bg2);"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">muv · Passenger App · Full Design Showcase · 2025–2026</div>
+  <div class="footer-r">Sr Product Designer · Paula Elffman</div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.13.0/lottie.min.js"></script>
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function coverFrom(x,y,dark,cb){
+    overlay.classList.toggle('dark',!!dark);
+    overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    });
+    setTimeout(cb,600);
+  }
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      coverFrom(x,y,true,function(){ window.location.href='index.html'; });
+    });
+  }
+})();
+
+/* FLOW REVEAL ANIMATION - staggered cascade for flow-item / wf-item / phone-wrap */
+(function(){
+  var groups = document.querySelectorAll('.flow-grid, .wf-grid');
+  groups.forEach(function(grid){
+    var items = grid.querySelectorAll('.flow-item, .wf-item');
+    items.forEach(function(el, i){
+      el.style.transitionDelay = (i * 110) + 'ms';
+    });
+  });
+  var solo = document.querySelectorAll('.phone-wrap');
+  solo.forEach(function(el){ el.style.transitionDelay = '0ms'; });
+
+  var targets = document.querySelectorAll('.flow-item, .wf-item, .phone-wrap');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.2, rootMargin:'0px 0px -60px 0px'});
+  targets.forEach(function(el){ io.observe(el); });
+})();
+
+/* EXPERIENCE LOTTIE - lazy init, high-fidelity replacement for the old GIF */
+(function(){
+  var el = document.getElementById('muv-experience-lottie');
+  if(!el || typeof lottie === 'undefined') return;
+  var started = false;
+  function start(){
+    if(started) return;
+    started = true;
+    function render(){
+      lottie.loadAnimation({
+        container: el,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: window.MUV_EXPERIENCE_DATA
+      });
+    }
+    if(window.MUV_EXPERIENCE_DATA){
+      render();
+    } else {
+      var s = document.createElement('script');
+      s.src = 'muv-experience-data.js';
+      s.onload = render;
+      document.head.appendChild(s);
+    }
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        start();
+        io.disconnect();
+      }
+    });
+  }, {rootMargin:'400px 0px'});
+  io.observe(el);
+})();
+
+/* LAZY LOAD IMAGES */
+(function(){
+  var IMG_STORE = window.MUV_CASE_IMAGES;
+  function applyImages(){
+    if(!window.MUV_CASE_IMAGES) return;
+    IMG_STORE = window.MUV_CASE_IMAGES;
+    document.querySelectorAll('[data-img-id]').forEach(function(el){
+      if(el.__loaded) return;
+      var id = el.getAttribute('data-img-id');
+      var src = IMG_STORE[id];
+      if(!src) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            el.src = src;
+            el.__loaded = true;
+            io.disconnect();
+          }
+        });
+      }, {rootMargin:'400px 0px'});
+      io.observe(el);
+    });
+  }
+  if(window.MUV_CASE_IMAGES){
+    applyImages();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'muv-case-images.js';
+    s.onload = applyImages;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --ash2:rgba(244,244,246,0.15);
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  background:var(--bg); color:var(--paper);
+}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+</body>
+</html>

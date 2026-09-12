@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monchis — Home Redesign Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F5F4F0;
+  --bg2:#EDEAE4;
+  --bg3:#E4E1DA;
+  --ink:#1A1814;
+  --ash:rgba(26,24,20,.5);
+  --ash2:rgba(26,24,20,.15);
+  --red:#E8143C;
+  --red2:rgba(232,20,60,.08);
+  --green:#2ECC71;
+  --line:rgba(26,24,20,.08);
+  --line2:rgba(26,24,20,.14);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ── BACK NAV ── */
+.back-nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(245,244,240,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line2);
+  padding:1rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);background:none;border:none;cursor:pointer;
+  text-decoration:none;transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.nav-title{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);}
+.nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(26,24,20,.3);}
+
+/* ── SHARED ── */
+.section{padding:5rem 4rem;}
+.section+.section{border-top:1px solid var(--line2);}
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--red);flex-shrink:0;}
+.section-label{
+  display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;
+}
+.sl-t{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);white-space:nowrap;}
+.sl-l{flex:1;height:1px;background:var(--line);}
+
+/* ── PHONE FRAME ── */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;}
+.phone-shell{
+  border-radius:16px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 16px 48px rgba(26,24,20,.14),0 4px 12px rgba(26,24,20,.08);
+  position:relative;
+}
+.phone-shell img{display:block;width:100%;height:auto;}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:72px;height:22px;background:#000;border-radius:0 0 14px 14px;z-index:3;}
+.badge{
+  margin-top:-12px;position:relative;z-index:5;
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .875rem;border-radius:100px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
+}
+.badge-r{background:var(--red);color:#fff;}
+.badge-g{background:rgba(46,204,113,.15);color:#27ae60;border:1px solid rgba(46,204,113,.25);}
+.badge-n{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+
+.plabel{margin-top:1.5rem;text-align:center;max-width:200px;}
+.pl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:.375rem;}
+.pl-t{font-size:.875rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.25rem;}
+.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+/* ── COVER ── */
+.cover{
+  display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(5rem,11vw,12rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--ink);
+}
+.cover-title .dim{color:rgba(26,24,20,.12);}
+.cover-meta{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:.5rem;}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--ink);}
+
+/* ── BEFORE/AFTER ── */
+.ba-grid{
+  display:grid;grid-template-columns:1fr 80px 1fr;gap:0;align-items:start;
+}
+.ba-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:8rem;gap:.5rem;}
+.ba-vs{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;color:var(--ash2);}
+.ba-line{width:1px;height:40px;background:var(--line2);}
+.ba-label-old{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.3rem 1rem;border-radius:100px;
+  background:rgba(232,20,60,.08);border:1px solid rgba(232,20,60,.2);
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);
+  margin-bottom:1rem;
+}
+.ba-label-new{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.3rem 1rem;border-radius:100px;
+  background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:#27ae60;
+  margin-bottom:1rem;
+}
+.problem-list{display:flex;flex-direction:column;gap:.75rem;margin-top:2rem;}
+.problem-item{
+  padding:.875rem 1.25rem;
+  background:rgba(232,20,60,.04);
+  border-left:2px solid var(--red);
+  border-radius:0 6px 6px 0;
+}
+.problem-item .pi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.problem-item .pi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+.win-list{display:flex;flex-direction:column;gap:.75rem;margin-top:2rem;}
+.win-item{
+  padding:.875rem 1.25rem;
+  background:rgba(46,204,113,.05);
+  border-left:2px solid #2ECC71;
+  border-radius:0 6px 6px 0;
+}
+.win-item .wi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.win-item .wi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+
+/* ── IMPACT STRIP ── */
+.impact-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.imp-item{background:var(--bg);padding:2rem 1.75rem;}
+.imp-val{font-size:2.5rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);display:block;margin-bottom:.375rem;}
+.imp-val.red{color:var(--red);}
+.imp-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
+
+/* ── QUOTES GRID ── */
+.quotes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+.quote-item{background:var(--bg);padding:1.5rem 1.75rem;}
+.qi-mark{font-size:1.5rem;opacity:.25;margin-bottom:.5rem;}
+.qi-text{font-size:.9rem;line-height:1.7;color:var(--ink);font-style:italic;margin-bottom:.75rem;}
+.qi-tag{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+
+/* ── WIREFRAME GRID ── */
+.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.wire-shell{border-radius:8px;overflow:hidden;border:1px solid var(--line2);background:var(--bg2);}
+.wire-shell img{display:block;width:100%;height:auto;}
+
+/* ── METRICS GRID ── */
+.metrics-bento{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.mb-item{background:var(--bg);padding:2rem 1.5rem;}
+.mb-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--red);display:block;margin-bottom:.25rem;}
+.mb-label{font-size:.8125rem;line-height:1.55;color:var(--ash);}
+.mb-item.accent{background:var(--red);}
+.mb-item.accent .mb-val{color:#fff;}
+.mb-item.accent .mb-label{color:rgba(255,255,255,.7);}
+
+/* categories bar chart */
+.cat-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.5rem;}
+.cat-name{font-size:.8125rem;color:var(--ash);width:200px;flex-shrink:0;}
+.cat-bar{flex:1;background:var(--bg2);border-radius:4px;height:6px;overflow:hidden;}
+.cat-fill{height:100%;background:var(--red);border-radius:4px;}
+.cat-pct{font-family:'Space Grotesk',sans-serif;font-size:.625rem;color:var(--red);width:40px;text-align:right;}
+
+/* ════════════════════════════════════════
+   ★ ANIMATED SEARCH DEMO ★
+════════════════════════════════════════ */
+.search-hero{
+  padding:5rem 4rem;
+  border-top:1px solid var(--line2);
+  background:linear-gradient(135deg,#fff 0%,#FFF5F7 100%);
+}
+.search-hero-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;
+  align-items:center;
+}
+.search-explanation{}
+.se-title{
+  font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:800;letter-spacing:-.04em;line-height:1;
+  margin-bottom:1.5rem;
+}
+.se-title .red{color:var(--red);}
+.se-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;}
+.se-body strong{color:var(--ink);font-weight:500;}
+.se-rules{display:flex;flex-direction:column;gap:.625rem;}
+.se-rule{
+  display:flex;align-items:center;gap:.875rem;
+  padding:.875rem 1.25rem;
+  background:#fff;
+  border:1px solid var(--line2);
+  border-radius:8px;
+}
+.sr-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.sr-text{font-size:.875rem;color:var(--ink);}
+
+/* ── Phone with animated search ── */
+.search-phone-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;
+}
+.search-phone{
+  width:280px;
+  background:#fff;
+  border-radius:32px;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.16),0 8px 20px rgba(26,24,20,.08);
+  overflow:hidden;
+  position:relative;
+}
+.sp-status{
+  background:#fff;
+  padding:14px 20px 8px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.sp-time{font-size:.75rem;font-weight:600;}
+.sp-icons{display:flex;gap:4px;align-items:center;font-size:.625rem;}
+
+/* The animated search bar */
+.sp-search{
+  margin:0 16px;
+  background:#F5F5F5;
+  border-radius:100px;
+  padding:10px 14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sp-search-icon{
+  width:14px;height:14px;
+  border:2px solid #999;border-radius:50%;
+  position:relative;flex-shrink:0;
+}
+.sp-search-icon::after{
+  content:'';position:absolute;bottom:-3px;right:-3px;
+  width:5px;height:2px;background:#999;
+  transform:rotate(45deg);border-radius:1px;
+}
+.sp-search-text{
+  font-size:.8125rem;color:#333;flex:1;
+  font-family:'Geist',sans-serif;
+  min-height:18px;
+  position:relative;
+}
+/* Animated placeholder */
+.animated-placeholder{
+  position:absolute;top:0;left:0;
+  display:flex;align-items:center;
+}
+.ph-word{
+  color:#999;
+  overflow:hidden;
+  white-space:nowrap;
+  max-width:0;
+  opacity:0;
+  transition:none;
+}
+.ph-word.visible{
+  animation:typeIn .5s ease forwards;
+}
+.ph-word.exit{
+  animation:typeOut .3s ease forwards;
+}
+@keyframes typeIn{
+  from{max-width:0;opacity:0;}
+  to{max-width:200px;opacity:1;}
+}
+@keyframes typeOut{
+  from{max-width:200px;opacity:1;}
+  to{max-width:0;opacity:0;}
+}
+.ph-cursor{
+  width:1.5px;height:14px;background:#E8143C;
+  margin-left:1px;
+  animation:blink .8s step-end infinite;
+  flex-shrink:0;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* Address bar below search */
+.sp-address{
+  margin:8px 16px;padding:8px 14px;
+  display:flex;align-items:center;gap:6px;
+  font-size:.75rem;color:#555;
+  border-bottom:1px solid #f0f0f0;
+}
+.sp-addr-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;}
+
+/* Category tiles */
+.sp-categories{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  padding:12px 16px;
+}
+.sp-cat{
+  background:#F8F8F8;border-radius:10px;
+  padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  font-size:.625rem;font-weight:500;color:#333;
+}
+.sp-cat-emoji{font-size:1.25rem;}
+
+/* Banner */
+.sp-banner{
+  margin:0 16px 12px;
+  background:linear-gradient(135deg,#1A7F5A,#2ECC71);
+  border-radius:10px;padding:12px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.spb-text{font-size:.625rem;color:#fff;line-height:1.4;}
+.spb-logo{
+  width:32px;height:32px;background:rgba(255,255,255,.2);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:.5rem;color:#fff;font-weight:700;
+}
+
+/* Favorites row */
+.sp-section-title{
+  padding:0 16px;margin-bottom:6px;
+  font-size:.625rem;font-weight:700;color:#111;
+}
+.sp-favs{
+  display:flex;gap:8px;padding:0 16px 12px;overflow:hidden;
+}
+.sp-fav{
+  display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;
+}
+.sf-logo{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:700;
+}
+.sf-name{font-size:.5rem;color:#555;text-align:center;max-width:40px;}
+.sf-time{font-size:.45rem;color:#999;}
+
+/* Bottom nav of phone */
+.sp-nav{
+  border-top:1px solid #f0f0f0;
+  padding:8px 0;
+  display:flex;justify-content:space-around;
+  background:#fff;
+}
+.sp-nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-size:.45rem;color:#999;
+}
+.sp-nav-item.active{color:var(--red);}
+.sp-nav-icon{font-size:.875rem;}
+.sp-nav-center{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.875rem;color:#fff;
+  margin-top:-12px;
+  box-shadow:0 4px 12px rgba(232,20,60,.35);
+}
+
+/* Annotation badges floating */
+.search-annotations{
+  position:absolute;
+  top:60px;right:-140px;
+  display:flex;flex-direction:column;gap:.75rem;
+}
+.ann-item{
+  display:flex;align-items:center;gap:.625rem;
+}
+.ann-line{width:32px;height:1px;background:var(--red);}
+.ann-bubble{
+  padding:.375rem .875rem;
+  background:#fff;
+  border:1px solid var(--line2);
+  border-radius:100px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink);
+  white-space:nowrap;
+  box-shadow:0 2px 8px rgba(26,24,20,.08);
+}
+
+/* ── DECISIONS GRID ── */
+.dec-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+  margin-top:3rem;
+}
+.dec{background:var(--bg);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ── INSIGHTS ── */
+.ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem;}
+.ins{padding:1.75rem;border:1px solid var(--line2);border-radius:8px;background:var(--bg);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ── RED CALLOUT ── */
+.callout{background:var(--red);border-radius:8px;padding:2.5rem;}
+.co-l{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.7);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.15);display:flex;gap:2rem;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.5);margin-top:.125rem;}
+
+/* footer */
+.footer{
+  padding:2rem 4rem;border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-t{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+</style>
+
+<style>
+/* ── MONCHIS DESIGN SYSTEM ── */
+.monchis-ds {}
+.mds-header { margin-bottom:2.5rem; margin-top:4rem; padding-top:3.5rem; border-top:2px solid rgba(26,24,20,.08); }
+.mds-title {
+  font-family:'Geist',sans-serif;font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:.95;margin-bottom:1rem;
+}
+.mds-title em { font-style:normal;color:var(--red); }
+.mds-sub { font-family:'Muli',sans-serif;font-size:1rem;line-height:1.75;color:var(--ash);max-width:680px; }
+
+/* Search hero — 2 col */
+.mds-search-hero {
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;
+  align-items:start;
+  background:#fff;
+  border:1px solid rgba(26,24,20,.08);border-radius:12px;
+  padding:2.5rem;margin-bottom:0;
+}
+.mds-comp-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(232,20,60,.2);
+  border-radius:100px;padding:.2rem .75rem;
+  display:inline-flex;align-items:center;gap:.5rem;
+  margin-bottom:1rem;
+}
+.mds-search-title {
+  font-family:'Geist',sans-serif;font-size:1.75rem;
+  font-weight:800;letter-spacing:-.04em;color:var(--ink);
+  line-height:1.1;margin-bottom:1rem;
+}
+.mds-search-desc {
+  font-family:'Muli',sans-serif;font-size:.9rem;line-height:1.7;
+  color:var(--ash);font-weight:300;margin-bottom:1.75rem;
+}
+.mds-search-rules { display:flex;flex-direction:column;gap:.875rem;margin-bottom:2rem; }
+.mds-rule { display:flex;gap:.75rem;align-items:flex-start;font-family:'Muli',sans-serif;font-size:.875rem;line-height:1.6;color:var(--ash); }
+.mds-rule strong { color:var(--ink);font-weight:600; }
+.mds-rule-dot { width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:.45rem; }
+
+/* Live search demo */
+.mds-search-live { margin-top:1.5rem; }
+.mds-search-bar-demo {
+  display:flex;align-items:center;gap:.625rem;
+  background:#F5F5F5;border-radius:100px;
+  padding:.75rem 1.25rem;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+.mds-phrases-wrap { position:relative;height:20px;flex:1;overflow:hidden; }
+.mds-ph {
+  position:absolute;top:0;left:0;
+  font-family:'Geist',sans-serif;font-size:.875rem;color:#6B7280;
+  white-space:nowrap;line-height:20px;
+  transform:translateY(100%);opacity:0;
+}
+.mds-ph.active {
+  transform:translateY(0);opacity:1;
+  transition:transform .5s cubic-bezier(0.22,1,0.36,1),opacity .4s ease;
+}
+.mds-ph.exit {
+  transform:translateY(-100%);opacity:0;
+  transition:transform .4s cubic-bezier(0.55,0,1,0.45),opacity .3s ease;
+}
+.mds-live-label {
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ash);
+  margin-top:.625rem;text-align:center;
+}
+
+/* Right: 2 comp cards stacked */
+.mds-search-right { display:flex;flex-direction:column;gap:1rem; }
+
+/* Compact components grid */
+.mds-components {
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
+}
+
+/* Component cards */
+.mds-comp-card {
+  background:#fff;border:1px solid rgba(26,24,20,.1);
+  border-radius:10px;overflow:hidden;
+}
+.mds-comp-label {
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ash);
+  padding:.75rem 1rem;border-bottom:1px solid rgba(26,24,20,.06);
+}
+.mds-comp-img {
+  padding:1rem;background:#F8F8F8;
+  display:flex;align-items:center;justify-content:center;
+}
+.mds-comp-img img { max-width:55%;height:auto;display:block;border-radius:6px; }
+.mds-comp-meta {
+  padding:.75rem 1rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.08em;color:var(--ash);
+}
+.mds-navbar-compare {
+  display:flex;flex-direction:column;gap:1rem;
+}
+.mds-navbar-compare img { max-width:80%;border-radius:4px; }
+.mds-comp-card-wide { grid-column:1/-1; }
+.mds-comp-img-xl { padding:2rem; }
+.mds-comp-img-xl img { max-width:92%; }
+
+@media(max-width:768px){
+  .mds-search-hero { grid-template-columns:1fr;gap:2rem; }
+  .mds-components { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<!-- BACK NAV -->
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="nav-title">monchis · Home Redesign</div>
+  <div class="nav-right">Paula Elffman · Sr Product Designer</div>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Food Delivery · Itti · Q3–Q4 2025</div>
+    <div class="cover-title">monchis<br><span class="dim">new home.</span></div>
+  </div>
+  <div class="cover-meta">
+    <div><div class="cm-label">Company</div><div class="cm-val">🇵🇾 monchis</div></div>
+    <div><div class="cm-label">Role</div><div class="cm-val">Sr Product Designer (end-to-end)</div></div>
+    <div><div class="cm-label">Mandate</div><div class="cm-val">Open scope — asked to take the lead</div></div>
+    <div><div class="cm-label">Time</div><div class="cm-val">1 Quarter · Research · Design · Test</div></div>
+    <div><div class="cm-label">Scope</div><div class="cm-val">Discovery → Delivery · Oct 2025</div></div>
+    <div><div class="cm-label">Scale</div><div class="cm-val">61K users · 300K orders · 1,268 vendors</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line2);"></div>
+
+<!-- SECTION 01 — CONTEXT & MANDATE -->
+<div class="section">
+  <div class="eyebrow">Context &amp; Problem</div>
+  <div style="font-size:clamp(2rem,3.5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:3rem;">
+    The homepage was our entry point.<br><span style="color:var(--red);">It felt like a dead end.</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:270px 1fr;gap:4rem;align-items:start;">
+    <div>
+      <div class="ba-label-old">❌ Current home — before</div>
+      <div class="phone-wrap">
+        <div class="phone-shell" style="width:230px;max-height:560px;">
+          <div class="phone-notch"></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 2705'%3E%3Crect width='760' height='2705' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="monchis_case_001" alt="Old Monchis home — full scroll" class="db-av-photo" style="width:100%;height:auto;display:block;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(to bottom,rgba(255,255,255,0),#fff);pointer-events:none;z-index:2;"></div>
+        </div>
+        <div class="badge badge-r" style="margin-top:8px;">Outdated · Disorganized</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.875rem;text-align:center;line-height:1.6;">↓ and it kept<br>scrolling</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="padding:2rem 2.25rem;background:var(--bg2);border:1px solid var(--line2);border-left:3px solid var(--red);border-radius:0 8px 8px 0;margin-bottom:2rem;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem;">The mandate</div>
+        <div style="font-size:1.25rem;font-weight:700;letter-spacing:-.02em;line-height:1.4;margin-bottom:.875rem;">I wasn't handed a brief — I was asked to take the lead on the home.</div>
+        <p style="font-size:.875rem;line-height:1.8;color:var(--ash);max-width:62ch;">
+          61K users, 300K orders, 1,268 vendors — and a home everyone agreed was underperforming without agreeing on why. Open scope meant I owned the framing: research first, then two directions, then a defended decision. The output of this project isn't a screen. It's the argument that produced it.
+        </p>
+      </div>
+
+      <div class="problem-list" style="margin-top:0;">
+        <div class="problem-item">
+          <div class="pi-t">Outdated &amp; unattractive UI</div>
+          <div class="pi-d">Disorganized layout. Icons don't match their categories. A negative first impression that costs trust before the first tap.</div>
+        </div>
+        <div class="problem-item">
+          <div class="pi-t">Discoverability failure</div>
+          <div class="pi-d">Users can't quickly find products. Too much time searching → frustration → abandonment.</div>
+        </div>
+        <div class="problem-item">
+          <div class="pi-t">No reorder or personalization</div>
+          <div class="pi-d">Can't find favourite stores. Can't repeat the last purchase. The app feels generic to a user who orders the same lunch every week.</div>
+        </div>
+        <div class="problem-item">
+          <div class="pi-t">Content blind to context</div>
+          <div class="pi-d">The same promos at 8am and 8pm, for every user. Merchandising that ignores time, preference and location.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 02 — RESEARCH
+══════════════════════════════════════ -->
+<style>
+.rs-methods{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);border-radius:8px;overflow:hidden;margin-bottom:3rem;}
+.rs-m{background:var(--bg);padding:1.75rem 1.5rem;}
+.rs-m-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.75rem;}
+.rs-m-t{font-size:.9375rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem;}
+.rs-m-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+.rs-split{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+
+/* ── RESEARCH INSIGHTS REDESIGN ── */
+.ri-stats-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;margin-bottom:2rem;
+  border-radius:8px;overflow:hidden;
+  border:1px solid var(--line2);
+}
+.ri-stat{
+  padding:2rem 2rem 1.5rem;
+  background:var(--bg);
+  position:relative;
+  display:flex;flex-direction:column;
+  border-bottom:1px solid var(--line);
+}
+.ri-stat:nth-child(odd){border-right:1px solid var(--line);}
+.ri-stat:nth-child(n+3){border-bottom:none;}
+
+.ri-stat-top{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:.875rem;
+}
+.ri-stat-number{
+  font-size:3.5rem;font-weight:800;letter-spacing:-.05em;
+  line-height:1;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.ri-stat-number .ri-pct{font-size:1.75rem;color:var(--ash);}
+
+.ri-stat-label{font-size:.8125rem;line-height:1.55;color:var(--ash);max-width:220px;}
+
+.ri-donut{width:48px;height:48px;transform:rotate(-90deg);}
+.ri-donut-track{fill:none;stroke:var(--line2);stroke-width:5;}
+.ri-donut-fill{fill:none;stroke-width:5;stroke-linecap:round;}
+.ri-donut-fill.c-red{stroke:var(--red);}
+.ri-donut-fill.c-blue{stroke:#5B8DEF;}
+.ri-donut-fill.c-teal{stroke:#2ECC71;}
+.ri-donut-fill.c-amber{stroke:#F0A500;}
+
+.ri-bar-wrap{display:flex;flex-direction:column;gap:4px;width:56px;}
+.ri-bar-track{height:5px;background:var(--line2);border-radius:3px;overflow:hidden;}
+.ri-bar-fill{height:100%;border-radius:3px;}
+
+.ri-stat-insight{
+  margin-top:auto;padding-top:.875rem;
+  border-top:1px solid var(--line);
+  font-size:.75rem;line-height:1.5;color:var(--ash);
+  font-style:italic;
+}
+
+.ri-conclusion{
+  padding:1.25rem 1.5rem;
+  background:var(--bg2);border:1px solid var(--line2);
+  border-left:3px solid var(--red);
+  border-radius:0 8px 8px 0;
+  margin-bottom:3rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.ri-conclusion-icon{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:rgba(232,20,60,.08);display:flex;align-items:center;justify-content:center;
+}
+.ri-conclusion-icon svg{width:14px;height:14px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ri-conclusion-text{font-size:.8125rem;line-height:1.7;color:var(--ash);}
+.ri-conclusion-text strong{color:var(--ink);font-weight:600;}
+
+.ri-quotes-flow{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+.ri-quote{
+  background:var(--bg);
+  border:1px solid var(--line2);
+  border-radius:8px;
+  padding:1.25rem 1.25rem 1rem;
+  display:flex;flex-direction:column;
+  transition:border-color .2s,box-shadow .2s;
+}
+.ri-quote:hover{border-color:var(--line2);box-shadow:0 4px 16px rgba(26,24,20,.06);}
+
+.ri-quote-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:100px;
+  margin-bottom:.75rem;width:fit-content;
+}
+.ri-quote-tag.t-disc{background:rgba(232,20,60,.06);color:var(--red);}
+.ri-quote-tag.t-speed{background:rgba(240,165,0,.08);color:#C08200;}
+.ri-quote-tag.t-pers{background:rgba(91,141,239,.08);color:#4A7AD4;}
+.ri-quote-tag.t-ctx{background:rgba(139,92,246,.08);color:#7C5CCE;}
+.ri-quote-tag.t-promo{background:rgba(46,204,113,.08);color:#27ae60;}
+
+.ri-quote-text{
+  font-size:.875rem;line-height:1.7;
+  color:var(--ink);flex:1;
+  font-style:italic;
+}
+.ri-quote-text::before{content:'\201C';font-size:1.25rem;line-height:0;vertical-align:-.15em;opacity:.3;margin-right:2px;}
+.ri-quote-text::after{content:'\201D';font-size:1.25rem;line-height:0;vertical-align:-.15em;opacity:.3;margin-left:1px;}
+
+@media(max-width:900px){
+  .ri-stats-grid{grid-template-columns:1fr;}
+  .ri-stat:nth-child(odd){border-right:none;}
+  .ri-stat{border-bottom:1px solid var(--line);}
+  .ri-stat:last-child{border-bottom:none;}
+  .ri-quotes-flow{grid-template-columns:1fr;}
+}
+@media(min-width:901px) and (max-width:1100px){
+  .ri-quotes-flow{grid-template-columns:1fr 1fr;}
+}
+.find-list{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+.find{background:var(--bg);padding:1.75rem 2rem;display:grid;grid-template-columns:64px 1fr 1fr;gap:2rem;align-items:start;}
+.find-n{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);padding-top:.25rem;}
+.find-t{font-size:1.0625rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem;}
+.find-d{font-size:.8125rem;line-height:1.7;color:var(--ash);}
+.find-imp{font-size:.8125rem;line-height:1.7;color:var(--ink);padding-left:1.25rem;border-left:2px solid var(--red);}
+.find-imp b{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:.375rem;font-weight:400;}
+/* ── TWO PATHS ── */
+.paths-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;margin-bottom:3rem;}
+.path{border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--bg);}
+.path-head{padding:1.75rem 2rem 1.5rem;border-bottom:1px solid var(--line);}
+.path-tag{display:inline-flex;align-items:center;gap:.5rem;padding:.3rem 1rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
+.path-tag.v1{background:rgba(232,20,60,.08);border:1px solid rgba(232,20,60,.2);color:var(--red);}
+.path-tag.v2{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);color:#27ae60;}
+.path-t{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:.625rem;}
+.path-d{font-size:.8125rem;line-height:1.7;color:var(--ash);}
+.path-img{background:var(--bg2);padding:1.5rem;}
+.path-img img{display:block;width:100%;height:auto;}
+.path-body{padding:1.75rem 2rem 2rem;}
+.pb-l{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;}
+.pb-list{display:flex;flex-direction:column;gap:.625rem;margin-bottom:1.75rem;}
+.pb-i{display:flex;gap:.75rem;font-size:.8125rem;line-height:1.6;color:var(--ink);}
+.pb-i span{flex-shrink:0;font-size:.75rem;line-height:1.7;}
+.pb-i.neg{color:var(--ash);}
+.matrix{width:100%;border-collapse:collapse;border:1px solid var(--line2);border-radius:8px;overflow:hidden;font-size:.8125rem;}
+.matrix th{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);text-align:left;padding:1rem 1.25rem;background:var(--bg2);border-bottom:1px solid var(--line2);font-weight:400;}
+.matrix td{padding:.875rem 1.25rem;border-bottom:1px solid var(--line);color:var(--ink);}
+.matrix tr:last-child td{border-bottom:none;}
+.matrix td.crit{color:var(--ash);}
+.matrix td.win{color:#27ae60;font-weight:600;}
+.verdict{margin-top:2.5rem;padding:2rem 2.25rem;background:var(--bg2);border:1px solid var(--line2);border-left:3px solid var(--red);border-radius:0 8px 8px 0;}
+.verdict-l{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:1rem;}
+.verdict-t{font-size:1.375rem;font-weight:800;letter-spacing:-.03em;line-height:1.25;margin-bottom:1rem;}
+.verdict-d{font-size:.875rem;line-height:1.8;color:var(--ash);max-width:62ch;}
+@media(max-width:1000px){
+  .rs-methods{grid-template-columns:1fr 1fr;}
+  .rs-split,.paths-grid{grid-template-columns:1fr;gap:2rem;}
+  .find{grid-template-columns:1fr;gap:1rem;}
+  .find-imp{border-left:none;padding-left:0;border-top:2px solid var(--red);padding-top:1rem;}
+}
+
+/* ── FINDINGS CAROUSEL ── */
+.fc-wrap{position:relative;overflow:hidden;border:1px solid var(--line2);border-radius:10px;background:var(--bg);}
+
+.fc-track{display:flex;transition:transform .5s cubic-bezier(.22,1,.36,1);}
+.fc-slide{min-width:100%;box-sizing:border-box;padding:3rem 3.5rem;}
+
+.fc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;}
+.fc-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(5rem,8vw,7rem);font-weight:800;
+  line-height:.85;letter-spacing:-.06em;
+  color:var(--red);opacity:.12;
+  user-select:none;
+}
+.fc-counter{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ash);
+  display:flex;align-items:center;gap:.75rem;
+  padding-top:.5rem;
+}
+.fc-counter-bar{width:80px;height:3px;background:var(--line2);border-radius:2px;overflow:hidden;}
+.fc-counter-fill{height:100%;background:var(--red);border-radius:2px;transition:width .5s cubic-bezier(.22,1,.36,1);}
+
+.fc-content{max-width:640px;}
+.fc-title{
+  font-size:clamp(1.25rem,2vw,1.625rem);
+  font-weight:800;letter-spacing:-.03em;line-height:1.2;
+  color:var(--ink);margin-bottom:1rem;
+}
+.fc-desc{font-size:.875rem;line-height:1.75;color:var(--ash);margin-bottom:1.75rem;}
+
+.fc-constraint{
+  display:flex;gap:1rem;align-items:flex-start;
+  padding:1.25rem 1.5rem;
+  background:rgba(232,20,60,.03);
+  border-left:3px solid var(--red);
+  border-radius:0 8px 8px 0;
+}
+.fc-constraint-label{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--red);flex-shrink:0;padding-top:.15rem;
+}
+.fc-constraint-text{font-size:.875rem;line-height:1.7;color:var(--ink);}
+
+.fc-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 3.5rem 2rem;
+}
+.fc-dots{display:flex;gap:8px;}
+.fc-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--line2);border:none;cursor:pointer;
+  transition:background .3s,transform .3s;
+  padding:0;
+}
+.fc-dot.active{background:var(--red);transform:scale(1.25);}
+.fc-dot:hover:not(.active){background:var(--ash2);}
+
+.fc-arrows{display:flex;gap:8px;}
+.fc-arrow{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--line2);background:var(--bg);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,background .2s;
+}
+.fc-arrow:hover{border-color:var(--red);background:rgba(232,20,60,.04);}
+.fc-arrow:disabled{opacity:.3;cursor:default;pointer-events:none;}
+.fc-arrow svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── KEYBOARD HINT ── */
+.fc-hint{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ash2);
+  display:flex;align-items:center;gap:.5rem;
+}
+.fc-hint kbd{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:4px;
+  border:1px solid var(--line2);background:var(--bg2);
+  font-family:inherit;font-size:.4rem;color:var(--ash);
+}
+
+@media(max-width:700px){
+  .fc-slide{padding:2rem 1.5rem;}
+  .fc-nav{padding:0 1.5rem 1.5rem;}
+  .fc-num{font-size:4rem;}
+  .fc-hint{display:none;}
+}
+</style>
+
+<div class="section">
+  <div class="eyebrow">Research · Discovery</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">
+    No brief. No backlog ticket.<br><span style="color:var(--red);">Just: "take the lead on this."</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.8;color:var(--ash);font-weight:300;max-width:70ch;margin-bottom:3rem;">
+    I was brought in without a defined scope — the home "worked", but nobody could explain why it wasn't converting. So instead of redesigning a screen, I started by defining the question the home actually had to answer: <strong style="color:var(--ink);font-weight:600;">is this a place to show what monchis is, or a place to get to the next order fast?</strong> Everything that follows — including the two paths — comes from that tension.
+  </p>
+
+  <div class="rs-methods">
+    <div class="rs-m">
+      <div class="rs-m-n">Method 01</div>
+      <div class="rs-m-t">Behavioural data</div>
+      <div class="rs-m-d">Amplitude across 61K users and 300K orders. Where taps land, which verticals get entered, where sessions die.</div>
+    </div>
+    <div class="rs-m">
+      <div class="rs-m-n">Method 02</div>
+      <div class="rs-m-t">Active listening</div>
+      <div class="rs-m-d">User feedback and support inputs, coded into themes: discoverability, speed, personalization, promo visibility.</div>
+    </div>
+    <div class="rs-m">
+      <div class="rs-m-n">Method 03</div>
+      <div class="rs-m-t">Heuristic audit</div>
+      <div class="rs-m-d">Mapping what the old home declared as hierarchy vs. what it actually delivered above the fold.</div>
+    </div>
+    <div class="rs-m">
+      <div class="rs-m-n">Method 04</div>
+      <div class="rs-m-t">Marketplace benchmark</div>
+      <div class="rs-m-d">Regional delivery and marketplace patterns for header, search persistence and category legibility.</div>
+    </div>
+  </div>
+
+  <!-- ── WHAT THE NUMBERS SAID ── -->
+  <div class="section-label" style="margin-bottom:1.75rem;"><div class="sl-t">What the numbers said</div><div class="sl-l"></div></div>
+
+  <div class="ri-stats-grid" id="ri-stats">
+    <!-- STAT 1 -->
+    <div class="ri-stat">
+      <div class="ri-stat-top">
+        <div>
+          <div class="ri-stat-number" data-count="60">0<span class="ri-pct">%</span></div>
+          <div class="ri-stat-label">of users engage with search — on a static placeholder</div>
+        </div>
+        <svg class="ri-donut" viewBox="0 0 36 36">
+          <circle class="ri-donut-track" cx="18" cy="18" r="14"/>
+          <circle class="ri-donut-fill c-red" cx="18" cy="18" r="14" stroke-dasharray="0 88" data-target="52.8 35.2"/>
+        </svg>
+      </div>
+      <div class="ri-stat-insight">Search was the front door — disguised as a form field</div>
+    </div>
+
+    <!-- STAT 2 -->
+    <div class="ri-stat">
+      <div class="ri-stat-top">
+        <div>
+          <div class="ri-stat-number" data-count="80">0<span class="ri-pct">%</span></div>
+          <div class="ri-stat-label">go straight into Restaurants from home</div>
+        </div>
+        <svg class="ri-donut" viewBox="0 0 36 36">
+          <circle class="ri-donut-track" cx="18" cy="18" r="14"/>
+          <circle class="ri-donut-fill c-blue" cx="18" cy="18" r="14" stroke-dasharray="0 88" data-target="70.4 17.6"/>
+        </svg>
+      </div>
+      <div class="ri-stat-insight">Users arrive with intent, not curiosity</div>
+    </div>
+
+    <!-- STAT 3 -->
+    <div class="ri-stat">
+      <div class="ri-stat-top">
+        <div>
+          <div class="ri-stat-number" data-count="67">0<span class="ri-pct">%+</span></div>
+          <div class="ri-stat-label">of category traffic is burgers &amp; pizza</div>
+        </div>
+        <div class="ri-bar-wrap">
+          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:var(--red);" data-w="82%"></div></div>
+          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:#F0A500;" data-w="64%"></div></div>
+          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:rgba(26,24,20,.2);" data-w="28%"></div></div>
+          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:rgba(26,24,20,.12);" data-w="15%"></div></div>
+        </div>
+      </div>
+      <div class="ri-stat-insight">High intent, low browsing — they already decided</div>
+    </div>
+
+    <!-- STAT 4 -->
+    <div class="ri-stat">
+      <div class="ri-stat-top">
+        <div>
+          <div class="ri-stat-number" data-count="27">0<span class="ri-pct">%</span></div>
+          <div class="ri-stat-label">of navbar taps go to cart — highest of any tab</div>
+        </div>
+        <svg class="ri-donut" viewBox="0 0 36 36">
+          <circle class="ri-donut-track" cx="18" cy="18" r="14"/>
+          <circle class="ri-donut-fill c-teal" cx="18" cy="18" r="14" stroke-dasharray="0 88" data-target="23.8 64.2"/>
+        </svg>
+      </div>
+      <div class="ri-stat-insight">Cart is the real destination — home is just a corridor</div>
+    </div>
+  </div>
+
+  <div class="ri-conclusion">
+    <div class="ri-conclusion-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    <div class="ri-conclusion-text">The pattern was consistent: people arrive knowing roughly what they want. <strong>The old home was built for browsing — an audience that wasn't browsing.</strong></div>
+  </div>
+
+  <!-- ── WHAT USERS SAID ── -->
+  <div class="section-label" style="margin-bottom:1.75rem;"><div class="sl-t">What users said</div><div class="sl-l"></div></div>
+
+  <div class="ri-quotes-flow">
+    <div class="ri-quote">
+      <div class="ri-quote-tag t-disc">Discoverability</div>
+      <div class="ri-quote-text">It's very difficult to find the products I want; I have to click a lot.</div>
+    </div>
+    <div class="ri-quote">
+      <div class="ri-quote-tag t-speed">Speed expectation</div>
+      <div class="ri-quote-text">The app is very slow; I generally want to buy something to eat quickly.</div>
+    </div>
+    <div class="ri-quote">
+      <div class="ri-quote-tag t-pers">Personalization gap</div>
+      <div class="ri-quote-text">I always order the same thing for lunch, but I can't mark stores as favorites.</div>
+    </div>
+    <div class="ri-quote">
+      <div class="ri-quote-tag t-ctx">Context-awareness</div>
+      <div class="ri-quote-text">I opened the app this morning and saw beer offers — the app doesn't know what time it is.</div>
+    </div>
+    <div class="ri-quote">
+      <div class="ri-quote-tag t-promo">Promo visibility</div>
+      <div class="ri-quote-text">Shipping costs are high and it's very difficult to find stores with promotions.</div>
+    </div>
+    <div class="ri-quote">
+      <div class="ri-quote-tag t-disc">Multi-store</div>
+      <div class="ri-quote-text">I'm with my friends and I want to shop at different stores, but I can't.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 03 — FINDINGS (CAROUSEL)
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Findings · What the research forced</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+    Five findings.<br><span style="color:var(--red);">Five non-negotiables.</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.8;color:var(--ash);font-weight:300;max-width:66ch;margin-bottom:3rem;">
+    I only kept findings that changed a decision. Each one is paired with the constraint it imposed on any design direction — which is exactly what made two paths possible instead of one.
+  </p>
+
+  <div class="fc-wrap" id="fc-carousel">
+    <div class="fc-track" id="fc-track">
+
+      <!-- F 01 -->
+      <div class="fc-slide">
+        <div class="fc-top">
+          <div class="fc-num">01</div>
+          <div class="fc-counter"><span id="fc-counter-text">1 / 5</span><div class="fc-counter-bar"><div class="fc-counter-fill" id="fc-progress" style="width:20%;"></div></div></div>
+        </div>
+        <div class="fc-content">
+          <div class="fc-title">Search was already the front door — dressed as a form field</div>
+          <div class="fc-desc">60% of users engage with search, yet it sat as a static input with a generic placeholder, scrolling out of view the moment anyone explored.</div>
+          <div class="fc-constraint">
+            <div class="fc-constraint-label">Constraint</div>
+            <div class="fc-constraint-text">Search must be permanently reachable, and it has to say something.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- F 02 -->
+      <div class="fc-slide">
+        <div class="fc-top">
+          <div class="fc-num">02</div>
+        </div>
+        <div class="fc-content">
+          <div class="fc-title">Users arrive with intent, not curiosity</div>
+          <div class="fc-desc">80% go straight into Restaurants; burgers and pizza alone carry 67%+ of category traffic. The home was optimising for discovery for people who had already decided.</div>
+          <div class="fc-constraint">
+            <div class="fc-constraint-label">Constraint</div>
+            <div class="fc-constraint-text">Everything actionable has to fit above the fold. Brand cannot own the first screen.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- F 03 -->
+      <div class="fc-slide">
+        <div class="fc-top">
+          <div class="fc-num">03</div>
+        </div>
+        <div class="fc-content">
+          <div class="fc-title">The product didn't know what time it was</div>
+          <div class="fc-desc">Beer promos at 8am. The same content for every user, every hour. Users read this as the app not knowing them — a trust problem, not a merchandising one.</div>
+          <div class="fc-constraint">
+            <div class="fc-constraint-label">Constraint</div>
+            <div class="fc-constraint-text">Home content must be time- and preference-aware, or not shown at all.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- F 04 -->
+      <div class="fc-slide">
+        <div class="fc-top">
+          <div class="fc-num">04</div>
+        </div>
+        <div class="fc-content">
+          <div class="fc-title">Zero memory between sessions</div>
+          <div class="fc-desc">No favourites, no reorder, no trace of the last purchase — in a product where the same lunch repeats week after week.</div>
+          <div class="fc-constraint">
+            <div class="fc-constraint-label">Constraint</div>
+            <div class="fc-constraint-text">The home needs a personalization slot high in the page, not a "recommended" afterthought.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- F 05 -->
+      <div class="fc-slide">
+        <div class="fc-top">
+          <div class="fc-num">05</div>
+        </div>
+        <div class="fc-content">
+          <div class="fc-title">Categories had to be decoded, not read</div>
+          <div class="fc-desc">Icons didn't match their verticals and unlabeled imagery forced interpretation — a bag of groceries could plausibly be Mercado or Comidas.</div>
+          <div class="fc-constraint">
+            <div class="fc-constraint-label">Constraint</div>
+            <div class="fc-constraint-text">If it's a vertical, it carries a label. No guessing.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="fc-nav">
+      <div class="fc-dots" id="fc-dots">
+        <button class="fc-dot active" data-i="0" aria-label="Finding 1"></button>
+        <button class="fc-dot" data-i="1" aria-label="Finding 2"></button>
+        <button class="fc-dot" data-i="2" aria-label="Finding 3"></button>
+        <button class="fc-dot" data-i="3" aria-label="Finding 4"></button>
+        <button class="fc-dot" data-i="4" aria-label="Finding 5"></button>
+      </div>
+      <div class="fc-arrows">
+        <button class="fc-arrow" id="fc-prev" disabled aria-label="Previous finding">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="fc-arrow" id="fc-next" aria-label="Next finding">
+          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 04 — WIREFRAMES
+══════════════════════════════════════ -->
+<style>
+.wf-hero{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3.5rem;}
+.wf-explore{display:grid;grid-template-columns:.85fr 1.15fr;gap:3rem;align-items:start;margin-bottom:3rem;}
+.wf-card{border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--bg);}
+.wf-card-head{padding:1.5rem 1.75rem 1.25rem;border-bottom:1px solid var(--line);}
+.wf-code{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 .5rem;border-radius:5px;background:#5B3DF5;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.06em;margin-bottom:.875rem;}
+.wf-card-t{font-size:1.0625rem;font-weight:700;letter-spacing:-.02em;line-height:1.35;margin-bottom:.5rem;}
+.wf-card-d{font-size:.8125rem;line-height:1.7;color:var(--ash);}
+.wf-card-img{background:var(--bg2);padding:1.5rem;display:flex;justify-content:center;}
+.wf-card-img img{display:block;width:100%;height:auto;border-radius:4px;}
+.wf-note{padding:1.25rem 1.75rem;border-top:1px solid var(--line);display:flex;gap:.875rem;align-items:flex-start;}
+.wf-note-l{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:#5B3DF5;flex-shrink:0;padding-top:.15rem;}
+.wf-note-t{font-size:.8125rem;line-height:1.7;color:var(--ink);}
+@media(max-width:1000px){.wf-hero,.wf-explore{grid-template-columns:1fr;gap:2rem;}}
+</style>
+
+<div class="section">
+  <div class="eyebrow">Wireframes · Exploration</div>
+  <div class="wf-hero">
+    <div>
+      <div style="font-size:clamp(2rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+        Structure first,<br><span style="color:var(--red);">pixels much later.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">
+        Low fidelity was where the real arguments got settled: block order, how many verticals survive above the fold, where the personalization slot lives, and what happens to the header on scroll. It's also where the sharpest idea of the project appeared — a contextual box driven by the moment of the day — and where I worked out the two things that make an idea like that survivable: how much space it's allowed to take from commercial content, and what happens when the user dismisses it. Carrying those unresolved trade-offs into review is what made <strong style="color:var(--ink);font-weight:600;">two complete paths</strong> necessary instead of one polished opinion.
+      </p>
+    </div>
+    <div style="padding:2rem;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.25rem;">What the wireframes resolved</div>
+      <div style="display:flex;flex-direction:column;gap:.625rem;">
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--ink);">Search as primary entry point, not a field</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--ink);">One component, four moments — instead of four sections</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--ink);">Banner placement matched to onboarding prefs</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.75rem 0;"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--ink);">Search sheet and box share one context engine</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label"><div class="sl-t">The exploration · Time-of-day box</div><div class="sl-l"></div></div>
+
+  <div class="wf-explore">
+    <!-- 1a -->
+    <div class="wf-card">
+      <div class="wf-card-head">
+        <div class="wf-card-t">Where the box lives — after the user, before the catalogue</div>
+        <div class="wf-card-d">Greeting and favourites open the page, the offer banner and category row follow, and only then the contextual box: "¿Qué te tienta esta mañana?" with two stacked rails — an intent shortcut ("¿Fan de los desayunos?" · medialunas, café, tostados) and "Más favoriteados a esta hora". Commercial sections keep running underneath.</div>
+      </div>
+      <div class="wf-card-img">
+        <div style="width:260px;background:var(--bg);border:1px solid var(--line2);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:9px;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="flex:1;height:26px;border-radius:13px;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);"></div>
+          </div>
+          <div style="height:9px;width:45%;border-radius:4px;background:var(--bg3);"></div>
+          <div style="display:flex;gap:5px;">
+            <div style="flex:1;height:58px;border-radius:8px;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="width:26px;height:58px;border-radius:8px;background:var(--bg2);border:1px solid var(--line2);"></div>
+          </div>
+          <div style="display:flex;gap:5px;">
+            <div style="width:14px;height:4px;border-radius:2px;background:var(--ink);"></div>
+            <div style="width:4px;height:4px;border-radius:2px;background:var(--line2);"></div>
+            <div style="width:4px;height:4px;border-radius:2px;background:var(--line2);"></div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--red2);border:1px solid var(--line2);"></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);"></div>
+          </div>
+          <div style="border:1px dashed var(--red);border-radius:10px;padding:8px;background:var(--red2);">
+            <div style="height:7px;width:70%;border-radius:3px;background:var(--red);opacity:.5;margin-bottom:6px;"></div>
+            <div style="display:flex;gap:4px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--line2);"></div>
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--line2);"></div>
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--line2);"></div>
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--line2);"></div>
+            </div>
+          </div>
+          <div style="height:9px;width:55%;border-radius:4px;background:var(--bg3);"></div>
+          <div style="height:34px;border-radius:8px;background:var(--bg2);border:1px solid var(--line2);"></div>
+        </div>
+      </div>
+      <div class="wf-note">
+        <div class="wf-note-l">Rule</div>
+        <div class="wf-note-t">The box is dismissible — and if it's closed, it returns the next day with a different moment. Personalization that can't be refused stops being a service and becomes a banner.</div>
+      </div>
+    </div>
+
+    <!-- 1e -->
+    <div>
+      <div class="wf-card" style="margin-bottom:1.5rem;">
+        <div class="wf-card-head">
+          <div class="wf-card-t">Same component, four moments</div>
+          <div class="wf-card-d">Morning, midday, afternoon and night are not four sections — they're one component with different content and copy. "¿Qué te tienta esta mañana?" at 8:40 becomes "¿No almorzaste aún?" at 12:30, "Merienda con algo dulce" at 17:10, "Cena sin vueltas" at 21:00.</div>
+        </div>
+        <div class="wf-card-img">
+          <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Mañana · 8:40</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">¿Qué te tienta esta mañana?</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">desayunos · café · 2x1</div>
+            </div>
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Mediodía · 12:30</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">¿No almorzaste aún?</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">opciones rápidas · menú del día</div>
+            </div>
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Tarde · 17:10</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">Merienda con algo dulce</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">cafeterías · postres · helados</div>
+            </div>
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Noche · 21:00</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">Cena sin vueltas</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">pizza · hamburguesas · mercado 24h</div>
+            </div>
+          </div>
+        </div>
+        <div class="wf-note">
+          <div class="wf-note-l">Rules</div>
+          <div class="wf-note-t">Time of day × order history × stock and delivery time. When there's no signal strong enough to personalise, it falls back to "más pedidos cerca tuyo" — the component never shows an empty or generic state pretending to be personal.</div>
+        </div>
+      </div>
+
+      <div style="padding:1.75rem 2rem;background:var(--bg2);border:1px solid var(--line2);border-left:3px solid #5B3DF5;border-radius:0 8px 8px 0;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:#5B3DF5;margin-bottom:.75rem;">Why this mattered</div>
+        <p style="font-size:.875rem;line-height:1.8;color:var(--ash);">
+          Defining one component with four content states — instead of four hardcoded sections — is what made time-awareness affordable to build and to maintain. The rules and the fallback were written at wireframe stage, before a single visual decision, which is why the feature survived scoping.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-card" style="margin-bottom:3rem;">
+    <div style="display:grid;grid-template-columns:1fr 1.35fr;gap:0;align-items:stretch;">
+      <div class="wf-card-head" style="border-bottom:none;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:2rem 2.25rem;">
+        <div class="wf-card-t">One context engine, two surfaces</div>
+        <div class="wf-card-d" style="margin-bottom:1.25rem;">Intent chips move up next to the search bar — desayuno · café · mercado — and opening search reveals a sheet built from the same signals as the box: "A esta hora se pide" (café con medialunas, desayuno saludable, tostado + jugo), then last orders, then what's trending nearby.</div>
+        <div class="wf-note" style="border-top:1px solid var(--line);padding:1.25rem 0 0;">
+          <div class="wf-note-l">Key</div>
+          <div class="wf-note-t">The sheet suggestions <em>are</em> the box suggestions — one engine, rendered twice. That's what turned the animated placeholder from a copy trick into a system, and it's the direct ancestor of the dynamic search that shipped.</div>
+        </div>
+      </div>
+      <div class="wf-card-img" style="padding:2rem;">
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:100%;">
+          <div style="width:200px;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);flex-shrink:0;"></div>
+              <div style="flex:1;height:18px;border-radius:9px;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;padding-left:6px;"><span style="font-size:6.5px;color:var(--ash);">¿Qué almorzás hoy?</span></div>
+              <div style="width:18px;height:18px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);flex-shrink:0;"></div>
+            </div>
+            <div style="display:flex;gap:4px;">
+              <div style="border:1px solid var(--line2);border-radius:8px;padding:2px 6px;font-size:6.5px;color:var(--ash);">desayuno</div>
+              <div style="border:1px solid var(--line2);border-radius:8px;padding:2px 6px;font-size:6.5px;color:var(--ash);">café</div>
+              <div style="border:1px solid var(--line2);border-radius:8px;padding:2px 6px;font-size:6.5px;color:var(--ash);">mercado</div>
+            </div>
+            <div style="height:6px;width:55%;border-radius:3px;background:var(--bg3);"></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:36px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:36px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:34px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;"><span style="font-size:6px;color:var(--ash);">promo carousel</span></div><div style="width:11px;height:34px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:7px;font-weight:600;color:var(--ink);">Nuevos cerca tuyo</span><span style="font-size:6.5px;color:var(--red);">Ver más</span></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:7px;font-weight:600;color:var(--ink);">Lunes de pizza al 50% OFF</span><span style="font-size:6.5px;color:var(--red);">Ver más</span></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+          </div>
+          <div style="width:200px;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:18px;border-radius:9px;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;padding-left:6px;"><span style="font-size:6.5px;color:var(--ash);">|</span></div>
+              <span style="font-size:6.5px;color:var(--ash);">Cancelar</span>
+            </div>
+            <div style="font-size:6.5px;color:var(--ash);">A esta hora se pide</div>
+            <div style="border:1px solid var(--line2);border-radius:9px;padding:5px 7px;font-size:6.5px;color:var(--ink);">café con medialunas</div>
+            <div style="border:1px solid var(--line2);border-radius:9px;padding:5px 7px;font-size:6.5px;color:var(--ink);">desayuno saludable</div>
+            <div style="border:1px solid var(--line2);border-radius:9px;padding:5px 7px;font-size:6.5px;color:var(--ink);">tostado + jugo</div>
+            <div style="font-size:6.5px;color:var(--ash);margin-top:2px;">Tus últimos pedidos</div>
+            <div style="height:18px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="height:18px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="font-size:6.5px;color:var(--ash);margin-top:2px;">Trending ahora cerca tuyo</div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label"><div class="sl-t">Personalized banners system</div><div class="sl-l"></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+    <div class="wire-shell" style="display:flex;align-items:center;justify-content:center;padding:2rem;">
+      <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;">
+        <div style="height:9px;width:40%;border-radius:4px;background:var(--bg3);"></div>
+        <div style="border:1px solid var(--line2);border-radius:10px;padding:10px;background:var(--bg);display:flex;gap:10px;align-items:center;">
+          <div style="width:46px;height:46px;border-radius:8px;background:var(--red2);flex-shrink:0;"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+            <div style="height:7px;width:70%;border-radius:3px;background:var(--red);opacity:.5;"></div>
+            <div style="height:6px;width:45%;border-radius:3px;background:var(--line2);"></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--line2);border-radius:10px;padding:10px;background:var(--bg);display:flex;gap:10px;align-items:center;">
+          <div style="width:46px;height:46px;border-radius:8px;background:var(--bg2);flex-shrink:0;"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+            <div style="height:7px;width:65%;border-radius:3px;background:var(--bg3);"></div>
+            <div style="height:6px;width:40%;border-radius:3px;background:var(--line2);"></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--line2);border-radius:10px;padding:10px;background:var(--bg);display:flex;gap:10px;align-items:center;">
+          <div style="width:46px;height:46px;border-radius:8px;background:var(--bg2);flex-shrink:0;"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+            <div style="height:7px;width:55%;border-radius:3px;background:var(--bg3);"></div>
+            <div style="height:6px;width:35%;border-radius:3px;background:var(--line2);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Wireframe · Banner logic</div>
+      <div style="font-size:1.25rem;font-weight:700;letter-spacing:-.02em;line-height:1.35;margin-bottom:.875rem;">Three banner types, none of them generic.</div>
+      <p style="font-size:.875rem;line-height:1.8;color:var(--ash);">
+        Top locals running a promo, a match against onboarding preferences, and a payment incentive. Defining the three cases at wireframe stage is what kept the slot from turning into undifferentiated ad space once real content arrived.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 05 — TWO PATHS ★
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">The two paths · V1 vs V2</div>
+  <div style="font-size:clamp(2rem,3.5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">
+    Two complete directions,<br><span style="color:var(--red);">not one safe proposal.</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.8;color:var(--ash);font-weight:300;max-width:72ch;margin-bottom:3.5rem;">
+    The findings pointed clearly at what the home had to do — but not at how much brand we were willing to trade for speed. Rather than pick for the business, I built both answers to the same brief, each internally consistent down to error and loading states. It moved the review from <em>"I like this one"</em> to <em>"which cost are we choosing".</em>
+  </p>
+
+  <div class="paths-grid">
+    <!-- V1 -->
+    <div class="path">
+      <div class="path-head">
+        <div class="path-tag v1">Path V1 · Brand-led</div>
+        <div class="path-t">The home as<br>a statement.</div>
+        <div class="path-d">An extended red header owns the entry: saved address, greeting and search all live inside the brand block. Promo carousel takes the hero slot, verticals follow as an image mosaic.</div>
+      </div>
+      <div class="path-img" style="display:flex;justify-content:center;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 1260'%3E%3Crect width='640' height='1260' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="monchis_path_v1" alt="V1 — brand-led home" style="max-width:58%;">
+      </div>
+      <div class="path-body">
+        <div class="pb-l">Where it wins</div>
+        <div class="pb-list">
+          <div class="pb-i"><span style="color:#27ae60;">✓</span> Address is impossible to miss — lowest risk of ordering to the wrong place</div>
+          <div class="pb-i"><span style="color:#27ae60;">✓</span> The proximity alert ("estás lejos de tu casa") has a natural home inside the header</div>
+          <div class="pb-i"><span style="color:#27ae60;">✓</span> Strongest brand recall on first frame</div>
+        </div>
+        <div class="pb-l">Where it costs</div>
+        <div class="pb-list" style="margin-bottom:0;">
+          <div class="pb-i neg"><span style="color:var(--red);">✕</span> The red block eats the first screen — verticals get pushed below the fold</div>
+          <div class="pb-i neg"><span style="color:var(--red);">✕</span> Search inherits the visual weight of the header and competes with the promo</div>
+          <div class="pb-i neg"><span style="color:var(--red);">✕</span> Unlabeled category mosaic leaves finding F05 unresolved</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V2 -->
+    <div class="path">
+      <div class="path-head">
+        <div class="path-tag v2">Path V2 · Task-led</div>
+        <div class="path-t">The home as<br>a shortcut.</div>
+        <div class="path-d">Neutral surface. Search is the first thing on screen, address one level below it. Labeled vertical cards move up; the promo becomes a module instead of the doorway.</div>
+      </div>
+      <div class="path-img" style="display:flex;justify-content:center;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 626 1298'%3E%3Crect width='626' height='1298' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="monchis_path_v2" alt="V2 — task-led home" style="max-width:58%;">
+      </div>
+      <div class="path-body">
+        <div class="pb-l">Where it wins</div>
+        <div class="pb-list">
+          <div class="pb-i"><span style="color:#27ae60;">✓</span> Search, address and all five verticals fit above the fold</div>
+          <div class="pb-i"><span style="color:#27ae60;">✓</span> Photo + label kills the guessing game — Comidas, Mercado, Tiendas, Pick up, ueno</div>
+          <div class="pb-i"><span style="color:#27ae60;">✓</span> Scales: a sixth vertical doesn't break the layout</div>
+        </div>
+        <div class="pb-l">Where it costs</div>
+        <div class="pb-list" style="margin-bottom:0;">
+          <div class="pb-i neg"><span style="color:var(--red);">✕</span> Much quieter brand presence on the first frame</div>
+          <div class="pb-i neg"><span style="color:var(--red);">✕</span> Promo loses the hero slot — needed a separate conversation with commercial</div>
+          <div class="pb-i neg"><span style="color:var(--red);">✕</span> The proximity alert loses its container and has to be re-solved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- V1 states -->
+  <div style="padding:2.5rem;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;margin-bottom:1.5rem;">
+    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:3rem;align-items:center;">
+      <div>
+        <div class="pb-l" style="margin-bottom:1rem;">V1 · Contextual alert &amp; states</div>
+        <div style="font-size:1.5rem;font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem;">The red header earned its space by preventing an expensive error.</div>
+        <p style="font-size:.875rem;line-height:1.8;color:var(--ash);margin-bottom:1.25rem;">
+          Ordering to the wrong address costs money, time and trust — so in V1 location isn't just displayed, it warns: <em>"¡Cuidado! Estás lejos de tu casa. ¿Querés hacer el pedido igual?"</em>, dismissible and never blocking. The same pass covered the states nobody designs: skeleton loading on the real grid, and a persistent offline snackbar.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div class="pb-i"><span style="color:var(--red);">·</span> Proximity alert docked inside the header block</div>
+          <div class="pb-i"><span style="color:var(--red);">·</span> Dismissible with an explicit "order anyway" path</div>
+          <div class="pb-i"><span style="color:var(--red);">·</span> Skeleton mirrors the final layout — no content jump</div>
+          <div class="pb-i"><span style="color:var(--red);">·</span> Offline snackbar over the header, never blocking nav</div>
+        </div>
+      </div>
+      <div>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1155 1078'%3E%3Crect width='1155' height='1078' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="monchis_path_v1_states" alt="V1 — proximity alert and offline / loading states" style="display:block;width:100%;height:auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- V2 scroll behaviour -->
+  <div style="padding:2.5rem;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;margin-bottom:3rem;">
+    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:3rem;align-items:center;">
+      <div>
+        <div class="pb-l" style="margin-bottom:1rem;">V2 · Scroll behaviour &amp; states</div>
+        <div style="font-size:1.5rem;font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem;">The header had to survive the scroll.</div>
+        <p style="font-size:.875rem;line-height:1.8;color:var(--ash);margin-bottom:1.25rem;">
+          Putting search at the top only works if it stays there. In V2 the header collapses into a compact sticky bar — search plus abbreviated address — and a floating <em>"Volver arriba"</em> returns the full context without manual scrolling. What V2 had to solve separately was the alert: without a red block to dock into, the proximity warning becomes a contextual snackbar.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div class="pb-i"><span style="color:var(--red);">·</span> Collapsed sticky header — search never leaves the screen</div>
+          <div class="pb-i"><span style="color:var(--red);">·</span> Back-to-top after deep scroll</div>
+          <div class="pb-i"><span style="color:var(--red);">·</span> Address abbreviated, never dropped</div>
+          <div class="pb-i"><span style="color:var(--red);">·</span> Same skeleton and offline rules as V1 — states are shared, not per-path</div>
+        </div>
+      </div>
+      <div>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 1330'%3E%3Crect width='1400' height='1330' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="monchis_path_v2b" alt="V2 scrolled state and offline state" style="display:block;width:100%;height:auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISION MATRIX -->
+  <div class="section-label"><div class="sl-t">How I decided</div><div class="sl-l"></div></div>
+  <table class="matrix">
+    <tr>
+      <th style="width:34%;">Criterion — tied to a finding</th>
+      <th style="width:33%;">V1 · Brand-led</th>
+      <th style="width:33%;">V2 · Task-led</th>
+    </tr>
+    <tr><td class="crit">Time to first action <em>(F02)</em></td><td>High — verticals below the fold</td><td class="win">Low — everything above the fold</td></tr>
+    <tr><td class="crit">Search persistence <em>(F01)</em></td><td>Scrolls away with the header</td><td class="win">Sticky, collapses but stays</td></tr>
+    <tr><td class="crit">Vertical legibility <em>(F05)</em></td><td>Image only — requires decoding</td><td class="win">Photo + label</td></tr>
+    <tr><td class="crit">Room for personalization <em>(F04)</em></td><td>Competes with hero promo</td><td class="win">Dedicated high slot</td></tr>
+    <tr><td class="crit">Address error prevention</td><td class="win">Highest — address is the headline</td><td>Needs a dedicated pattern</td></tr>
+    <tr><td class="crit">Brand presence</td><td class="win">High</td><td>Medium — carried by the system</td></tr>
+    <tr><td class="crit">Category scalability</td><td>Limited</td><td class="win">High</td></tr>
+  </table>
+
+  <div class="verdict">
+    <div class="verdict-l">The call</div>
+    <div class="verdict-t">V2 won on four of the five findings. V1 won on the one that costs real money.</div>
+    <div class="verdict-d">
+      So the final home isn't V2 — it's V2's spine with V1's safeguards grafted on. Task-first structure, labeled verticals and the sticky search from V2; the contextual proximity alert and the address prominence from V1, re-expressed as a contextual snackbar instead of a permanent red block. The promo kept its reach by moving from doorway to module — which is the trade the commercial team ultimately signed off on.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 06 — WHAT SHIPPED
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">The final version</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+    <div>
+      <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">
+        What actually<br><span style="color:var(--red);">shipped.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.8;color:var(--ash);font-weight:300;margin-bottom:2rem;">
+        V2's structure survived contact with delivery, and the personalization layer the wireframes had been arguing for finally landed on top of it: favourite places, time-aware carousels, and a search bar that stopped being a field and started being a conversation.
+      </p>
+      <div class="win-list" style="margin-top:0;">
+        <div class="win-item">
+          <div class="wi-t">Task-first spine — from V2</div>
+          <div class="wi-d">Search on top, labeled verticals above the fold, promo as a module. The sticky collapsing header carries search through the whole page.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Contextual safeguards — from V1</div>
+          <div class="wi-d">Proximity alert and address confirmation preserved, re-expressed as contextual snackbars rather than a permanent brand block.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">The personalization layer — new</div>
+          <div class="wi-d">Favourite places, reorder and time-aware sections. This is the piece that later produced the highest CVR of any carousel on the page.</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone-shell" style="width:280px;">
+        <div class="phone-notch"></div>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 870 1546'%3E%3Crect width='870' height='1546' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="monchis_case_002" alt="Final monchis home" style="width:100%;height:auto;display:block;border-radius:16px;">
+      </div>
+      <div class="badge badge-g" style="margin-top:8px;">Final · V2 spine + V1 safeguards</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ★ SECTION 04 — ANIMATED SEARCH HERO ★
+══════════════════════════════════════════ -->
+<div class="search-hero">
+  <div class="eyebrow">Feature Focus · Animated Dynamic Search</div>
+  <p style="font-size:.9375rem;line-height:1.8;color:var(--ash);font-weight:300;max-width:72ch;margin:-1rem 0 2.5rem;">
+    Both paths agreed on one thing and disagreed on everything else — search had to lead. V2 won the structure argument, but this is the component that made the decision worth making: once search is permanently on screen, it stops being a field you fill and becomes the surface that carries context.
+  </p>
+  <div class="search-hero-inner">
+
+    <div class="search-explanation">
+      <div class="se-title">The search<br>that <span class="red">thinks.</span></div>
+      <p class="se-body">The animated search bar is the emotional centerpiece of the new home. Instead of a static placeholder, it <strong>rotates contextual suggestions</strong> based on time of day, user history, and active promotions — making the app feel alive, personal, and aware.</p>
+      <div class="se-rules">
+        <div class="se-rule"><div class="sr-dot"></div><div class="sr-text"><strong>Time-aware</strong> — "¿Ya desayunaste?" at 9am · "Para el almuerzo" at noon · "¿Qué cenamos?" at 7pm</div></div>
+        <div class="se-rule"><div class="sr-dot"></div><div class="sr-text"><strong>Preference-matched</strong> — reflects onboarding choices: "Mirá el sushi con delivery gratis"</div></div>
+        <div class="se-rule"><div class="sr-dot"></div><div class="sr-text"><strong>Promotion-aware</strong> — surfaces active deals: "Hamburguesas al 50% OFF hoy"</div></div>
+        <div class="se-rule"><div class="sr-dot"></div><div class="sr-text"><strong>60% of users</strong> click the search — 23.2K unique users · 90.1K clicks (Amplitude, Nov 2025)</div></div>
+      </div>
+    </div>
+
+    <!-- LIVE ANIMATED PHONE DEMO -->
+    <div class="search-phone-wrap">
+      <div class="search-phone">
+
+        <!-- Status bar -->
+        <div class="sp-status">
+          <div class="sp-time">9:41</div>
+          <div class="sp-icons">▪▪▪▪ WiFi ▪▪</div>
+        </div>
+
+        <!-- ANIMATED SEARCH BAR -->
+        <div style="padding:8px 16px 4px;">
+          <div class="sp-search">
+            <div class="sp-search-icon"></div>
+            <div class="sp-search-text">
+              <div class="animated-placeholder">
+                <span class="ph-word" id="ph-text">¿Una comida rica?</span>
+                <span class="ph-cursor"></span>
+              </div>
+            </div>
+            <div style="width:20px;height:20px;background:#E8143C;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;flex-shrink:0;">💬</div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="sp-address">
+          <div class="sp-addr-dot"></div>
+          <span>11 de septiembre de 1888, 2979...</span>
+          <span style="margin-left:auto;font-size:.625rem;color:var(--red);">›</span>
+        </div>
+
+        <!-- Categories 2x2 -->
+        <div class="sp-categories">
+          <div class="sp-cat"><div class="sp-cat-emoji">🍔🥗🍦</div>Restaurantes</div>
+          <div class="sp-cat"><div class="sp-cat-emoji">🥦🛒🍌</div>Mercados</div>
+          <div class="sp-cat"><div class="sp-cat-emoji">🎧</div>Locales</div>
+          <div class="sp-cat"><div class="sp-cat-emoji">🏪</div>Retiro en local</div>
+        </div>
+
+        <!-- Banner -->
+        <div class="sp-banner">
+          <div class="spb-text"><strong style="color:#fff;">ueno bank</strong><br>Pagá con ueno y obtené<br>un 40% de reintegro.</div>
+          <div class="spb-logo">U</div>
+        </div>
+
+        <!-- Favorite stores -->
+        <div class="sp-section-title">Locales favoritos</div>
+        <div class="sp-favs">
+          <div class="sp-fav">
+            <div class="sf-logo" style="background:#FFF3E0;color:#E65100;font-size:.5rem;">Chu</div>
+            <div class="sf-name">Chuchos</div>
+            <div class="sf-time">25 min</div>
+          </div>
+          <div class="sp-fav">
+            <div class="sf-logo" style="background:#FFF9C4;color:#F57F17;font-size:.875rem;">🍔</div>
+            <div class="sf-name">McDonald's</div>
+            <div class="sf-time">40 min</div>
+          </div>
+          <div class="sp-fav">
+            <div class="sf-logo" style="background:#E3F2FD;color:#0D47A1;font-size:.625rem;">SUB</div>
+            <div class="sf-name">Subway</div>
+            <div class="sf-time">16 min</div>
+          </div>
+          <div class="sp-fav">
+            <div class="sf-logo" style="background:#FCE4EC;color:#B71C1C;font-size:.75rem;">BK</div>
+            <div class="sf-name">Burger King</div>
+            <div class="sf-time">25 min</div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="sp-nav">
+          <div class="sp-nav-item active">
+            <div class="sp-nav-icon">🏠</div>
+            <div>Home</div>
+          </div>
+          <div class="sp-nav-item">
+            <div class="sp-nav-icon">🏷</div>
+            <div>Promos</div>
+          </div>
+          <div class="sp-nav-center">🛒</div>
+          <div class="sp-nav-item">
+            <div class="sp-nav-icon">📋</div>
+            <div>Pedidos</div>
+          </div>
+          <div class="sp-nav-item">
+            <div class="sp-nav-icon">👤</div>
+            <div>Cuenta</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating annotations -->
+      <div class="search-annotations">
+        <div class="ann-item">
+          <div class="ann-line"></div>
+          <div class="ann-bubble" id="ann-current">Time-aware · 9am</div>
+        </div>
+        <div class="ann-item" style="margin-top:2rem;">
+          <div class="ann-line"></div>
+          <div class="ann-bubble">Rotates every 2.5s</div>
+        </div>
+        <div class="ann-item" style="margin-top:2rem;">
+          <div class="ann-line"></div>
+          <div class="ann-bubble">60% click rate</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Search states row -->
+  <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--line2);">
+    <div class="section-label"><div class="sl-t">Search placeholder variations</div><div class="sl-l"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
+      <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
+        <div style="font-size:1.25rem;margin-bottom:.5rem;">🌅</div>
+        <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Morning</div>
+        <div style="font-size:.6875rem;color:var(--ash);">"¿Ya desayunaste?"</div>
+      </div>
+      <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
+        <div style="font-size:1.25rem;margin-bottom:.5rem;">☀️</div>
+        <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Lunch</div>
+        <div style="font-size:.6875rem;color:var(--ash);">"Hamburguesas o pizza"</div>
+      </div>
+      <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
+        <div style="font-size:1.25rem;margin-bottom:.5rem;">🌆</div>
+        <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Afternoon</div>
+        <div style="font-size:.6875rem;color:var(--ash);">"¿Algo fresco?"</div>
+      </div>
+      <div style="padding:1.25rem;background:rgba(232,20,60,.04);border:1px solid rgba(232,20,60,.15);border-radius:8px;text-align:center;">
+        <div style="font-size:1.25rem;margin-bottom:.5rem;">🎯</div>
+        <div style="font-size:.75rem;font-weight:600;color:var(--red);margin-bottom:.25rem;">Preference</div>
+        <div style="font-size:.6875rem;color:var(--ash);">"Sushi con delivery gratis"</div>
+      </div>
+      <div style="padding:1.25rem;background:rgba(232,20,60,.04);border:1px solid rgba(232,20,60,.15);border-radius:8px;text-align:center;">
+        <div style="font-size:1.25rem;margin-bottom:.5rem;">🏷</div>
+        <div style="font-size:.75rem;font-weight:600;color:var(--red);margin-bottom:.25rem;">Promo</div>
+        <div style="font-size:.6875rem;color:var(--ash);">"Pizzas al 50% OFF"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DESIGN SYSTEM — MONCHIS HOME
+══════════════════════════════════════ -->
+<div class="section monchis-ds">
+  <div class="eyebrow">Design System · Home Components</div>
+
+  <!-- ★ SEARCH HERO ★ -->
+  <div class="mds-search-hero">
+    <div class="mds-search-left">
+      <div class="mds-comp-num">★ Hero component</div>
+      <h3 class="mds-search-title">The search that thinks.</h3>
+      <p class="mds-search-desc">The animated search bar is the emotional centerpiece of the new home. Instead of a static "¿Qué vas a pedir?" it rotates contextual suggestions based on time of day, user preferences and active promotions — making the app feel alive and personal.</p>
+
+      <div class="mds-search-rules">
+        <div class="mds-rule"><div class="mds-rule-dot"></div><div><strong>Time-aware</strong> — "¿Ya desayunaste?" at 9am, "¿Algo para cenar?" at night</div></div>
+        <div class="mds-rule"><div class="mds-rule-dot"></div><div><strong>Preference-matched</strong> — reflects onboarding choices: "Sushi con delivery gratis"</div></div>
+        <div class="mds-rule"><div class="mds-rule-dot"></div><div><strong>Promotion-aware</strong> — surfaces active deals: "Hamburguesas al 50% OFF"</div></div>
+        <div class="mds-rule"><div class="mds-rule-dot" style="background:#2ECC71"></div><div><strong>60% of users</strong> click the search — 23.2K unique · 90.1K clicks (Amplitude)</div></div>
+      </div>
+
+      <!-- Live animated demo -->
+      <div class="mds-search-live">
+        <div class="mds-search-bar-demo">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;opacity:.5">
+            <circle cx="6" cy="6" r="4.5" stroke="#333" stroke-width="1.5"/>
+            <path d="M10 10L12.5 12.5" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span style="color:#999;font-size:.875rem;flex-shrink:0;">Buscar</span>
+          <div class="mds-phrases-wrap">
+            <span class="mds-ph active">"¿Una comida rica?"</span>
+            <span class="mds-ph">"Hamburguesas o pizza"</span>
+            <span class="mds-ph">"¿Algo fresco?"</span>
+            <span class="mds-ph">"¿Ya desayunaste?"</span>
+            <span class="mds-ph">"Sushi con delivery gratis"</span>
+            <span class="mds-ph">"Pizzas al 50% OFF"</span>
+          </div>
+        </div>
+        <div class="mds-live-label">↑ Live demo — rotating every 2.5s</div>
+      </div>
+    </div>
+
+    <div class="mds-search-right">
+      <div class="mds-comp-card">
+        <div class="mds-comp-label">Search input · Static state</div>
+        <div class="mds-comp-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 740 80'%3E%3Crect width='740' height='80' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_003" alt="Search input"></div>
+      </div>
+      <div class="mds-comp-card">
+        <div class="mds-comp-label">Dynamic placeholder · Variations</div>
+        <div class="mds-comp-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 662 444'%3E%3Crect width='662' height='444' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_004" alt="Search words"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS HEADER -->
+  <div class="mds-header">
+    <h2 class="mds-title">Components built<br>to <em>convert.</em></h2>
+    <p class="mds-sub">Every element of the new home was designed with a clear purpose: reduce friction, surface relevant content, and drive the user toward their first order.</p>
+  </div>
+
+  <!-- OTHER COMPONENTS — compact grid -->
+  <div class="mds-components">
+    <div class="mds-comp-num" style="margin-bottom:2rem;grid-column:1/-1;">Other key components</div>
+
+    <div class="mds-comp-card">
+      <div class="mds-comp-label">Store Carousels · Real photography</div>
+      <div class="mds-comp-img mds-comp-img-xl"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1136 397'%3E%3Crect width='1136' height='397' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_005" alt="Store carousels"></div>
+      <div class="mds-comp-meta">Real food photography · Logo overlay · Distance + ETA</div>
+    </div>
+
+    <div class="mds-comp-card">
+      <div class="mds-comp-label">Food Categories · Horizontal scroll</div>
+      <div class="mds-comp-img mds-comp-img-xl" style="flex-direction:column;gap:1rem;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1078 216'%3E%3Crect width='1078' height='216' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_006" alt="Food categories">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 539 108'%3E%3Crect width='539' height='108' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_007" alt="Food categories">
+      </div>
+      <div class="mds-comp-meta">11 categories · 3D emoji icons · Carnes · Sushi · Pizza · Burguer</div>
+    </div>
+
+    <div class="mds-comp-card">
+      <div class="mds-comp-label">Bottom Navbar · Old vs New</div>
+      <div class="mds-comp-img mds-navbar-compare">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;text-align:center;">Old</div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 804 258'%3E%3Crect width='804' height='258' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_008" alt="Old navbar">
+        </div>
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;text-align:center;">New</div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 804 258'%3E%3Crect width='804' height='258' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_009" alt="New navbar">
+        </div>
+      </div>
+      <div class="mds-comp-meta">Cart FAB · 27% taps · Green primary action</div>
+    </div>
+
+    <div class="mds-comp-card">
+      <div class="mds-comp-label">Snackbar · Error state</div>
+      <div class="mds-comp-img"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 756 168'%3E%3Crect width='756' height='168' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_010" alt="Snackbar error"></div>
+      <div class="mds-comp-meta">Dark bg · WiFi icon · "Parece que no tenés conexión"</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FULL FLOW SHOWCASE
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Full Flow · End-to-End Experience</div>
+  <div style="font-size:clamp(1.75rem,3.2vw,2.75rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:2rem;">From address to<br><span style="color:var(--red);">checkout, in one flow.</span></div>
+  <div style="text-align:center;">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1195 807'%3E%3Crect width='1195' height='807' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="monchis_case_011" alt="Full app flow" style="max-width:100%;height:auto;">
+  </div>
+</div>
+
+<!-- SECTION 05 — METRICS -->
+<div class="section">
+  <div class="eyebrow">Impact & Metrics · Amplitude Nov 2025</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:3rem;">Numbers that validated<br><span style="color:var(--red);">every decision.</span></div>
+
+  <div class="metrics-bento" style="margin-bottom:2rem;">
+    <div class="mb-item accent">
+      <div class="mb-val">44.6%</div>
+      <div class="mb-label">CVR — Killer feature: customization (Favorite Places)</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">60%</div>
+      <div class="mb-label">Users interested in search · 23.2K unique · 90.1K clicks</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">80%</div>
+      <div class="mb-label">Users enter Restaurants vertical from home</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">77.8%</div>
+      <div class="mb-label">Complete the onboarding flow</div>
+    </div>
+  </div>
+
+  <div class="metrics-bento" style="margin-bottom:3rem;">
+    <div class="mb-item">
+      <div class="mb-val red">67%+</div>
+      <div class="mb-label">Hamburgers & pizzas dominate food categories traffic</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">60%</div>
+      <div class="mb-label">Checkout completion rate</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">99.1%</div>
+      <div class="mb-label">Address loading success rate (1'29'' load time)</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">90%</div>
+      <div class="mb-label">Users prefer to search by map location</div>
+    </div>
+  </div>
+
+  <!-- Categories CVR breakdown -->
+  <div style="padding:2rem;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;margin-bottom:2rem;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.5rem;">Carousel CVR breakdown</div>
+    <div class="cat-row"><div class="cat-name">Favorite Places</div><div class="cat-bar"><div class="cat-fill" style="width:100%;"></div></div><div class="cat-pct">44.6%</div></div>
+    <div class="cat-row"><div class="cat-name">Pick up without delays</div><div class="cat-bar"><div class="cat-fill" style="width:35.9%;"></div></div><div class="cat-pct">16.0%</div></div>
+    <div class="cat-row"><div class="cat-name">New places near you</div><div class="cat-bar"><div class="cat-fill" style="width:34.5%;"></div></div><div class="cat-pct">15.4%</div></div>
+    <div class="cat-row"><div class="cat-name">Ready for Burgers?</div><div class="cat-bar"><div class="cat-fill" style="width:33.6%;"></div></div><div class="cat-pct">15.0%</div></div>
+    <div class="cat-row"><div class="cat-name">Pizza Craving</div><div class="cat-bar"><div class="cat-fill" style="width:23.5%;"></div></div><div class="cat-pct">10.5%</div></div>
+  </div>
+
+  <!-- Bottom nav distribution -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);border-radius:8px;overflow:hidden;">
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--red);">27%</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Shopping cart</div>
+    </div>
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);">25%</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Home</div>
+    </div>
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);">16%</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Account</div>
+    </div>
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);">12%</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Orders</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 06 — DECISIONS + LEARNINGS -->
+<div class="section">
+  <div class="eyebrow">Key Design Decisions</div>
+  <div class="dec-grid">
+    <div class="dec"><div class="dec-n">Decision 01</div><div class="dec-t">Two paths instead of one proposal</div><div class="dec-d">V1 brand-led vs V2 task-led, both built to the same findings. It turned the review from a taste debate into an explicit trade-off — and the final home borrows from both.</div></div>
+    <div class="dec"><div class="dec-n">Decision 02</div><div class="dec-t">Animated dynamic search</div><div class="dec-d">Static placeholder → contextual rotating text. Time, user prefs, promotions. 60% click rate validates the investment.</div></div>
+    <div class="dec"><div class="dec-n">Decision 03</div><div class="dec-t">Time-aware carousels</div><div class="dec-d">Beer promos at 8am told users the app didn't know them. Content that adapts to context = trust.</div></div>
+    <div class="dec"><div class="dec-n">Decision 04</div><div class="dec-t">Favorite places as hero feature</div><div class="dec-d">44.6% CVR. The highest performing carousel by far — personalization beats any other content strategy.</div></div>
+    <div class="dec"><div class="dec-n">Decision 05</div><div class="dec-t">Personalized promo banners</div><div class="dec-d">3 types: Top locals with promo, onboarding match, payment incentive. Contextual, never generic.</div></div>
+    <div class="dec"><div class="dec-n">Decision 06</div><div class="dec-t">Rapid execution constraint</div><div class="dec-d">Prioritized aesthetic improvements over new features. Visual facelift first — data then drives feature investment.</div></div>
+    <div class="dec"><div class="dec-n">Decision 07</div><div class="dec-t">Reusable component system</div><div class="dec-d">Documentation reduced QA cycles and enabled team to move faster on next iterations. System = product investment.</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:1.75rem;margin-top:2rem;align-items:start;">
+    <div class="ins-grid" style="grid-template-columns:1fr 1fr;gap:.75rem;margin-top:0;">
+      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 01</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Two directions beat one recommendation</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">Brought V1 and V2 fully resolved, states included — turned opinion into an explicit trade-off.</div></div>
+      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 02</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Personalization is the killer feature</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">44.6% CVR came from customization, not visual polish — users convert when the product understands them.</div></div>
+      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 03</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Context-awareness is trust</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">Time-aware carousels weren't aesthetic — they were a trust decision that changed the emotional relationship with the product.</div></div>
+      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 04</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Documentation ships features</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">A real design system reduced QA cycles and enabled faster iteration — system thinking is a product investment.</div></div>
+    </div>
+    <div class="callout" style="padding:1.5rem;">
+      <div class="co-l" style="margin-bottom:.625rem;">The result</div>
+      <div class="co-t" style="font-size:1.0625rem;margin-bottom:.625rem;">"Personalization is the killer feature."</div>
+      <div class="co-d" style="font-size:.75rem;line-height:1.55;">The 44.6% CVR came from building a product that feels like it knows the user — every "obvious" decision had a measurable counterpart in the data.</div>
+      <div class="co-stats" style="margin-top:1rem;padding-top:1rem;gap:1.25rem;">
+        <div><div class="cos-v" style="font-size:1.0625rem;">44.6%</div><div class="cos-l">CVR</div></div>
+        <div><div class="cos-v" style="font-size:1.0625rem;">60%</div><div class="cos-l">Search clicks</div></div>
+        <div><div class="cos-v" style="font-size:1.0625rem;">77.8%</div><div class="cos-l">Onboarding</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-t">monchis · Home Redesign · Q3–Q4 2025</div>
+  <div class="footer-t">Sr Product Designer · Paula Elffman</div>
+</div>
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function coverFrom(x,y,dark,cb){
+    overlay.classList.toggle('dark',!!dark);
+    overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    });
+    setTimeout(cb,600);
+  }
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      coverFrom(x,y,true,function(){ window.location.href='index.html'; });
+    });
+  }
+})();
+</script>
+
+<script>
+// ── Animated search placeholder ──
+var phrases = [
+  {text: '¿Una comida rica?',          ann: 'Generic · always on'},
+  {text: '¿Ya desayunaste?',            ann: 'Time-aware · 9am'},
+  {text: 'Algo fresco para tu heladera', ann: 'Context-aware'},
+  {text: 'Hamburguesas o pizza',         ann: 'Category-based'},
+  {text: 'Amás el sushi 🍱',            ann: 'Preference-matched'},
+  {text: 'Promos cerca tuyo',            ann: 'Location-aware'},
+  {text: '¿Cenamos algo rico hoy?',     ann: 'Time-aware · night'},
+  {text: 'Pagá con Ueno y ahorrá',      ann: 'Payment incentive'},
+];
+
+var idx = 0;
+var phEl = document.getElementById('ph-text');
+var annEl = document.getElementById('ann-current');
+
+function nextPhrase() {
+  // exit current
+  phEl.className = 'ph-word exit';
+  setTimeout(function(){
+    idx = (idx + 1) % phrases.length;
+    phEl.textContent = phrases[idx].text;
+    phEl.className = 'ph-word visible';
+    if(annEl) annEl.textContent = phrases[idx].ann;
+  }, 350);
+}
+
+// Init first
+phEl.className = 'ph-word visible';
+setInterval(nextPhrase, 2500);
+</script>
+
+<!-- Inject images inline -->
+<script>
+(function(){
+  var phs = document.querySelectorAll('.mds-ph');
+  if(!phs.length) return;
+  var cur = 0;
+  phs[0].classList.add('active');
+  setInterval(function(){
+    phs[cur].classList.remove('active');
+    phs[cur].classList.add('exit');
+    var prev = cur;
+    cur = (cur+1) % phs.length;
+    setTimeout(function(){
+      phs[prev].classList.remove('exit');
+      phs[cur].style.transition='none';
+      phs[cur].style.transform='translateY(100%)';
+      phs[cur].style.opacity='0';
+      phs[cur].offsetHeight;
+      phs[cur].style.transition='';
+      phs[cur].style.transform='';
+      phs[cur].style.opacity='';
+      phs[cur].classList.add('active');
+    }, 380);
+  }, 2500);
+})();
+</script>
+<script>
+/* LAZY LOAD IMAGES */
+(function(){
+  var IMG_STORE = window.MONCHIS_CASE_IMAGES;
+  function applyImages(){
+    if(!window.MONCHIS_CASE_IMAGES) return;
+    IMG_STORE = window.MONCHIS_CASE_IMAGES;
+    document.querySelectorAll('[data-img-id]').forEach(function(el){
+      if(el.__loaded) return;
+      var id = el.getAttribute('data-img-id');
+      var src = IMG_STORE[id];
+      if(!src) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            el.src = src;
+            el.__loaded = true;
+            io.disconnect();
+          }
+        });
+      }, {rootMargin:'400px 0px'});
+      io.observe(el);
+    });
+  }
+  if(window.MONCHIS_CASE_IMAGES){
+    applyImages();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'monchis-case-images.js';
+    s.onload = applyImages;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ink:#F4F4F6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --ash2:rgba(244,244,246,0.15);
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  background:var(--bg); color:var(--paper);
+}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+<!-- Research Insights Animation -->
+<script>
+(function(){
+  var statsEl = document.getElementById('ri-stats');
+  if(!statsEl) return;
+  var fired = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !fired){
+        fired = true;
+        animateStats();
+        io.disconnect();
+      }
+    });
+  }, {threshold:0.15});
+  io.observe(statsEl);
+
+  function animateStats(){
+    statsEl.querySelectorAll('[data-count]').forEach(function(el){
+      var target = parseInt(el.getAttribute('data-count'));
+      var pctSpan = el.querySelector('.ri-pct');
+      var pctText = pctSpan ? pctSpan.outerHTML : '';
+      var cur = 0;
+      var step = Math.max(1, Math.floor(target / 35));
+      var iv = setInterval(function(){
+        cur += step;
+        if(cur >= target){ cur = target; clearInterval(iv); }
+        el.innerHTML = cur + pctText;
+      }, 30);
+    });
+
+    statsEl.querySelectorAll('[data-target]').forEach(function(c){
+      var parts = c.getAttribute('data-target').split(' ');
+      setTimeout(function(){
+        c.style.transition = 'stroke-dasharray .8s cubic-bezier(.22,1,.36,1)';
+        c.setAttribute('stroke-dasharray', parts[0]+' '+parts[1]);
+      }, 120);
+    });
+
+    statsEl.querySelectorAll('[data-w]').forEach(function(bar, i){
+      setTimeout(function(){
+        bar.style.transition = 'width .6s cubic-bezier(.22,1,.36,1)';
+        bar.style.width = bar.getAttribute('data-w');
+      }, 180 + i * 90);
+    });
+  }
+})();
+</script>
+
+<!-- Findings Carousel -->
+<script>
+(function(){
+  var track = document.getElementById('fc-track');
+  var dots = document.querySelectorAll('.fc-dot');
+  var prevBtn = document.getElementById('fc-prev');
+  var nextBtn = document.getElementById('fc-next');
+  var counterText = document.getElementById('fc-counter-text');
+  var progress = document.getElementById('fc-progress');
+  var total = 5;
+  var cur = 0;
+
+  if(!track) return;
+
+  function goTo(i){
+    if(i < 0 || i >= total) return;
+    cur = i;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+
+    dots.forEach(function(d,j){
+      d.classList.toggle('active', j === cur);
+    });
+
+    prevBtn.disabled = cur === 0;
+    nextBtn.disabled = cur === total - 1;
+
+    if(counterText) counterText.textContent = (cur + 1) + ' / ' + total;
+    if(progress) progress.style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  prevBtn.addEventListener('click', function(){ goTo(cur - 1); });
+  nextBtn.addEventListener('click', function(){ goTo(cur + 1); });
+
+  dots.forEach(function(d){
+    d.addEventListener('click', function(){
+      goTo(parseInt(d.getAttribute('data-i')));
+    });
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e){
+    var rect = document.getElementById('fc-carousel').getBoundingClientRect();
+    if(rect.top > window.innerHeight || rect.bottom < 0) return;
+    if(e.key === 'ArrowRight' || e.key === 'Right'){ e.preventDefault(); goTo(cur + 1); }
+    if(e.key === 'ArrowLeft' || e.key === 'Left'){ e.preventDefault(); goTo(cur - 1); }
+  });
+
+  // Swipe support
+  var startX = 0;
+  var isDragging = false;
+  var carousel = document.getElementById('fc-carousel');
+
+  carousel.addEventListener('touchstart', function(e){
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  }, {passive:true});
+
+  carousel.addEventListener('touchend', function(e){
+    if(!isDragging) return;
+    isDragging = false;
+    var diff = startX - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 50){
+      if(diff > 0) goTo(cur + 1);
+      else goTo(cur - 1);
+    }
+  }, {passive:true});
+})();
+</script>
+
+</body>
+</html>

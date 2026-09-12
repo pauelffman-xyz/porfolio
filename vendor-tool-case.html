@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Tool — Self-Management Dashboard Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F5F4F0;
+  --bg2:#EDEAE4;
+  --bg3:#E4E1DA;
+  --ink:#1A1814;
+  --ash:rgba(26,24,20,.5);
+  --ash2:rgba(26,24,20,.15);
+  --red:#E8143C;
+  --red2:rgba(232,20,60,.08);
+  --green:#2ECC71;
+  --line:rgba(26,24,20,.08);
+  --line2:rgba(26,24,20,.14);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ── BACK NAV ── */
+.back-nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(245,244,240,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line2);
+  padding:1rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);background:none;border:none;cursor:pointer;
+  text-decoration:none;transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.nav-title{font-family:'JetBrains Mono',monospace;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);}
+.nav-right{font-family:'JetBrains Mono',monospace;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
+
+/* ── SHARED ── */
+.section{padding:5rem 4rem;}
+.section+.section{border-top:1px solid var(--line2);}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--red);flex-shrink:0;}
+.section-label{
+  display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;
+}
+.sl-t{font-family:'JetBrains Mono',monospace;font-size:.5625rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);white-space:nowrap;}
+.sl-l{flex:1;height:1px;background:var(--line);}
+
+/* ── COVER ── */
+.cover{
+  display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(4.5rem,10vw,10.5rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--ink);
+}
+.cover-title .dim{color:rgba(26,24,20,.12);}
+.cover-meta{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:.5rem;}
+.cm-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--ink);}
+
+/* ── COVER OVERVIEW LOTTIE ── */
+.cover-video-wrap{
+  max-width:1100px;margin:0 auto;padding:0 4rem 4rem;
+}
+.cover-video-frame{
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.16),0 8px 20px rgba(26,24,20,.08);
+  line-height:0;
+}
+#vt-overview-lottie{width:100%;height:auto;display:block;}
+#vt-overview-lottie svg{display:block;}
+
+/* ── PHOTO CAROUSEL (Photo Governance section) ── */
+.photo-carousel{
+  position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;
+  background:var(--bg2);
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.16),0 8px 20px rgba(26,24,20,.08);
+}
+.pc-track{display:flex;width:100%;height:100%;transition:transform .7s cubic-bezier(.65,0,.35,1);}
+.pc-slide{flex:0 0 100%;width:100%;height:100%;}
+.pc-slide img{width:100%;height:100%;object-fit:contain;display:block;background:var(--bg2);}
+.pc-slide-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:var(--bg2);
+}
+.pc-slide-placeholder svg{width:15%;height:15%;opacity:.35;}
+.pc-dots{display:flex;gap:.4rem;justify-content:center;margin-top:.875rem;}
+.pc-dot{width:6px;height:6px;border-radius:50%;background:rgba(26,24,20,.18);transition:background .3s;}
+.pc-dot.active{background:var(--red);}
+@media (prefers-reduced-motion: reduce){
+  .pc-track{transition:none;}
+}
+
+/* ── BROWSER FRAME (desktop dashboard) ── */
+.browser-shell{
+  border-radius:10px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.14),0 8px 20px rgba(26,24,20,.06);
+}
+.browser-topbar{
+  background:#EDEAE4;padding:.6875rem 1rem;
+  display:flex;align-items:center;gap:1.25rem;
+}
+.bt-dots{display:flex;gap:.375rem;}
+.bt-dot{width:9px;height:9px;border-radius:50%;background:rgba(26,24,20,.18);}
+.bt-url{
+  flex:1;background:#fff;border-radius:6px;padding:.3rem .875rem;
+  font-family:'JetBrains Mono',monospace;font-size:.5625rem;color:var(--ash);
+  max-width:280px;
+}
+.browser-shell img{display:block;width:100%;height:auto;}
+
+/* ── PHONE FRAME (small) ── */
+.phone-shell-sm{
+  border-radius:20px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 16px 48px rgba(26,24,20,.14),0 4px 12px rgba(26,24,20,.08);
+}
+.phone-shell-sm img{display:block;width:100%;height:auto;}
+
+/* ── DEVICE MOCKUPS (placeholders) ── */
+.device-laptop{
+  position:relative;
+  padding:16px 16px 0;
+  background:linear-gradient(180deg,#3d3d42,#232326);
+  border-radius:20px 20px 5px 5px;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 30px 70px rgba(26,24,20,.22),0 10px 24px rgba(26,24,20,.1);
+}
+.device-laptop::before{
+  content:'';
+  position:absolute;top:7px;left:50%;transform:translateX(-50%);
+  width:7px;height:7px;border-radius:50%;
+  background:#0a0a0c;box-shadow:0 0 0 2px rgba(255,255,255,.04);
+}
+.device-laptop-screen{overflow:hidden;border-radius:4px 4px 0 0;background:#fff;line-height:0;}
+.device-laptop-screen img{display:block;width:100%;height:auto;}
+.device-laptop-base{
+  height:16px;
+  background:linear-gradient(180deg,#e8e8ea,#c5c5c9);
+  border-radius:0 0 3px 3px;
+  position:relative;
+}
+.device-laptop-base::after{
+  content:'';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:70px;height:7px;background:#aeaeb2;border-radius:0 0 8px 8px;
+}
+.device-laptop-foot{
+  height:7px;width:104%;margin-left:-2%;
+  background:linear-gradient(180deg,#c5c5c9,#a3a3a8);
+  border-radius:0 0 16px 16px;
+}
+.device-phone{
+  position:relative;
+  padding:10px;
+  background:linear-gradient(180deg,#3d3d42,#232326);
+  border-radius:34px;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 60px rgba(26,24,20,.2),0 8px 20px rgba(26,24,20,.1);
+}
+.device-phone-screen{overflow:hidden;border-radius:24px;background:#fff;position:relative;line-height:0;}
+.device-phone-screen img{display:block;width:100%;height:auto;}
+.device-phone-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:38%;height:22px;background:#232326;border-radius:0 0 14px 14px;
+  z-index:2;
+}
+.ph-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  margin-top:.75rem;
+  padding:.3rem 1rem;border-radius:100px;
+  background:rgba(201,138,31,.1);border:1px solid rgba(201,138,31,.3);
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#96650F;
+}
+
+.badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .875rem;border-radius:100px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
+}
+.badge-r{background:var(--red);color:#fff;}
+.badge-g{background:rgba(46,204,113,.15);color:#27ae60;border:1px solid rgba(46,204,113,.25);}
+.badge-n{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+
+.plabel{margin-top:1.5rem;text-align:center;max-width:220px;}
+.pl-n{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:.375rem;}
+.pl-t{font-size:.875rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.25rem;}
+.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+/* ── PROBLEM / WIN LISTS ── */
+.problem-list{display:flex;flex-direction:column;gap:.75rem;}
+.problem-item{
+  padding:.875rem 1.25rem;
+  background:rgba(232,20,60,.04);
+  border-left:2px solid var(--red);
+  border-radius:0 6px 6px 0;
+}
+.problem-item .pi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.problem-item .pi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+.win-list{display:flex;flex-direction:column;gap:.75rem;}
+.win-item{
+  padding:.875rem 1.25rem;
+  background:rgba(46,204,113,.05);
+  border-left:2px solid #2ECC71;
+  border-radius:0 6px 6px 0;
+}
+.win-item .wi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.win-item .wi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+
+/* ── IMPACT STRIP ── */
+.impact-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.imp-item{background:var(--bg);padding:2rem 1.75rem;}
+.imp-val{font-size:2.5rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);display:block;margin-bottom:.375rem;}
+.imp-val.red{color:var(--red);}
+.imp-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
+
+/* ── QUOTES GRID ── */
+.quotes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+.quote-item{background:var(--bg);padding:1.5rem 1.75rem;}
+.qi-mark{font-size:1.5rem;opacity:.25;margin-bottom:.5rem;}
+.qi-text{font-size:.9rem;line-height:1.7;color:var(--ink);font-style:italic;margin-bottom:.75rem;}
+.qi-tag{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+
+/* ── METRICS GRID ── */
+.metrics-bento{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.mb-item{background:var(--bg);padding:2rem 1.5rem;}
+.mb-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--red);display:block;margin-bottom:.25rem;}
+.mb-label{font-size:.8125rem;line-height:1.55;color:var(--ash);}
+.mb-item.accent{background:var(--red);}
+.mb-item.accent .mb-val{color:#fff;}
+.mb-item.accent .mb-label{color:rgba(255,255,255,.7);}
+.mb-item.dark{background:var(--ink);}
+.mb-item.dark .mb-val{color:#fff;}
+.mb-item.dark .mb-label{color:rgba(255,255,255,.55);}
+
+/* ── DECISIONS / PILLARS GRID ── */
+.dec-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.dec{background:var(--bg);padding:2rem 1.75rem;}
+.dec-n{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ── INSIGHTS ── */
+.ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.ins{padding:1.75rem;border:1px solid var(--line2);border-radius:8px;background:var(--bg);}
+.ins-n{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ── RED CALLOUT ── */
+.callout{background:var(--red);border-radius:8px;padding:2.5rem;}
+.co-l{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.7);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.15);display:flex;gap:2rem;flex-wrap:wrap;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.5);margin-top:.125rem;}
+
+/* ── STEP CARDS (Action) ── */
+.step-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.step-card{padding:2.25rem;background:#fff;border:1px solid var(--line2);border-radius:10px;position:relative;}
+.step-num{
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(232,20,60,.2);border-radius:100px;
+  padding:.25rem .875rem;display:inline-flex;margin-bottom:1.25rem;
+}
+.step-t{font-size:1.375rem;font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:.875rem;}
+.step-d{font-size:.875rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.step-d strong{color:var(--ink);font-weight:600;}
+
+/* footer */
+.footer{
+  padding:2rem 4rem;border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-t{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+
+/* ── VENDOR TOOL DESIGN SYSTEM ── */
+.vt-ds {}
+.vds-header { margin-bottom:2.5rem; margin-top:4rem; padding-top:3.5rem; border-top:2px solid rgba(26,24,20,.08); }
+.vds-title {
+  font-family:'Geist',sans-serif;font-size:clamp(2.25rem,3.6vw,3.5rem);
+  font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:.95;margin-bottom:1rem;
+}
+.vds-title em { font-style:normal;color:var(--red); }
+.vds-sub { font-family:'Geist',sans-serif;font-weight:300;font-size:1rem;line-height:1.75;color:var(--ash);max-width:680px; }
+
+.vds-components { display:grid;grid-template-columns:repeat(2,1fr);gap:1rem; }
+.vds-comp-card { background:#fff;border:1px solid rgba(26,24,20,.1);border-radius:10px;overflow:hidden; }
+.vds-comp-label { font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);padding:.75rem 1rem;border-bottom:1px solid rgba(26,24,20,.06); }
+.vds-comp-body { padding:1.5rem;display:flex;flex-direction:column;gap:.75rem; }
+.vds-comp-card-wide { grid-column:1/-1; }
+.vds-comp-meta { padding:.75rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.08em;color:var(--ash); }
+
+/* order status pill */
+.os-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .75rem;border-radius:100px;font-size:.6875rem;font-weight:600;}
+.os-cancelada{background:rgba(232,20,60,.1);color:var(--red);}
+.os-entregada{background:rgba(46,204,113,.12);color:#27ae60;}
+.os-rechazada{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+.os-pendiente{background:rgba(255,171,0,.12);color:#B87200;}
+
+/* status timeline mini */
+.tl-mini{display:flex;align-items:center;gap:0;}
+.tl-step{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;position:relative;}
+.tl-dot{width:22px;height:22px;border-radius:50%;background:#27ae60;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6875rem;z-index:2;}
+.tl-line{position:absolute;top:11px;left:50%;width:100%;height:2px;background:#27ae60;z-index:1;}
+.tl-step:last-child .tl-line{display:none;}
+.tl-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ash);text-align:center;}
+
+/* photo status chips */
+.ph-status-row{display:flex;gap:.75rem;}
+.ph-chip{flex:1;padding:1.25rem;border-radius:8px;text-align:center;border:1px solid var(--line2);}
+.ph-chip-review{background:rgba(255,171,0,.06);border-color:rgba(255,171,0,.25);}
+.ph-chip-rejected{background:rgba(232,20,60,.05);border-color:rgba(232,20,60,.2);}
+.ph-chip-approved{background:rgba(46,204,113,.06);border-color:rgba(46,204,113,.25);}
+.ph-chip-t{font-family:'JetBrains Mono',monospace;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+
+/* roles table mini */
+.roles-mini{border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:#fff;}
+.rm-row{display:grid;grid-template-columns:2fr 1.5fr 1fr;padding:.75rem 1.25rem;font-size:.8125rem;}
+.rm-row+.rm-row{border-top:1px solid var(--line);}
+.rm-head{background:var(--bg2);font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);}
+.rm-role{display:inline-flex;padding:.2rem .625rem;border-radius:100px;background:rgba(232,20,60,.08);color:var(--red);font-size:.6875rem;font-weight:600;}
+
+@media(max-width:768px){
+  .vds-components { grid-template-columns:1fr; }
+  .step-grid,.ba-grid-vt{grid-template-columns:1fr !important;}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.13.0/lottie.min.js"></script>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<!-- BACK NAV -->
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="nav-title">Vendor Tool · Monchis</div>
+  <div class="nav-right">Paula Elffman · Sr Product Designer</div>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Vendor Management · Monchis · Q1 2025 — Continuous improvement</div>
+    <div class="cover-title">Vendor<br>Tool<br><span class="dim">self-management.</span></div>
+  </div>
+  <div class="cover-meta">
+    <div><div class="cm-label">Company</div><div class="cm-val">🇵🇾 monchis</div></div>
+    <div><div class="cm-label">Role</div><div class="cm-val">Product Designer (end-to-end)</div></div>
+    <div><div class="cm-label">Time</div><div class="cm-val">1 Quarter · Continuous improvement w/ new features</div></div>
+    <div><div class="cm-label">Scope</div><div class="cm-val">Web dashboard · Desktop-first, mobile-adapted</div></div>
+    <div><div class="cm-label">Launched</div><div class="cm-val">May 2025</div></div>
+  </div>
+</div>
+
+<!-- COVER OVERVIEW LOTTIE -->
+<div class="cover-video-wrap">
+  <div class="cover-video-frame">
+    <div id="vt-overview-lottie" style="aspect-ratio:1600/1200;"></div>
+  </div>
+</div>
+
+<div style="height:1px;background:var(--line2);"></div>
+
+<!-- SECTION 01 — PROBLEM -->
+<div class="section">
+  <div class="eyebrow">Context & Problem</div>
+  <div style="font-size:clamp(2rem,3.5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">
+    Vendors were running restaurants<br><span style="color:var(--red);">through phone calls and spreadsheets.</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    "Our previous vendor platform faced two main challenges: management friction and an operating ceiling." Every new branch added more manual overhead instead of less — the tool wasn't built to scale with the network.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;">
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="pi-t">Fragmentation & latency (Q4)</div>
+        <div class="pi-d">Many branches were still relying on the least efficient order-reception method available — with acceptance times stretching past 7 minutes per order. A meaningful share of branches had no digital tool at all, running purely on phone calls.</div>
+      </div>
+    </div>
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="pi-t">Service volatility (Q3)</div>
+        <div class="pi-d">Even where the tool was adopted, performance was inconsistent — degrading sharply during peak hours and specific high-demand months. Service Level dropped noticeably in a single month alone. Vendors needed stability, not just a tool.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label"><div class="sl-t">Scale at the time of redesign</div><div class="sl-l"></div></div>
+  <div class="impact-strip">
+    <div class="imp-item"><span class="imp-val">116.6k</span><div class="imp-label">Total orders</div></div>
+    <div class="imp-item"><span class="imp-val">37k</span><div class="imp-label">Total users</div></div>
+    <div class="imp-item"><span class="imp-val red">545</span><div class="imp-label">Total vendors</div></div>
+  </div>
+</div>
+
+<!-- SECTION 02 — TASK / VISION -->
+<div class="section">
+  <div class="eyebrow">Task & Vision</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">Three pillars.<br><span style="color:var(--red);">One self-managed vendor.</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:720px;margin-bottom:1rem;">
+    "Our task was to design a solution that scales operational efficiency and eliminates manual dependencies to transform our vendors into strategic partners." That translated into three pillars — our Vision.
+  </p>
+  <div class="dec-grid">
+    <div class="dec"><div class="dec-n">Pillar 01</div><div class="dec-t">Self-Management</div><div class="dec-d">Vendors control their own menu, photos, prices, orders and team — without calling support for every change.</div></div>
+    <div class="dec"><div class="dec-n">Pillar 02</div><div class="dec-t">Optimization with Data / AI</div><div class="dec-d">AI-assisted photo review and content generation reduce the quality gap between a professional and an informal vendor.</div></div>
+    <div class="dec"><div class="dec-n">Pillar 03</div><div class="dec-t">Ecosystem Growth</div><div class="dec-d">Cross-sell touchpoints (financial services, photography tools) turn the dashboard into a growth channel, not just an admin panel.</div></div>
+  </div>
+</div>
+
+<!-- SECTION 03 — THE VENDOR TOOL (OVERVIEW) -->
+<div class="section">
+  <div class="eyebrow">The Solution · Vendor Tool</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+    <div>
+      <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:1.25rem;">
+        One dashboard for <span style="color:var(--red);">products, orders, status and finances.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">
+        I designed the new management dashboard end-to-end: catalog and menu, real-time order management, operational status, franchise-level rollups and billing — for both single-branch owners and multi-branch franchises.
+      </p>
+    </div>
+    <div class="win-list">
+      <div class="win-item"><div class="wi-t">Franchise-wide view</div><div class="wi-d">Real-time operating status across every branch, from a single screen.</div></div>
+      <div class="win-item"><div class="wi-t">Self-service menu & photos</div><div class="wi-d">AI-assisted content review, no design or support ticket required.</div></div>
+      <div class="win-item"><div class="wi-t">Role-based access</div><div class="wi-d">Franchise owners assign scoped permissions per branch and per user.</div></div>
+    </div>
+  </div>
+
+  <div class="device-laptop" style="max-width:60%;margin:0 auto;">
+    <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1086 706'%3E%3Crect width='1086' height='706' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_012" alt="Vendor Tool franchise dashboard overview"></div>
+    <div class="device-laptop-base"></div>
+    <div class="device-laptop-foot"></div>
+  </div>
+  <div style="text-align:center;margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);">Franchise view · Branch status · Product completion · 7-day metrics · Ecosystem banners (Ueno Bank, photo tips)</div>
+</div>
+
+<!-- SECTION 04 — MENU & CATALOG -->
+<div class="section">
+  <div class="eyebrow">Menu & Catalog</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">A menu vendors<br><span style="color:var(--red);">actually want to keep updated.</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    I designed a simpler, more attractive menu system showcasing the product and its features — categories with visibility scheduling, promos, and add-ons. With the help of AI, we improved photos and copy directly inside the flow.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Categories · Scheduling & visibility toggles</div>
+      <div class="device-laptop">
+        <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 624'%3E%3Crect width='960' height='624' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_001" alt="Categorías de producto"></div>
+        <div class="device-laptop-base"></div>
+        <div class="device-laptop-foot"></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Product listing · Inside a category (Promos)</div>
+      <div class="device-laptop">
+        <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1086 706'%3E%3Crect width='1086' height='706' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_002" alt="Listado de productos — Promos"></div>
+        <div class="device-laptop-base"></div>
+        <div class="device-laptop-foot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 05 — PRODUCT EDITOR: RESPONSIVE -->
+<div class="section">
+  <div class="eyebrow">Product Editor · Responsive by design</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">Desktop-first,<br><span style="color:var(--red);">mobile-ready.</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    Vendor Tool is a desktop-first management dashboard — most owners set up their catalog from a laptop at the counter. But the exact same product editor adapts fully to mobile, so a vendor can update a photo or price from the kitchen floor.
+  </p>
+
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:3rem;align-items:end;margin-bottom:3rem;">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Desktop · Product detail with live preview</div>
+      <div class="device-laptop">
+      <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1252 764'%3E%3Crect width='1252' height='764' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_004" alt="Producto detail desktop"></div>
+      <div class="device-laptop-base"></div>
+      <div class="device-laptop-foot"></div>
+    </div>
+    </div>
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;text-align:center;">Mobile · Same editor</div>
+      <div class="device-phone" style="max-width:200px;margin:0 auto;">
+        <div class="device-phone-screen">
+          <div class="device-phone-notch"></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 328 661'%3E%3Crect width='328' height='661' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_005" alt="Producto detail mobile">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Instant feedback · Enable / disable a product</div>
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1004 712'%3E%3Crect width='1004' height='712' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_003" alt="Product disable confirmation toast" style="width:100%;height:auto;border-radius:12px;box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.16),0 8px 20px rgba(26,24,20,.08);">
+    </div>
+    <div class="win-list">
+      <div class="win-item"><div class="wi-t">No dead ends</div><div class="wi-d">Disabling a product gives immediate, reversible confirmation — no support ticket to bring it back.</div></div>
+      <div class="win-item"><div class="wi-t">One editor, two surfaces</div><div class="wi-d">Same component library and logic power both the desktop and mobile product editor.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 06 — PHOTO GOVERNANCE (AI) -->
+<div class="section">
+  <div class="eyebrow">Optimization with AI · Photo Governance</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">"2 of 3 customers decide<br><span style="color:var(--red);">based on the photo."</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    Menu photography was the single biggest lever on conversion — and the hardest thing to standardize across 545 independent vendors. I designed a lightweight in-flow photography guide plus an automated review pipeline, so quality control doesn't require a human reviewer on every upload.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem;">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">In-flow photography tips</div>
+      <div class="photo-carousel" id="photo-carousel">
+        <div class="pc-track" id="photo-carousel-track">
+          <div class="pc-slide">
+            <img data-img-id="vt_case_013" alt="Ayuda para crear fotos — Enfoque y encuadre">
+          </div>
+          <div class="pc-slide">
+            <img data-img-id="vt_case_014" alt="Ayuda para crear fotos — Luz">
+          </div>
+          <div class="pc-slide">
+            <img data-img-id="vt_case_015" alt="Ayuda para crear fotos — Crea productos tentadores">
+          </div>
+        </div>
+      </div>
+      <div class="pc-dots">
+        <div class="pc-dot active"></div>
+        <div class="pc-dot"></div>
+        <div class="pc-dot"></div>
+      </div>
+    </div>
+    <div class="problem-list" style="justify-content:center;">
+      <div class="win-item"><div class="wi-t">Framing & composition</div><div class="wi-d">Rule-of-thirds guide overlaid directly on example shots.</div></div>
+      <div class="win-item"><div class="wi-t">Natural lighting</div><div class="wi-d">Simple, non-technical language — no photography background required.</div></div>
+      <div class="win-item"><div class="wi-t">Tempting framing</div><div class="wi-d">Coaches vendors to shoot fresh, colorful ingredients close-up.</div></div>
+    </div>
+  </div>
+
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Automated review pipeline · Three states</div>
+  <div class="device-laptop">
+    <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201600%20719%27%3E%3Crect%20width%3D%271600%27%20height%3D%27719%27%20fill%3D%27%23F5F4F0%27/%3E%3Crect%20x%3D%270%27%20y%3D%270%27%20width%3D%2796%27%20height%3D%27719%27%20fill%3D%27rgba%2826%2C24%2C20%2C.07%29%27/%3E%3Crect%20x%3D%2727%27%20y%3D%2740%27%20width%3D%2742%27%20height%3D%2742%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2727%27%20y%3D%2796%27%20width%3D%2742%27%20height%3D%2742%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2727%27%20y%3D%27152%27%20width%3D%2742%27%20height%3D%2742%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2727%27%20y%3D%27208%27%20width%3D%2742%27%20height%3D%2742%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2727%27%20y%3D%27264%27%20width%3D%2742%27%20height%3D%2742%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%2740%27%20width%3D%27458%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%2787%27%20width%3D%27258%27%20height%3D%2714%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%27141%27%20width%3D%27337%27%20height%3D%27122%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27162%27%20y%3D%27172%27%20width%3D%27168%27%20height%3D%2729%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27162%27%20y%3D%27219%27%20width%3D%27236%27%20height%3D%2717%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27493%27%20y%3D%27141%27%20width%3D%27337%27%20height%3D%27122%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27527%27%20y%3D%27172%27%20width%3D%27168%27%20height%3D%2729%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27527%27%20y%3D%27219%27%20width%3D%27236%27%20height%3D%2717%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27858%27%20y%3D%27141%27%20width%3D%27337%27%20height%3D%27122%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27892%27%20y%3D%27172%27%20width%3D%27168%27%20height%3D%2729%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27892%27%20y%3D%27219%27%20width%3D%27236%27%20height%3D%2717%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271223%27%20y%3D%27141%27%20width%3D%27337%27%20height%3D%27122%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%271257%27%20y%3D%27172%27%20width%3D%27168%27%20height%3D%2729%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%271257%27%20y%3D%27219%27%20width%3D%27236%27%20height%3D%2717%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%27306%27%20width%3D%271432%27%20height%3D%2775%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27157%27%20y%3D%27330%27%20width%3D%2772%27%20height%3D%2727%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27326%27%20width%3D%27401%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27350%27%20width%3D%27229%27%20height%3D%2711%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271302%27%20y%3D%27329%27%20width%3D%27172%27%20height%3D%2726%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%27402%27%20width%3D%271432%27%20height%3D%2775%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27157%27%20y%3D%27426%27%20width%3D%2772%27%20height%3D%2727%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27421%27%20width%3D%27401%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27445%27%20width%3D%27229%27%20height%3D%2711%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271302%27%20y%3D%27424%27%20width%3D%27172%27%20height%3D%2726%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%27497%27%20width%3D%271432%27%20height%3D%2775%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27157%27%20y%3D%27521%27%20width%3D%2772%27%20height%3D%2727%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27517%27%20width%3D%27401%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27541%27%20width%3D%27229%27%20height%3D%2711%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271302%27%20y%3D%27520%27%20width%3D%27172%27%20height%3D%2726%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27128%27%20y%3D%27593%27%20width%3D%271432%27%20height%3D%2775%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27157%27%20y%3D%27617%27%20width%3D%2772%27%20height%3D%2727%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27613%27%20width%3D%27401%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27257%27%20y%3D%27637%27%20width%3D%27229%27%20height%3D%2711%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271302%27%20y%3D%27616%27%20width%3D%27172%27%20height%3D%2726%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3C/svg%3E" alt="Placeholder — pending final asset"></div>
+    <div class="device-laptop-base"></div>
+    <div class="device-laptop-foot"></div>
+  </div>
+  <div class="ph-badge">Placeholder &middot; pending final asset</div>
+  <div class="ph-status-row" style="margin-top:1.5rem;">
+    <div class="ph-chip ph-chip-review"><div class="ph-chip-t" style="color:#B87200;">In Review</div><div style="font-size:.75rem;color:var(--ash);">Product stays live with the previous photo while the new one is reviewed.</div></div>
+    <div class="ph-chip ph-chip-rejected"><div class="ph-chip-t" style="color:var(--red);">Rejected</div><div style="font-size:.75rem;color:var(--ash);">Clear reason shown (format, size, resolution) so the vendor can retry instantly.</div></div>
+    <div class="ph-chip ph-chip-approved"><div class="ph-chip-t" style="color:#27ae60;">Approved</div><div style="font-size:.75rem;color:var(--ash);">Auto-enables on the live menu — no manual publishing step.</div></div>
+  </div>
+</div>
+
+<!-- SECTION 07 — ORDERS MANAGEMENT -->
+<div class="section">
+  <div class="eyebrow">Self-Management · Orders</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">The order queue<br><span style="color:var(--red);">that fixed the 7-minute problem.</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    Slow acceptance times were the core driver of service volatility. The new order manager surfaces every pending order with a visible countdown, batch actions, and one-tap accept/reject — designed to be usable by a busy cashier, not just an admin.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;margin-bottom:3rem;">
+    <div class="device-laptop">
+      <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201400%20623%27%3E%3Crect%20width%3D%271400%27%20height%3D%27623%27%20fill%3D%27%23F5F4F0%27/%3E%3Crect%20x%3D%270%27%20y%3D%270%27%20width%3D%2784%27%20height%3D%27623%27%20fill%3D%27rgba%2826%2C24%2C20%2C.07%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2740%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2796%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%27152%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%27208%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%27264%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%2735%27%20width%3D%27401%27%20height%3D%2722%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%2775%27%20width%3D%27226%27%20height%3D%2712%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27122%27%20width%3D%27294%27%20height%3D%27106%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27141%27%20y%3D%27150%27%20width%3D%27147%27%20height%3D%2725%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27141%27%20y%3D%27190%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27432%27%20y%3D%27122%27%20width%3D%27294%27%20height%3D%27106%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27461%27%20y%3D%27150%27%20width%3D%27147%27%20height%3D%2725%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27461%27%20y%3D%27190%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27751%27%20y%3D%27122%27%20width%3D%27294%27%20height%3D%27106%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27780%27%20y%3D%27150%27%20width%3D%27147%27%20height%3D%2725%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27780%27%20y%3D%27190%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271071%27%20y%3D%27122%27%20width%3D%27294%27%20height%3D%27106%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%271100%27%20y%3D%27150%27%20width%3D%27147%27%20height%3D%2725%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%271100%27%20y%3D%27190%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27266%27%20width%3D%271253%27%20height%3D%2765%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27286%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27283%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27303%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27285%27%20width%3D%27150%27%20height%3D%2722%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27348%27%20width%3D%271253%27%20height%3D%2765%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27369%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27365%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27386%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27368%27%20width%3D%27150%27%20height%3D%2722%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27431%27%20width%3D%271253%27%20height%3D%2765%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27452%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27448%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27469%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27451%27%20width%3D%27150%27%20height%3D%2722%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27514%27%20width%3D%271253%27%20height%3D%2765%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27535%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27531%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27552%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27534%27%20width%3D%27150%27%20height%3D%2722%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3C/svg%3E" alt="Placeholder — pending final asset"></div>
+      <div class="device-laptop-base"></div>
+      <div class="device-laptop-foot"></div>
+    </div>
+    <div class="ph-badge">Placeholder &middot; pending final asset</div>
+    <div class="win-list">
+      <div class="win-item"><div class="wi-t">Visible countdown per order</div><div class="wi-d">"Te quedan 05:00 min para aceptarla" — urgency without guesswork.</div></div>
+      <div class="win-item"><div class="wi-t">Full order context, no drill-down</div><div class="wi-d">Products, attributes, comments and payment method all visible in the same card.</div></div>
+      <div class="win-item"><div class="wi-t">Batch actions</div><div class="wi-d">"Pasar a preparando" moves selected orders forward in one action.</div></div>
+    </div>
+  </div>
+
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Order history, GMV & individual tracking</div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;">
+    <div class="device-laptop">
+      <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 976 634'%3E%3Crect width='976' height='634' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_009" alt="Listado de órdenes con filtros y GMV"></div>
+      <div class="device-laptop-base"></div>
+      <div class="device-laptop-foot"></div>
+    </div>
+    <div class="device-laptop">
+      <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 969 630'%3E%3Crect width='969' height='630' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="vt_case_010" alt="Detalle de la orden con línea de tiempo de estado"></div>
+      <div class="device-laptop-base"></div>
+      <div class="device-laptop-foot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 08 — PERMISSIONS & ROLES -->
+<div class="section">
+  <div class="eyebrow">Self-Management · Permissions & Roles</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">One franchise,<br><span style="color:var(--red);">many trusted hands.</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    Franchises needed to delegate day-to-day operations across branches without losing control. I designed a scoped roles system — franchise owners assign access per branch and per role, with destructive actions (like removing a user) requiring explicit confirmation.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;">
+    <div class="device-laptop">
+      <div class="device-laptop-screen"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201400%20633%27%3E%3Crect%20width%3D%271400%27%20height%3D%27633%27%20fill%3D%27%23F5F4F0%27/%3E%3Crect%20x%3D%270%27%20y%3D%270%27%20width%3D%2784%27%20height%3D%27633%27%20fill%3D%27rgba%2826%2C24%2C20%2C.07%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2740%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2796%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%27152%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%27208%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%2724%27%20y%3D%27264%27%20width%3D%2737%27%20height%3D%2737%27%20rx%3D%277%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%2735%27%20width%3D%27401%27%20height%3D%2723%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%2776%27%20width%3D%27226%27%20height%3D%2713%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27124%27%20width%3D%27294%27%20height%3D%27108%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27141%27%20y%3D%27152%27%20width%3D%27147%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27141%27%20y%3D%27192%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27432%27%20y%3D%27124%27%20width%3D%27294%27%20height%3D%27108%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27461%27%20y%3D%27152%27%20width%3D%27147%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27461%27%20y%3D%27192%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27751%27%20y%3D%27124%27%20width%3D%27294%27%20height%3D%27108%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27780%27%20y%3D%27152%27%20width%3D%27147%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27780%27%20y%3D%27192%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271071%27%20y%3D%27124%27%20width%3D%27294%27%20height%3D%27108%27%20rx%3D%2710%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%271100%27%20y%3D%27152%27%20width%3D%27147%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%271100%27%20y%3D%27192%27%20width%3D%27206%27%20height%3D%2715%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27269%27%20width%3D%271253%27%20height%3D%2766%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27290%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27286%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27308%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27289%27%20width%3D%27150%27%20height%3D%2723%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27353%27%20width%3D%271253%27%20height%3D%2766%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27375%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27371%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27392%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27373%27%20width%3D%27150%27%20height%3D%2723%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27438%27%20width%3D%271253%27%20height%3D%2766%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27459%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27455%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27476%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27458%27%20width%3D%27150%27%20height%3D%2723%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%27112%27%20y%3D%27522%27%20width%3D%271253%27%20height%3D%2766%27%20rx%3D%278%27%20fill%3D%27%23FFFFFF%27%20stroke%3D%27rgba%2826%2C24%2C20%2C.2%29%27/%3E%3Crect%20x%3D%27137%27%20y%3D%27543%27%20width%3D%2763%27%20height%3D%2724%27%20rx%3D%275%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27539%27%20width%3D%27351%27%20height%3D%2713%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.22%29%27/%3E%3Crect%20x%3D%27225%27%20y%3D%27560%27%20width%3D%27200%27%20height%3D%279%27%20rx%3D%273%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3Crect%20x%3D%271139%27%20y%3D%27542%27%20width%3D%27150%27%20height%3D%2723%27%20rx%3D%276%27%20fill%3D%27rgba%2826%2C24%2C20%2C.13%29%27/%3E%3C/svg%3E" alt="Placeholder — pending final asset"></div>
+      <div class="device-laptop-base"></div>
+      <div class="device-laptop-foot"></div>
+    </div>
+    <div class="ph-badge">Placeholder &middot; pending final asset</div>
+    <div class="win-list">
+      <div class="win-item"><div class="wi-t">Franchise & branch scoping</div><div class="wi-d">Filter and assign users by franchise and branch, not just a flat user list.</div></div>
+      <div class="win-item"><div class="wi-t">Editable roles</div><div class="wi-d">Operativo / Gerente roles editable in-place, no support required.</div></div>
+      <div class="win-item"><div class="wi-t">Guarded deletion</div><div class="wi-d">"¿Estás seguro que deseas eliminar este usuario?" — irreversible actions get an explicit second step.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 09 — ACTION -->
+<div class="section">
+  <div class="eyebrow">Design Action</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">"Revolutionizing efficiency<br><span style="color:var(--red);">through AI and self-management."</span></div>
+  <div class="step-grid">
+    <div class="step-card">
+      <div class="step-num">Step 01</div>
+      <div class="step-t">Migration & Standardization</div>
+      <div class="step-d">Migrated the network onto the new system — with a handful of legacy Multicomercio franchises still transitioning at time of writing. This alone standardized operations across branches that previously ran on completely different tools.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">Step 02</div>
+      <div class="step-t">Self-Management (Better UX)</div>
+      <div class="step-d">Improved UI tooltips and AI-support integration to reduce the need for manual contact. The goal: make the tool simple enough to drive self-service adoption, <strong>with the operational efficiency of a POS system.</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 10 — RESULTS -->
+<div class="section">
+  <div class="eyebrow">Results & Impact</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:3rem;">Numbers that validated<br><span style="color:var(--red);">every decision.</span></div>
+
+  <div class="metrics-bento" style="margin-bottom:2rem;">
+    <div class="mb-item accent">
+      <div class="mb-val">-15%</div>
+      <div class="mb-label">Order cancellation rate — operational stability improved</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">+28%</div>
+      <div class="mb-label">Growth in active branches — Q3'25 vs Q1'24</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">44'</div>
+      <div class="mb-label">Delivery time — down 3 minutes on average</div>
+    </div>
+    <div class="mb-item dark">
+      <div class="mb-val">72h</div>
+      <div class="mb-label">Manual work per week Vendors 2.0 is projected to free up</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div class="ins-grid" style="grid-template-columns:1fr;">
+      <div class="ins"><div class="ins-n">Learning 01</div><div class="ins-t">Self-management beats manual support</div><div class="ins-d">Reducing acceptance time and support-ticket dependency drove the cancellation-rate drop more than any single feature.</div></div>
+      <div class="ins"><div class="ins-n">Learning 02</div><div class="ins-t">Photo quality is a growth lever, not a cosmetic one</div><div class="ins-d">Automating review meant quality control could scale with the vendor base instead of bottlenecking on a support team.</div></div>
+      <div class="ins"><div class="ins-n">Learning 03</div><div class="ins-t">Migration is a design problem too</div><div class="ins-d">Standardizing legacy Multicomercio franchises onto one system was as much a UX challenge as any new feature.</div></div>
+    </div>
+    <div class="callout">
+      <div class="co-l">The goal ahead</div>
+      <div class="co-t">"A key factor in achieving +45% growth — from 545 to 1,080 vendors — by the end of the year."</div>
+      <div class="co-d">Vendor Tool wasn't designed as a one-time redesign. It's the operational backbone that has to hold as the vendor base roughly doubles.</div>
+      <div class="co-stats">
+        <div><div class="cos-v">545 → 1,080</div><div class="cos-l">Vendors target</div></div>
+        <div><div class="cos-v">-15%</div><div class="cos-l">Cancellations</div></div>
+        <div><div class="cos-v">72h</div><div class="cos-l">Freed weekly</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DESIGN SYSTEM — VENDOR TOOL
+══════════════════════════════════════ -->
+<div class="section vt-ds">
+  <div class="eyebrow">Design System · Core Components</div>
+  <div class="vds-header" style="margin-top:0;padding-top:0;border-top:none;">
+    <h2 class="vds-title">Built for a queue,<br>not a <em>dashboard demo.</em></h2>
+    <p class="vds-sub">Every component in Vendor Tool was designed to survive a busy lunch rush — legible statuses, forgiving destructive actions, and states that never leave the vendor guessing what happens next.</p>
+  </div>
+
+  <div class="vds-components">
+
+    <div class="vds-comp-card">
+      <div class="vds-comp-label">Order status pills</div>
+      <div class="vds-comp-body">
+        <div style="display:flex;gap:.625rem;flex-wrap:wrap;">
+          <span class="os-pill os-pendiente">Pendiente</span>
+          <span class="os-pill os-entregada">Entregada</span>
+          <span class="os-pill os-cancelada">Cancelada</span>
+          <span class="os-pill os-rechazada">Rechazada</span>
+        </div>
+      </div>
+      <div class="vds-comp-meta">4 states · Consistent across queue, history and detail views</div>
+    </div>
+
+    <div class="vds-comp-card">
+      <div class="vds-comp-label">Photo governance chips</div>
+      <div class="vds-comp-body">
+        <div class="ph-status-row" style="gap:.5rem;">
+          <div class="ph-chip ph-chip-review" style="padding:.75rem;"><div class="ph-chip-t" style="color:#B87200;font-size:.5rem;">In Review</div></div>
+          <div class="ph-chip ph-chip-rejected" style="padding:.75rem;"><div class="ph-chip-t" style="color:var(--red);font-size:.5rem;">Rejected</div></div>
+          <div class="ph-chip ph-chip-approved" style="padding:.75rem;"><div class="ph-chip-t" style="color:#27ae60;font-size:.5rem;">Approved</div></div>
+        </div>
+      </div>
+      <div class="vds-comp-meta">Auto-publishes on approval · No manual step</div>
+    </div>
+
+    <div class="vds-comp-card vds-comp-card-wide">
+      <div class="vds-comp-label">Order status timeline</div>
+      <div class="vds-comp-body">
+        <div class="tl-mini">
+          <div class="tl-step"><div class="tl-line"></div><div class="tl-dot">✓</div><div class="tl-label">Pendiente</div></div>
+          <div class="tl-step"><div class="tl-line"></div><div class="tl-dot">✓</div><div class="tl-label">Confirmada</div></div>
+          <div class="tl-step"><div class="tl-line"></div><div class="tl-dot">✓</div><div class="tl-label">Preparando</div></div>
+          <div class="tl-step"><div class="tl-line"></div><div class="tl-dot">✓</div><div class="tl-label">Delivery</div></div>
+          <div class="tl-step"><div class="tl-dot">✓</div><div class="tl-label">Entregada</div></div>
+        </div>
+      </div>
+      <div class="vds-comp-meta">Shared timeline component · Same 5 states on every order detail</div>
+    </div>
+
+    <div class="vds-comp-card vds-comp-card-wide">
+      <div class="vds-comp-label">Roles table · Row pattern</div>
+      <div class="vds-comp-body" style="padding:0;">
+        <div class="roles-mini">
+          <div class="rm-row rm-head"><div>Nombre</div><div>Franquicia</div><div>Rol</div></div>
+          <div class="rm-row"><div>Juan Domínguez</div><div>Franquicia A</div><div><span class="rm-role">Operativo</span></div></div>
+          <div class="rm-row"><div>María González</div><div>Franquicia A</div><div><span class="rm-role">Operativo</span></div></div>
+          <div class="rm-row"><div>Juan Francisco Murray</div><div>Franquicia A</div><div><span class="rm-role">Operativo</span></div></div>
+        </div>
+      </div>
+      <div class="vds-comp-meta">Editable inline · Guarded delete confirmation modal</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-t">Vendor Tool · Monchis · Q1 2025 — Continuous improvement</div>
+  <div class="footer-t">Sr Product Designer · Paula Elffman</div>
+</div>
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function coverFrom(x,y,dark,cb){
+    overlay.classList.toggle('dark',!!dark);
+    overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    });
+    setTimeout(cb,600);
+  }
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      coverFrom(x,y,true,function(){ window.location.href='index.html'; });
+    });
+  }
+})();
+</script>
+
+<script>
+/* PHOTO CAROUSEL — Photo Governance section */
+(function(){
+  var track = document.getElementById('photo-carousel-track');
+  if(!track) return;
+  var slides = track.querySelectorAll('.pc-slide');
+  var dots = document.querySelectorAll('.pc-dots .pc-dot');
+  if(slides.length < 2) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  var cur = 0;
+  setInterval(function(){
+    dots[cur] && dots[cur].classList.remove('active');
+    cur = (cur + 1) % slides.length;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    dots[cur] && dots[cur].classList.add('active');
+  }, 2800);
+})();
+</script>
+<script>
+/* COVER OVERVIEW LOTTIE — loads window.VT_OVERVIEW_DATA via <script src>, never fetch/path (file:// safe) */
+(function(){
+  var el = document.getElementById('vt-overview-lottie');
+  if(!el) return;
+  var started = false;
+  function start(){
+    if(started) return;
+    started = true;
+    function render(){
+      lottie.loadAnimation({
+        container: el,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: window.VT_OVERVIEW_DATA
+      });
+    }
+    if(window.VT_OVERVIEW_DATA){
+      render();
+    } else {
+      var s = document.createElement('script');
+      s.src = 'vendor-tool-overview-data.js';
+      s.onload = render;
+      document.head.appendChild(s);
+    }
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ start(); io.disconnect(); }
+    });
+  }, {rootMargin:'400px 0px'});
+  io.observe(el);
+})();
+</script>
+<script>
+/* LAZY LOAD IMAGES */
+(function(){
+  var IMG_STORE = window.VT_CASE_IMAGES;
+  function applyImages(){
+    if(!window.VT_CASE_IMAGES) return;
+    IMG_STORE = window.VT_CASE_IMAGES;
+    document.querySelectorAll('[data-img-id]').forEach(function(el){
+      if(el.__loaded) return;
+      var id = el.getAttribute('data-img-id');
+      var src = IMG_STORE[id];
+      if(!src) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            el.src = src;
+            el.__loaded = true;
+            io.disconnect();
+          }
+        });
+      }, {rootMargin:'400px 0px'});
+      io.observe(el);
+    });
+  }
+  if(window.VT_CASE_IMAGES){
+    applyImages();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'vendor-tool-case-images.js';
+    s.onload = applyImages;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  /* --red:#E8143C was ~3.4:1 on this dark bg -- fails AA for body text (used broadly:
+     eyebrow, labels, callout bg, big numbers). */
+  --red:#E6224F; --red2:rgba(230,34,79,.12);
+  background:var(--bg); color:var(--paper);
+}
+/* .back-nav bg is hardcoded to the light cream value with no dark counterpart -- fixed per portfolio-bible.md dark-mode audit (Sep 2026). */
+body.dark-mode .back-nav{background:rgba(30,30,38,.85);}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+</body>
+</html>

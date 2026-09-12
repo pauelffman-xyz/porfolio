@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monchis drivers — Driver App Redesign</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F5F4F0;
+  --bg2:#EDEAE4;
+  --bg3:#E4E1DA;
+  --ink:#1A1814;
+  --ash:rgba(26,24,20,.5);
+  --ash2:rgba(26,24,20,.15);
+  --red:#E8143C;
+  --red2:rgba(232,20,60,.08);
+  --green:#2ECC71;
+  --teal:#00BFA5;
+  --line:rgba(26,24,20,.08);
+  --line2:rgba(26,24,20,.14);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ── BACK NAV ── */
+.back-nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(245,244,240,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line2);
+  padding:1rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);background:none;border:none;cursor:pointer;
+  text-decoration:none;transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.nav-title{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);}
+.nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(26,24,20,.3);}
+
+/* ── SHARED ── */
+.section{padding:5rem 4rem;}
+.section+.section{border-top:1px solid var(--line2);}
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--red);flex-shrink:0;}
+
+/* ── PHONE FRAME ── */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;}
+.phone-shell{
+  border-radius:24px;overflow:hidden;background:#1a1a22;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 16px 48px rgba(26,24,20,.14),0 4px 12px rgba(26,24,20,.08);
+  position:relative;
+}
+.phone-shell img{display:block;width:100%;height:auto;}
+
+/* ── COVER ── */
+.cover{
+  display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(4.5rem,10vw,11rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--ink);
+}
+.cover-title .dim{color:rgba(26,24,20,.12);}
+.cover-meta{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:.5rem;}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--ink);}
+
+/* ── PROBLEM/WIN ITEMS ── */
+.problem-list{display:flex;flex-direction:column;gap:.75rem;margin-top:2rem;}
+.problem-item{
+  padding:.875rem 1.25rem;
+  background:rgba(232,20,60,.04);
+  border-left:2px solid var(--red);
+  border-radius:0 6px 6px 0;
+}
+.problem-item .pi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.problem-item .pi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+.win-list{display:flex;flex-direction:column;gap:.75rem;margin-top:2rem;}
+.win-item{
+  padding:.875rem 1.25rem;
+  background:rgba(46,204,113,.05);
+  border-left:2px solid #2ECC71;
+  border-radius:0 6px 6px 0;
+}
+.win-item .wi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.win-item .wi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+
+/* ── QUOTES GRID ── */
+.quotes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+.quote-item{background:var(--bg);padding:1.5rem 1.75rem;}
+.qi-mark{font-size:1.5rem;opacity:.25;margin-bottom:.5rem;}
+.qi-text{font-size:.9rem;line-height:1.7;color:var(--ink);font-style:italic;margin-bottom:.75rem;}
+.qi-tag{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+
+/* ── METRICS BENTO ── */
+.metrics-bento{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.mb-item{background:var(--bg);padding:2rem 1.5rem;}
+.mb-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--red);display:block;margin-bottom:.25rem;}
+.mb-label{font-size:.8125rem;line-height:1.55;color:var(--ash);}
+.mb-item.accent{background:var(--red);}
+.mb-item.accent .mb-val{color:#fff;}
+.mb-item.accent .mb-label{color:rgba(255,255,255,.7);}
+
+/* ── DECISIONS GRID ── */
+.dec-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+  margin-top:3rem;
+}
+.dec{background:var(--bg);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ── INSIGHTS + CALLOUT ── */
+.ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem;}
+.ins{padding:1.75rem;border:1px solid var(--line2);border-radius:8px;background:var(--bg);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+.callout{background:var(--red);border-radius:8px;padding:2.5rem;}
+.co-l{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.7);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.15);display:flex;gap:2rem;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.5);margin-top:.125rem;}
+
+/* ── FLOW SHOWCASE ── */
+.flow-showcase{
+  display:flex;gap:2.5rem;align-items:flex-start;
+  overflow-x:auto;padding:2rem 0;
+  -webkit-overflow-scrolling:touch;
+}
+.flow-step{
+  display:flex;flex-direction:column;align-items:center;gap:1.25rem;
+  flex-shrink:0;position:relative;
+}
+.flow-step-num{
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);
+  background:rgba(232,20,60,.06);
+  border:1px solid rgba(232,20,60,.15);
+  border-radius:100px;padding:.25rem .75rem;
+}
+.flow-step-label{
+  text-align:center;max-width:200px;
+}
+.fsl-t{font-size:.875rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.25rem;}
+.fsl-d{font-size:.7rem;line-height:1.55;color:var(--ash);}
+.flow-arrow{
+  position:absolute;right:-1.75rem;top:50%;
+  transform:translateY(-50%);
+  font-size:1rem;color:var(--ash2);
+}
+
+/* ── 2-COL FEATURE ── */
+.feat-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+}
+.feat-grid.reverse{direction:rtl;}
+.feat-grid.reverse > *{direction:ltr;}
+
+/* ── FULL-FLOW ROW ── */
+.full-flow-row{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:1.5rem;
+  align-items:start;
+}
+.ffr-item{display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.ffr-num{
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:#fff;background:var(--red);
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.ffr-label{text-align:center;}
+.ffr-t{font-size:.8125rem;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:.2rem;}
+.ffr-d{font-size:.6875rem;line-height:1.5;color:var(--ash);}
+
+/* footer */
+.footer{
+  padding:2rem 4rem;border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-t{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+
+@media(max-width:768px){
+  .back-nav{padding:1rem 1.5rem;}
+  .nav-right{display:none;}
+  .cover{grid-template-columns:1fr;gap:2rem;padding:3rem 1.5rem 2rem;}
+  .cover-title{font-size:clamp(3rem,12vw,5rem);}
+  .section{padding:3rem 1.5rem;}
+  .feat-grid{grid-template-columns:1fr;gap:2rem;}
+  .feat-grid.reverse{direction:ltr;}
+  .quotes-grid{grid-template-columns:1fr;}
+  .metrics-bento{grid-template-columns:repeat(2,1fr);}
+  .dec-grid{grid-template-columns:1fr;}
+  .ins-grid{grid-template-columns:1fr;}
+  .full-flow-row{grid-template-columns:repeat(3,1fr);}
+  .footer{padding:2rem 1.5rem;flex-direction:column;gap:.5rem;}
+}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<!-- BACK NAV -->
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="nav-title">monchis drivers · App Redesign</div>
+  <div class="nav-right">Paula Elffman · Sr Product Designer</div>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Delivery Operations · Itti · Q1 2026</div>
+    <div class="cover-title">monchis<br><span class="dim">drivers.</span></div>
+  </div>
+  <div class="cover-meta">
+    <div><div class="cm-label">Company</div><div class="cm-val">🇵🇾 monchis · Itti</div></div>
+    <div><div class="cm-label">Role</div><div class="cm-val">Sr Product Designer (end-to-end)</div></div>
+    <div><div class="cm-label">Time</div><div class="cm-val">1 Quarter · Research · Design · Delivery</div></div>
+    <div><div class="cm-label">Scope</div><div class="cm-val">Full app redesign · Android</div></div>
+    <div><div class="cm-label">Scale</div><div class="cm-val">1,200+ active drivers · 300K orders/month</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line2);"></div>
+
+<!-- SECTION 01 — CONTEXT -->
+<div class="section">
+  <div class="eyebrow">Context & Problem</div>
+  <div style="font-size:clamp(2rem,3.5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+    Our drivers were the backbone.<br><span style="color:var(--red);">Their app was an afterthought.</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:720px;margin-bottom:3rem;">
+    Monchis processed 300K orders a month, but the driver-facing app hadn't been redesigned in years. Drivers managed shifts, accepted orders, and navigated deliveries through an interface that created friction at every step — costing time, money, and driver retention.
+  </p>
+
+  <div class="problem-list" style="max-width:720px;">
+    <div class="problem-item">
+      <div class="pi-t">No real-time visibility</div>
+      <div class="pi-d">Drivers couldn't see their assigned zone, shift schedule, or earnings clearly. Every decision required guesswork.</div>
+    </div>
+    <div class="problem-item">
+      <div class="pi-t">Clunky order management</div>
+      <div class="pi-d">Accepting, tracking, and completing orders involved too many taps. The progress pipeline was invisible — drivers had no sense of where they were in the flow.</div>
+    </div>
+    <div class="problem-item">
+      <div class="pi-t">No route context</div>
+      <div class="pi-d">The map showed the zone but not the pickup-to-delivery route. Drivers relied on switching to Google Maps mid-delivery.</div>
+    </div>
+    <div class="problem-item">
+      <div class="pi-t">Shift planning was blind</div>
+      <div class="pi-d">Drivers couldn't see upcoming shifts, per-order pay, or km rates. They showed up without knowing what they'd earn.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 02 — USER VOICES -->
+<div class="section">
+  <div class="eyebrow">Active Listening</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:3rem;">What drivers told us.</div>
+  <div class="quotes-grid">
+    <div class="quote-item">
+      <div class="qi-mark">"</div>
+      <div class="qi-text">Nunca sé cuánto voy a ganar en un turno hasta que termina. Es como trabajar a ciegas.</div>
+      <div class="qi-tag">Earnings visibility</div>
+    </div>
+    <div class="quote-item">
+      <div class="qi-mark">"</div>
+      <div class="qi-text">Me llega un pedido y tengo que abrir Google Maps aparte para ver cómo llegar. Pierdo tiempo.</div>
+      <div class="qi-tag">Navigation gap</div>
+    </div>
+    <div class="quote-item">
+      <div class="qi-mark">"</div>
+      <div class="qi-text">A veces acepto un pedido que está muy lejos y no me di cuenta. La app no me muestra la distancia clara.</div>
+      <div class="qi-tag">Distance awareness</div>
+    </div>
+    <div class="quote-item">
+      <div class="qi-mark">"</div>
+      <div class="qi-text">Si tengo un problema con un pedido, no sé cómo contactar a soporte rápido. El chat está escondido.</div>
+      <div class="qi-tag">Support access</div>
+    </div>
+    <div class="quote-item">
+      <div class="qi-mark">"</div>
+      <div class="qi-text">Quiero saber mi zona, mis turnos de la semana, y cuántos pedidos hice — todo en un lugar.</div>
+      <div class="qi-tag">Centralized info</div>
+    </div>
+    <div class="quote-item">
+      <div class="qi-mark">"</div>
+      <div class="qi-text">El botón de aceptar es chico y hay que buscarlo. Cuando estás manejando, cada segundo cuenta.</div>
+      <div class="qi-tag">Interaction speed</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 03 — FULL DELIVERY FLOW
+══════════════════════════════════════ -->
+<div class="section" style="background:linear-gradient(180deg,var(--bg) 0%,#fff 100%);">
+  <div class="eyebrow">Full Flow · End-to-End Delivery</div>
+  <div style="font-size:clamp(1.75rem,3.2vw,2.75rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1rem;">From push notification to<br><span style="color:var(--red);">delivered, in one flow.</span></div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:720px;margin-bottom:3rem;">
+    Every screen was designed around the real-world delivery sequence. Here's the full journey a driver follows — from the moment a new order arrives to marking it as delivered.
+  </p>
+
+  <div class="full-flow-row">
+    <div class="ffr-item">
+      <div class="ffr-num">1</div>
+      <div class="phone-shell" style="width:100%;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1090'%3E%3Crect width='500' height='1090' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="push_notification" alt="Push notification">
+      </div>
+      <div class="ffr-label">
+        <div class="ffr-t">Push notification</div>
+        <div class="ffr-d">New order arrives on lock screen with store name and location.</div>
+      </div>
+    </div>
+    <div class="ffr-item">
+      <div class="ffr-num">2</div>
+      <div class="phone-shell" style="width:100%;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1090'%3E%3Crect width='500' height='1090' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="home_order_incoming" alt="Home with incoming order">
+      </div>
+      <div class="ffr-label">
+        <div class="ffr-t">Accept or reject</div>
+        <div class="ffr-d">Incoming order card: store, distance, earnings, countdown — accept or reject.</div>
+      </div>
+    </div>
+    <div class="ffr-item">
+      <div class="ffr-num">3</div>
+      <div class="phone-shell" style="width:100%;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 933'%3E%3Crect width='500' height='933' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="order_detail_pickup" alt="Navigate to pickup">
+      </div>
+      <div class="ffr-label">
+        <div class="ffr-t">Navigate to pickup</div>
+        <div class="ffr-d">Map with store location. "Llegué al local" confirms arrival.</div>
+      </div>
+    </div>
+    <div class="ffr-item">
+      <div class="ffr-num">4</div>
+      <div class="phone-shell" style="width:100%;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1390'%3E%3Crect width='500' height='1390' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="order_detail_client" alt="Order detail">
+      </div>
+      <div class="ffr-label">
+        <div class="ffr-t">Client details</div>
+        <div class="ffr-d">Address, payment, client notes, call button. "Estoy afuera" to signal arrival.</div>
+      </div>
+    </div>
+    <div class="ffr-item">
+      <div class="ffr-num">5</div>
+      <div class="phone-shell" style="width:100%;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 889'%3E%3Crect width='500' height='889' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="delivery_map" alt="Deliver to client">
+      </div>
+      <div class="ffr-label">
+        <div class="ffr-t">Deliver</div>
+        <div class="ffr-d">Route to client with ETA, distance, and Google Maps integration.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 04 — HOME CONNECTED + ORDERS LIST -->
+<div class="section">
+  <div class="eyebrow">Feature Focus · Home & Orders</div>
+  <div class="feat-grid">
+    <div>
+      <div style="font-size:clamp(2rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+        Everything at<br><span style="color:var(--red);">a glance.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;">
+        The home screen shows connection status, zone map with live position, and shift controls — all without scrolling. When an order comes in, it overlays the map with store name, distance, earnings, and a countdown bar.
+      </p>
+      <div class="win-list">
+        <div class="win-item">
+          <div class="wi-t">Connected status badge</div>
+          <div class="wi-d">Green "Conectado" pill always visible. Drivers know their status instantly.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Zone map with live position</div>
+          <div class="wi-d">The map shows the assigned zone with the driver's real-time position. No more guessing where the boundaries are.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Pause & disconnect in thumb zone</div>
+          <div class="wi-d">"Pausar Turno" and "Desconectarme" are full-width at the bottom — reachable one-handed on a motorcycle.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1.5rem;justify-content:center;">
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1090'%3E%3Crect width='500' height='1090' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="home_connected" alt="Home connected">
+      </div>
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 995'%3E%3Crect width='500' height='995' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="orders_list" alt="Orders list">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 05 — ORDER DETAIL DEEP DIVE -->
+<div class="section">
+  <div class="eyebrow">Feature Focus · Order Pipeline</div>
+  <div class="feat-grid reverse">
+    <div>
+      <div style="font-size:clamp(2rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+        The order flow<br><span style="color:var(--red);">made visible.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;">
+        Every in-progress order shows a 4-step visual pipeline: <strong style="color:var(--ink);">Aceptado → Retirado → En camino → Entregado</strong>. Drivers always know exactly where they are in the delivery. The order detail reveals client info, payment method, product list, and one-tap call buttons for both client and store.
+      </p>
+      <div class="win-list">
+        <div class="win-item">
+          <div class="wi-t">Visual status pipeline</div>
+          <div class="wi-d">4-step progress bar on every order card. Color-coded: green for done, red for current, grey for pending.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Earnings upfront</div>
+          <div class="wi-d">Gs. 13,000 per order and payment method (EFECTIVO) visible before accepting. No hidden math.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">One-tap client contact</div>
+          <div class="wi-d">"Llamar al cliente" and "Llamar al local" — direct call buttons, no digging through menus.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1.5rem;justify-content:center;">
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 933'%3E%3Crect width='500' height='933' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="order_detail_pickup" alt="Pickup detail">
+      </div>
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1390'%3E%3Crect width='500' height='1390' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="order_detail_client" alt="Client detail">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 06 — NAVIGATION & MAP -->
+<div class="section">
+  <div class="eyebrow">Feature Focus · Navigation</div>
+  <div class="feat-grid">
+    <div>
+      <div style="font-size:clamp(2rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+        From pickup to delivery.<br><span style="color:var(--red);">One map, one flow.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;">
+        The active delivery screen shows the full route with real-time ETA and distance. A sticky bottom bar shows the current destination and order count. "Ir a Google maps" lets drivers hand off navigation when needed — but the route context stays inside the app.
+      </p>
+      <div class="win-list">
+        <div class="win-item">
+          <div class="wi-t">Route + ETA + distance</div>
+          <div class="wi-d">"Estás a 1h 02 min - 900 mts" — visible in the bottom bar without tapping anything.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Google Maps integration</div>
+          <div class="wi-d">One-tap "Ir a Google maps" button for turn-by-turn when needed — but the driver never loses context.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Multi-order awareness</div>
+          <div class="wi-d">Order count badge shows how many deliveries are active. Drivers stay oriented across batched orders.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1.5rem;justify-content:center;">
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 889'%3E%3Crect width='500' height='889' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="pickup_map" alt="Pickup map">
+      </div>
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 889'%3E%3Crect width='500' height='889' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="delivery_map" alt="Delivery map">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 07 — SHIFT + MENU + PAUSE -->
+<div class="section">
+  <div class="eyebrow">Feature Focus · Shift Management & Profile</div>
+  <div class="feat-grid reverse">
+    <div>
+      <div style="font-size:clamp(2rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">
+        Shifts, earnings, and<br><span style="color:var(--red);">driver identity.</span>
+      </div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;">
+        The side panel gives drivers a complete view of their account: profile, ranking tier (Monchis Silver), earnings history, shift management, and support access — all organized by context. When a driver pauses for too long, a modal with a countdown warns them before auto-disconnecting.
+      </p>
+      <div class="win-list">
+        <div class="win-item">
+          <div class="wi-t">Ranking & gamification</div>
+          <div class="wi-d">"Monchis Silver" badge visible in the profile. Rankings give drivers a sense of progression and loyalty.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Pause timeout modal</div>
+          <div class="wi-d">"Estás llegando al límite del estado pausado" with a countdown timer. Clear choice: Activarme or Desconectarme.</div>
+        </div>
+        <div class="win-item">
+          <div class="wi-t">Structured menu</div>
+          <div class="wi-d">Grouped by Tu Cuenta, Turnos y Pedidos, Centro de Ayuda — not a flat list of 15 items.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1.5rem;justify-content:center;">
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1288'%3E%3Crect width='500' height='1288' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="menu_sidepanel" alt="Menu sidepanel">
+      </div>
+      <div class="phone-shell" style="width:220px;">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 1035'%3E%3Crect width='500' height='1035' fill='%231a1a22'/%3E%3C/svg%3E" data-img-id="turnos_paused_modal" alt="Turnos paused modal">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 08 — IMPACT -->
+<div class="section">
+  <div class="eyebrow">Impact & Outcomes</div>
+  <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:3rem;">Designed for speed.<br><span style="color:var(--red);">Measured by trust.</span></div>
+
+  <div class="metrics-bento" style="margin-bottom:2rem;">
+    <div class="mb-item accent">
+      <div class="mb-val">1,200+</div>
+      <div class="mb-label">Active drivers using the redesigned app daily</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">300K</div>
+      <div class="mb-label">Orders per month processed through the driver app</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">10</div>
+      <div class="mb-label">Key screens designed: home, orders, detail, map, menu, shifts, pause, push, pickup, delivery</div>
+    </div>
+    <div class="mb-item">
+      <div class="mb-val red">5</div>
+      <div class="mb-label">Steps in the order lifecycle — all visible to the driver at any moment</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);border-radius:8px;overflow:hidden;">
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--red);">5</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Nav tabs</div>
+    </div>
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);">4</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Pipeline stages</div>
+    </div>
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);">1</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">Tap to call</div>
+    </div>
+    <div style="background:var(--bg);padding:1.75rem;text-align:center;">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);">0</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.25rem;">App switches needed</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 09 — DECISIONS + LEARNINGS -->
+<div class="section">
+  <div class="eyebrow">Key Design Decisions</div>
+  <div class="dec-grid">
+    <div class="dec"><div class="dec-n">Decision 01</div><div class="dec-t">Dark UI for outdoor use</div><div class="dec-d">Drivers work in bright sunlight. A dark interface with high-contrast text and colored CTAs reduces glare and improves readability on the road.</div></div>
+    <div class="dec"><div class="dec-n">Decision 02</div><div class="dec-t">Visual order pipeline</div><div class="dec-d">Replaced invisible state changes with a 4-step color-coded pipeline. Drivers always know where they are — Aceptado, Retirado, En camino, Entregado.</div></div>
+    <div class="dec"><div class="dec-n">Decision 03</div><div class="dec-t">Thumb-zone primary actions</div><div class="dec-d">Accept/reject, Pausar, Desconectarme, Llegué al local, Estoy afuera — all full-width at the bottom. One-handed, on a motorcycle — safety first.</div></div>
+    <div class="dec"><div class="dec-n">Decision 04</div><div class="dec-t">Earnings before accepting</div><div class="dec-d">"Ganancia Gs 13.000" visible on the incoming order card, plus distance. Drivers make informed decisions before committing.</div></div>
+    <div class="dec"><div class="dec-n">Decision 05</div><div class="dec-t">Pause timeout with countdown</div><div class="dec-d">Instead of silently disconnecting paused drivers, a modal warns with a countdown. Clear choice: Activarme or Desconectarme. Respect, not punishment.</div></div>
+    <div class="dec"><div class="dec-n">Decision 06</div><div class="dec-t">Structured side menu</div><div class="dec-d">Tu Cuenta · Turnos y Pedidos · Centro de Ayuda · Acerca de Monchis. Grouped by context, not a flat list. Ranking badge gives drivers identity.</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;">
+    <div class="ins-grid" style="grid-template-columns:1fr;margin-top:0;">
+      <div class="ins"><div class="ins-n">Learning 01</div><div class="ins-t">Drivers are not power users</div><div class="ins-d">They're on a motorcycle, in the sun, with one hand. Every interaction needs to be optimized for speed and minimal cognitive load — not feature richness.</div></div>
+      <div class="ins"><div class="ins-n">Learning 02</div><div class="ins-t">Transparency drives retention</div><div class="ins-d">When drivers can see exactly what they'll earn per order before accepting, they trust the platform. Opaque economics create distrust and churn.</div></div>
+      <div class="ins"><div class="ins-n">Learning 03</div><div class="ins-t">The pipeline is the product</div><div class="ins-d">Making order status visible didn't just reduce support tickets — it gave drivers a sense of progress and control. Visibility is trust.</div></div>
+    </div>
+    <div class="callout">
+      <div class="co-l">The result</div>
+      <div class="co-t">"La app que te acompaña en tu jornada de delivery."</div>
+      <div class="co-d">The redesigned driver app transformed a friction-filled tool into a companion that drivers could trust: transparent earnings, visible order progress, integrated navigation, and support always one tap away. Every screen was designed for the reality of delivery work — not a desk.</div>
+      <div class="co-stats">
+        <div><div class="cos-v">1,200+</div><div class="cos-l">Active drivers</div></div>
+        <div><div class="cos-v">300K</div><div class="cos-l">Orders/month</div></div>
+        <div><div class="cos-v">10</div><div class="cos-l">Screens designed</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-t">monchis drivers · App Redesign · Q1 2026</div>
+  <div class="footer-t">Sr Product Designer · Paula Elffman</div>
+</div>
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function coverFrom(x,y,dark,cb){
+    overlay.classList.toggle('dark',!!dark);
+    overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    });
+    setTimeout(cb,600);
+  }
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      coverFrom(x,y,true,function(){ window.location.href='index.html'; });
+    });
+  }
+})();
+</script>
+
+<script>
+/* LAZY LOAD IMAGES */
+(function(){
+  var IMG_STORE = window.MONCHIS_DRIVERS_IMAGES;
+  function applyImages(){
+    if(!window.MONCHIS_DRIVERS_IMAGES) return;
+    IMG_STORE = window.MONCHIS_DRIVERS_IMAGES;
+    document.querySelectorAll('[data-img-id]').forEach(function(el){
+      if(el.__loaded) return;
+      var id = el.getAttribute('data-img-id');
+      var src = IMG_STORE[id];
+      if(!src) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            el.src = src;
+            el.__loaded = true;
+            io.disconnect();
+          }
+        });
+      }, {rootMargin:'400px 0px'});
+      io.observe(el);
+    });
+  }
+  if(window.MONCHIS_DRIVERS_IMAGES){
+    applyImages();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'monchis-drivers-images.js';
+    s.onload = applyImages;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ink:#F4F4F6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --ash2:rgba(244,244,246,0.15);
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  background:var(--bg); color:var(--paper);
+}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+</body>
+</html>

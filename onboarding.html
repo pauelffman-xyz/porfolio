@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheFork New Onboarding — Value Prop in 3 Steps</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F5F4F0;
+  --bg2:#EDEAE4;
+  --bg3:#E4E1DA;
+  --ink:#1A1814;
+  --ash:rgba(26,24,20,.5);
+  --ash2:rgba(26,24,20,.15);
+  --red:#0B8457;
+  --red2:rgba(11,132,87,.08);
+  --green:#2ECC71;
+  --line:rgba(26,24,20,.08);
+  --line2:rgba(26,24,20,.14);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ── BACK NAV ── */
+.back-nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(245,244,240,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line2);
+  padding:1rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);background:none;border:none;cursor:pointer;
+  text-decoration:none;transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.nav-title{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);}
+.nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(26,24,20,.3);}
+
+/* ── SHARED ── */
+.section{padding:5rem 4rem;}
+.section+.section{border-top:1px solid var(--line2);}
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--red);flex-shrink:0;}
+.section-label{
+  display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;
+}
+.sl-t{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);white-space:nowrap;}
+.sl-l{flex:1;height:1px;background:var(--line);}
+
+/* ── COVER ── */
+.cover{
+  display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(4.5rem,10vw,10.5rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--ink);
+}
+.cover-title .dim{color:rgba(26,24,20,.12);}
+.cover-meta{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:.5rem;}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.2rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--ink);}
+
+/* ── COVER OVERVIEW LOTTIE ── */
+.cover-video-wrap{
+  max-width:1100px;margin:0 auto;padding:0 4rem 4rem;
+}
+.cover-video-frame{
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.16),0 8px 20px rgba(26,24,20,.08);
+  line-height:0;
+}
+#vt-overview-lottie{width:100%;height:auto;display:block;}
+#vt-overview-lottie svg{display:block;}
+
+/* ── PHOTO CAROUSEL (Photo Governance section) ── */
+.photo-carousel{
+  position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;
+  background:var(--bg2);
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.16),0 8px 20px rgba(26,24,20,.08);
+}
+.pc-track{display:flex;width:100%;height:100%;transition:transform .7s cubic-bezier(.65,0,.35,1);}
+.pc-slide{flex:0 0 100%;width:100%;height:100%;}
+.pc-slide img{width:100%;height:100%;object-fit:contain;display:block;background:var(--bg2);}
+.pc-slide-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:var(--bg2);
+}
+.pc-slide-placeholder svg{width:15%;height:15%;opacity:.35;}
+.pc-dots{display:flex;gap:.4rem;justify-content:center;margin-top:.875rem;}
+.pc-dot{width:6px;height:6px;border-radius:50%;background:rgba(26,24,20,.18);transition:background .3s;}
+.pc-dot.active{background:var(--red);}
+@media (prefers-reduced-motion: reduce){
+  .pc-track{transition:none;}
+}
+
+/* ── BROWSER FRAME (desktop dashboard) ── */
+.browser-shell{
+  border-radius:10px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 64px rgba(26,24,20,.14),0 8px 20px rgba(26,24,20,.06);
+}
+.browser-topbar{
+  background:#EDEAE4;padding:.6875rem 1rem;
+  display:flex;align-items:center;gap:1.25rem;
+}
+.bt-dots{display:flex;gap:.375rem;}
+.bt-dot{width:9px;height:9px;border-radius:50%;background:rgba(26,24,20,.18);}
+.bt-url{
+  flex:1;background:#fff;border-radius:6px;padding:.3rem .875rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.5625rem;color:var(--ash);
+  max-width:280px;
+}
+.browser-shell img{display:block;width:100%;height:auto;}
+
+/* ── PHONE FRAME (small) ── */
+.phone-shell-sm{
+  border-radius:20px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 16px 48px rgba(26,24,20,.14),0 4px 12px rgba(26,24,20,.08);
+}
+.phone-shell-sm img{display:block;width:100%;height:auto;}
+
+/* ── DEVICE MOCKUPS (placeholders) ── */
+.device-laptop{
+  position:relative;
+  padding:16px 16px 0;
+  background:linear-gradient(180deg,#3d3d42,#232326);
+  border-radius:20px 20px 5px 5px;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 30px 70px rgba(26,24,20,.22),0 10px 24px rgba(26,24,20,.1);
+}
+.device-laptop::before{
+  content:'';
+  position:absolute;top:7px;left:50%;transform:translateX(-50%);
+  width:7px;height:7px;border-radius:50%;
+  background:#0a0a0c;box-shadow:0 0 0 2px rgba(255,255,255,.04);
+}
+.device-laptop-screen{overflow:hidden;border-radius:4px 4px 0 0;background:#fff;line-height:0;}
+.device-laptop-screen img{display:block;width:100%;height:auto;}
+.device-laptop-base{
+  height:16px;
+  background:linear-gradient(180deg,#e8e8ea,#c5c5c9);
+  border-radius:0 0 3px 3px;
+  position:relative;
+}
+.device-laptop-base::after{
+  content:'';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:70px;height:7px;background:#aeaeb2;border-radius:0 0 8px 8px;
+}
+.device-laptop-foot{
+  height:7px;width:104%;margin-left:-2%;
+  background:linear-gradient(180deg,#c5c5c9,#a3a3a8);
+  border-radius:0 0 16px 16px;
+}
+.device-phone{
+  position:relative;
+  padding:10px;
+  background:linear-gradient(180deg,#3d3d42,#232326);
+  border-radius:34px;
+  box-shadow:0 0 0 1px rgba(26,24,20,.08),0 24px 60px rgba(26,24,20,.2),0 8px 20px rgba(26,24,20,.1);
+}
+.device-phone-screen{overflow:hidden;border-radius:24px;background:#fff;position:relative;line-height:0;}
+.device-phone-screen img{display:block;width:100%;height:auto;}
+.device-phone-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:38%;height:22px;background:#232326;border-radius:0 0 14px 14px;
+  z-index:2;
+}
+.ph-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  margin-top:.75rem;
+  padding:.3rem 1rem;border-radius:100px;
+  background:rgba(201,138,31,.1);border:1px solid rgba(201,138,31,.3);
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#96650F;
+}
+
+.badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .875rem;border-radius:100px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
+}
+.badge-r{background:var(--red);color:#fff;}
+.badge-g{background:rgba(46,204,113,.15);color:#27ae60;border:1px solid rgba(46,204,113,.25);}
+.badge-n{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+
+.plabel{margin-top:1.5rem;text-align:center;max-width:220px;}
+.pl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:.375rem;}
+.pl-t{font-size:.875rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.25rem;}
+.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+/* ── PROBLEM / WIN LISTS ── */
+.problem-list{display:flex;flex-direction:column;gap:.75rem;}
+.problem-item{
+  padding:.875rem 1.25rem;
+  background:rgba(11,132,87,.04);
+  border-left:2px solid var(--red);
+  border-radius:0 6px 6px 0;
+}
+.problem-item .pi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.problem-item .pi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+.win-list{display:flex;flex-direction:column;gap:.75rem;}
+.win-item{
+  padding:.875rem 1.25rem;
+  background:rgba(46,204,113,.05);
+  border-left:2px solid #2ECC71;
+  border-radius:0 6px 6px 0;
+}
+.win-item .wi-t{font-size:.875rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;}
+.win-item .wi-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+
+/* ── IMPACT STRIP ── */
+.impact-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.imp-item{background:var(--bg);padding:2rem 1.75rem;}
+.imp-val{font-size:2.5rem;font-weight:800;letter-spacing:-.04em;color:var(--ink);display:block;margin-bottom:.375rem;}
+.imp-val.red{color:var(--red);}
+.imp-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
+
+/* ── QUOTES GRID ── */
+.quotes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+.quote-item{background:var(--bg);padding:1.5rem 1.75rem;}
+.qi-mark{font-size:1.5rem;opacity:.25;margin-bottom:.5rem;}
+.qi-text{font-size:.9rem;line-height:1.7;color:var(--ink);font-style:italic;margin-bottom:.75rem;}
+.qi-tag{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+
+/* ── METRICS GRID ── */
+.metrics-bento{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.mb-item{background:var(--bg);padding:2rem 1.5rem;}
+.mb-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--red);display:block;margin-bottom:.25rem;}
+.mb-label{font-size:.8125rem;line-height:1.55;color:var(--ash);}
+.mb-item.accent{background:var(--red);}
+.mb-item.accent .mb-val{color:#fff;}
+.mb-item.accent .mb-label{color:rgba(255,255,255,.7);}
+.mb-item.dark{background:var(--ink);}
+.mb-item.dark .mb-val{color:#fff;}
+.mb-item.dark .mb-label{color:rgba(255,255,255,.55);}
+
+/* ── DECISIONS / PILLARS GRID ── */
+.dec-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--line2);
+  border:1px solid var(--line2);border-radius:8px;overflow:hidden;
+}
+.dec{background:var(--bg);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ── INSIGHTS ── */
+.ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.ins{padding:1.75rem;border:1px solid var(--line2);border-radius:8px;background:var(--bg);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ── RED CALLOUT ── */
+.callout{background:var(--red);border-radius:8px;padding:2.5rem;}
+.co-l{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.7);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.15);display:flex;gap:2rem;flex-wrap:wrap;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.5);margin-top:.125rem;}
+
+/* ── STEP CARDS (Action) ── */
+.step-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.step-card{padding:2.25rem;background:#fff;border:1px solid var(--line2);border-radius:10px;position:relative;}
+.step-num{
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(11,132,87,.2);border-radius:100px;
+  padding:.25rem .875rem;display:inline-flex;margin-bottom:1.25rem;
+}
+.step-t{font-size:1.375rem;font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:.875rem;}
+.step-d{font-size:.875rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.step-d strong{color:var(--ink);font-weight:600;}
+
+/* footer */
+.footer{
+  padding:2rem 4rem;border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-t{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+
+/* ── VENDOR TOOL DESIGN SYSTEM ── */
+.vt-ds {}
+.vds-header { margin-bottom:2.5rem; margin-top:4rem; padding-top:3.5rem; border-top:2px solid rgba(26,24,20,.08); }
+.vds-title {
+  font-family:'Geist',sans-serif;font-size:clamp(2.25rem,3.6vw,3.5rem);
+  font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:.95;margin-bottom:1rem;
+}
+.vds-title em { font-style:normal;color:var(--red); }
+.vds-sub { font-family:'Geist',sans-serif;font-weight:300;font-size:1rem;line-height:1.75;color:var(--ash);max-width:680px; }
+
+.vds-components { display:grid;grid-template-columns:repeat(2,1fr);gap:1rem; }
+.vds-comp-card { background:#fff;border:1px solid rgba(26,24,20,.1);border-radius:10px;overflow:hidden; }
+.vds-comp-label { font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);padding:.75rem 1rem;border-bottom:1px solid rgba(26,24,20,.06); }
+.vds-comp-body { padding:1.5rem;display:flex;flex-direction:column;gap:.75rem; }
+.vds-comp-card-wide { grid-column:1/-1; }
+.vds-comp-meta { padding:.75rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.08em;color:var(--ash); }
+
+/* order status pill */
+.os-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .75rem;border-radius:100px;font-size:.6875rem;font-weight:600;}
+.os-cancelada{background:rgba(11,132,87,.1);color:var(--red);}
+.os-entregada{background:rgba(46,204,113,.12);color:#27ae60;}
+.os-rechazada{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+.os-pendiente{background:rgba(255,171,0,.12);color:#B87200;}
+
+/* status timeline mini */
+.tl-mini{display:flex;align-items:center;gap:0;}
+.tl-step{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;position:relative;}
+.tl-dot{width:22px;height:22px;border-radius:50%;background:#27ae60;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6875rem;z-index:2;}
+.tl-line{position:absolute;top:11px;left:50%;width:100%;height:2px;background:#27ae60;z-index:1;}
+.tl-step:last-child .tl-line{display:none;}
+.tl-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ash);text-align:center;}
+
+/* photo status chips */
+.ph-status-row{display:flex;gap:.75rem;}
+.ph-chip{flex:1;padding:1.25rem;border-radius:8px;text-align:center;border:1px solid var(--line2);}
+.ph-chip-review{background:rgba(255,171,0,.06);border-color:rgba(255,171,0,.25);}
+.ph-chip-rejected{background:rgba(11,132,87,.05);border-color:rgba(11,132,87,.2);}
+.ph-chip-approved{background:rgba(46,204,113,.06);border-color:rgba(46,204,113,.25);}
+.ph-chip-t{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+
+/* roles table mini */
+.roles-mini{border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:#fff;}
+.rm-row{display:grid;grid-template-columns:2fr 1.5fr 1fr;padding:.75rem 1.25rem;font-size:.8125rem;}
+.rm-row+.rm-row{border-top:1px solid var(--line);}
+.rm-head{background:var(--bg2);font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);}
+.rm-role{display:inline-flex;padding:.2rem .625rem;border-radius:100px;background:rgba(11,132,87,.08);color:var(--red);font-size:.6875rem;font-weight:600;}
+
+@media(max-width:768px){
+  .vds-components { grid-template-columns:1fr; }
+  .step-grid,.ba-grid-vt{grid-template-columns:1fr !important;}
+}
+</style>
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ink:#F4F4F6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --ash2:rgba(244,244,246,0.15);
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  background:var(--bg); color:var(--paper);
+}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<div style="background:#0B8457;color:#fff;text-align:center;padding:.5rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:.625rem;letter-spacing:.08em;text-transform:uppercase;">
+  Borrador — falta texto y capturas reales del caso, listo para reemplazar
+</div>
+
+
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>&larr;</span> Back to portfolio
+  </a>
+  <div class="nav-title">New Onboarding &middot; TheFork</div>
+  <div class="nav-right">Paula Elffman &middot; Sr Product Designer</div>
+</nav>
+
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Onboarding &amp; Personalization &middot; TheFork &middot; Borrador</div>
+    <div class="cover-title">A new<br>onboarding<br><span class="dim">in 3 steps.</span></div>
+  </div>
+  <div class="cover-meta">
+    <div><div class="cm-label">Company</div><div class="cm-val">🍴 TheFork (a Tripadvisor company)</div></div>
+    <div><div class="cm-label">Role</div><div class="cm-val">Product Designer</div></div>
+    <div><div class="cm-label">Scope</div><div class="cm-val">Mobile app &middot; Onboarding &amp; personalization</div></div>
+    <div><div class="cm-label">Status</div><div class="cm-val">Borrador — completar con datos reales</div></div>
+  </div>
+</div>
+
+<div style="height:1px;background:var(--line2);"></div>
+
+<div class="section">
+  <div class="eyebrow">Context &amp; Problem</div>
+  <div style="font-size:clamp(2rem,3.5vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">
+    Onboarding that opens the door,<br><span style="color:var(--red);">but never shows the house.</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    [Borrador] Today's onboarding and customization experience is effectively null. Users move through several steps — sign up, permissions, legal consent — before the app shows anything that resembles what makes TheFork useful for them. None of those steps communicate the value proposition, so people reach the home screen without understanding why location, food preferences, or a shortlist even matter.
+  </p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:1rem;">
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="pi-t">Steps without a "why"</div>
+        <div class="pi-d">[Borrador] Sign-up, location and legal screens are shown back-to-back with no framing — users can't tell how each step will shape what they see next.</div>
+      </div>
+    </div>
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="pi-t">Value prop arrives too late</div>
+        <div class="pi-d">[Borrador] Personalization only becomes visible deep inside the app, once the user is already browsing — by then the onboarding has already lost their attention.</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="pi-t">Low engagement, low completion</div>
+        <div class="pi-d">[Borrador] A generic, undifferentiated flow gives no reason to finish it — drop-off is highest exactly where personalization should start paying off.</div>
+      </div>
+    </div>
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="pi-t">Skip is the path of least resistance</div>
+        <div class="pi-d">[Borrador] Every preference step can be skipped, and with nothing shown in return for answering, most users take the exit.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">The Solution &middot; Value Prop in 3 Steps</div>
+  <div style="font-size:clamp(2rem,3.2vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:1.25rem;max-width:820px;">
+    Show the value <span style="color:var(--red);">before asking for anything back.</span>
+  </div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:3rem;">
+    [Borrador] The proposal collapses onboarding into three understandable, sequential moments — each one earning the next. We tell the user why we need their location, learn what they like and dislike, and reward that input immediately with a handpicked list of restaurants before they ever reach the generic home screen.
+  </p>
+
+  <div class="step-grid">
+    <div class="step-card">
+      <div class="step-num">Step 1 &middot; Location</div>
+      <div class="step-t">Where would you like to eat?</div>
+      <div class="step-d">[Borrador] A single, low-friction choice — type a city or share location — framed around a clear benefit: <strong>finding the best spots nearby</strong>, not filling out a form.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">Step 2 &middot; Taste</div>
+      <div class="step-t">Which types of food do you want to try?</div>
+      <div class="step-d">[Borrador] Removable cuisine chips instead of a dropdown — quick to scan, quick to adjust, and framed as recommendations rather than a filter form.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">Step 3 &middot; Payoff</div>
+      <div class="step-t">TheFork Shortlist for you!</div>
+      <div class="step-d">[Borrador] Before landing on the generic home screen, the user sees a small, ranked set of restaurants that already reflect their answers — proof the previous two steps were worth it.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">The Flow</div>
+  <div style="font-size:clamp(1.5rem,2.4vw,2rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
+    From splash to a personalized first screen
+  </div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;margin-bottom:2.5rem;">
+    [Borrador] Twelve screens, three decisions. Sign-up and legal consent stay where they need to for compliance, but every preference-gathering step is paired with an immediate, visible payoff.
+  </p>
+
+  <div class="sl-t" style="margin-bottom:1rem;">01 &middot; Entry &amp; sign-up</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:3rem;">
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-01-splash.png" alt="Splash screen"></div>
+      <div class="plabel"><div class="pl-n">Splash</div><div class="pl-t">Find amazing dining experiences near you</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-02-signup.png" alt="Sign-up modal"></div>
+      <div class="plabel"><div class="pl-n">Sign-up</div><div class="pl-t">Welcome to TheFork</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-12-consent.png" alt="Tracking consent screen"></div>
+      <div class="plabel"><div class="pl-n">Consent</div><div class="pl-t">You deserve the best experience</div></div>
+    </div>
+  </div>
+
+  <div class="sl-t" style="margin-bottom:1rem;">02 &middot; Step 1 — Location</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:3rem;">
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-03-location-empty.png" alt="Choose your city, empty state"></div>
+      <div class="plabel"><div class="pl-n">Prompt</div><div class="pl-t">Choose your city or share location</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-04-location-typing.png" alt="Typing a city name"></div>
+      <div class="plabel"><div class="pl-n">Input</div><div class="pl-t">Type-ahead search</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-05-location-filled.png" alt="City selected"></div>
+      <div class="plabel"><div class="pl-n">Selected</div><div class="pl-t">Paris confirmed</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-06-location-permission.png" alt="System location permission"></div>
+      <div class="plabel"><div class="pl-n">Precision</div><div class="pl-t">System permission for exact matches</div></div>
+    </div>
+  </div>
+
+  <div class="sl-t" style="margin-bottom:1rem;">03 &middot; Step 2 — Taste</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:3rem;">
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-07-food-empty.png" alt="Cuisine chips, none selected"></div>
+      <div class="plabel"><div class="pl-n">Prompt</div><div class="pl-t">Which types of food do you want to try?</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-08-food-selected.png" alt="Cuisine chips, some selected"></div>
+      <div class="plabel"><div class="pl-n">Selected</div><div class="pl-t">Vegetarian, Japanese, Mediterranean</div></div>
+    </div>
+  </div>
+
+  <div class="sl-t" style="margin-bottom:1rem;">04 &middot; Step 3 — Payoff</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-09-shortlist.png" alt="TheFork Shortlist for you"></div>
+      <div class="plabel"><div class="pl-n">Payoff</div><div class="pl-t">TheFork Shortlist for you!</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-10-shortlist-detail.png" alt="Shortlist restaurant detail"></div>
+      <div class="plabel"><div class="pl-n">Detail</div><div class="pl-t">Match score, price, distance and offers</div></div>
+    </div>
+    <div>
+      <div class="phone-shell-sm"><img src="assets/onb-11-home-personalized.png" alt="Personalized home screen"></div>
+      <div class="plabel"><div class="pl-n">Carry-through</div><div class="pl-t">The home screen keeps the shortlist visible, not buried</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">Outcome</div>
+  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1.5rem;">[Borrador] Resultados e impacto a completar.</div>
+  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;">
+    Espacio reservado para métricas reales (completitud del onboarding, adopción de Shortlist, tiempo a la primera reserva) y aprendizajes del lanzamiento.
+  </p>
+</div>
+
+<div class="footer">
+  <div class="footer-t">New Onboarding &middot; TheFork &middot; Borrador</div>
+  <div class="footer-t">Sr Product Designer &middot; Paula Elffman</div>
+</div>
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      overlay.classList.toggle('dark',false);
+      overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      overlay.classList.remove('animate');
+      void overlay.offsetWidth;
+      overlay.classList.add('animate');
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+      });
+      setTimeout(function(){ window.location.href='index.html'; },600);
+    });
+  }
+})();
+</script>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+
+</body>
+</html>

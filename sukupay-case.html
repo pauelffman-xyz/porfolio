@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SukuPay — Home XP · Paula Elffman</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F5F4F0;
+  --bg2:#EDEAE4;
+  --bg3:#E4E1DA;
+  --ghost:#EDEAE4;
+  --ghost-2:#E4E1DA;
+  --paper:#152119;
+  --ash:rgba(21,33,25,.55);
+  --ash-2:rgba(21,33,25,.28);
+  --accent:#0E6B4A;
+  --lime:#AEEB3B;
+  --dark:#0B2A20;
+  --line:rgba(21,33,25,.08);
+  --line-md:rgba(21,33,25,.16);
+  --line2:rgba(21,33,25,.14);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+html{font-size:16px;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ─── SHARED ─── */
+.mono{font-family:'Space Grotesk',sans-serif;}
+.accent{color:var(--accent);}
+.lime{color:var(--lime);}
+
+/* ─── SECTION WRAPPER ─── */
+.section{padding:5rem 4rem;}
+.section + .section{border-top:1px solid var(--line2);}
+
+/* ─── EYEBROW ─── */
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);flex-shrink:0;}
+
+/* ─── PHONES ─── */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;}
+.phone-shell{
+  border-radius:20px;overflow:hidden;background:transparent;
+  box-shadow:0 0 0 1px rgba(21,33,25,.08), 0 16px 48px rgba(21,33,25,.14), 0 4px 12px rgba(21,33,25,.08);
+  position:relative;
+}
+.phone-shell img{display:block;width:100%;height:auto;}
+.badge{
+  margin-top:-12px;position:relative;z-index:5;
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .875rem;border-radius:100px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
+}
+.badge-a{background:var(--accent);color:#fff;}
+.badge-g{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
+.badge-l{background:rgba(174,235,59,.18);color:#5B7A0E;border:1px solid rgba(174,235,59,.4);}
+
+.plabel{margin-top:1.5rem;text-align:center;max-width:210px;}
+.pl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.375rem;}
+.pl-t{font-size:.875rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.25rem;}
+.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+/* wire / component shell */
+.wire-shell{
+  border-radius:12px;overflow:hidden;
+  background:transparent;
+  display:flex;align-items:center;justify-content:center;
+}
+.wire-shell img{display:block;width:100%;height:auto;}
+
+/* flow arrow */
+.arrow-col{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.375rem;padding-top:5rem;
+}
+.arr-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);}
+.arr-line{width:1px;height:28px;background:linear-gradient(to bottom,var(--accent),rgba(21,33,25,0));}
+.arr-lbl{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);writing-mode:vertical-rl;margin-top:.25rem;
+}
+
+/* ─── SECTION 00: COVER ─── */
+.cover{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:4rem;
+  align-items:end;
+  padding:5rem 4rem 4rem;
+}
+.cover-title{
+  font-size:clamp(4.5rem,10vw,10rem);
+  font-weight:800;letter-spacing:-.06em;line-height:.85;
+  color:var(--paper);
+}
+.cover-title .dim{color:rgba(21,33,25,.15);}
+.cover-meta{
+  display:flex;flex-direction:column;gap:1.25rem;
+  padding-bottom:.5rem;
+}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.25rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--paper);}
+
+/* ─── SECTION 01: OVERVIEW ─── */
+.overview-grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+.ov-title{
+  font-size:clamp(2.25rem,4vw,3.75rem);
+  font-weight:800;letter-spacing:-.04em;line-height:1.02;
+  margin-bottom:1.5rem;
+}
+.ov-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.ov-body strong{color:var(--paper);font-weight:600;}
+.stats-col{display:flex;flex-direction:column;gap:0;}
+.stat-item{
+  padding:1.25rem 0;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:.875rem;
+}
+.stat-val{font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--paper);white-space:nowrap;}
+.stat-lbl{font-size:.8125rem;color:var(--ash);line-height:1.4;}
+.accent-card{
+  background:var(--accent);
+  border-radius:12px;padding:2rem;
+}
+.ac-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.875rem;}
+.ac-val{font-size:1.375rem;font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.35;margin-bottom:.75rem;}
+.ac-desc{font-size:.8125rem;color:rgba(255,255,255,.82);line-height:1.65;}
+
+/* ─── PILL ROW (assumptions) ─── */
+.pill-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.5rem;}
+.pill-card{
+  background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  padding:1.5rem 1.25rem;text-align:center;
+}
+.pill-ico{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(14,107,74,.1);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto .875rem;font-size:1rem;font-weight:700;
+}
+.pill-t{font-size:.8125rem;font-weight:600;color:var(--paper);line-height:1.4;}
+.pill-note{
+  margin-top:1.25rem;text-align:center;font-size:.75rem;color:var(--ash);
+  font-style:italic;
+}
+
+/* ─── COMPETITOR GRID ─── */
+.comp-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;margin-top:3rem;
+}
+.comp-card{background:var(--bg2);padding:1.75rem 1.5rem;display:flex;flex-direction:column;}
+.comp-name{font-size:1rem;font-weight:800;letter-spacing:-.02em;color:var(--paper);margin-bottom:.25rem;}
+.comp-owns{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}
+.comp-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.25rem;flex:1;}
+.comp-list li{font-size:.75rem;line-height:1.5;color:var(--ash);padding-left:.875rem;position:relative;}
+.comp-list li::before{content:'';position:absolute;left:0;top:.5em;width:4px;height:4px;border-radius:50%;background:var(--ash-2);}
+.comp-insight{
+  padding-top:1rem;border-top:1px solid var(--line);
+  font-size:.75rem;line-height:1.55;color:var(--paper);font-weight:500;
+}
+.comp-insight span{font-family:'Space Grotesk',sans-serif;font-size:.4375rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);display:block;margin-bottom:.375rem;font-weight:400;}
+
+.opportunity-box{
+  margin-top:1.5rem;background:var(--dark);border-radius:12px;padding:1.75rem 2rem;
+  text-align:center;
+}
+.opportunity-box .co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem;}
+.opportunity-box .co-t{font-size:1.125rem;font-weight:600;letter-spacing:-.01em;line-height:1.5;color:#fff;max-width:760px;margin:0 auto;}
+.opportunity-box .co-t .lime{color:var(--lime);font-weight:700;}
+
+/* ─── OLD XP CAROUSEL (multi-item marquee) ─── */
+.oldxp-block{margin-bottom:3rem;}
+.oldxp-tag{
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ash);text-align:center;margin-bottom:1.5rem;
+}
+.oldxp-carousel{
+  position:relative;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 6%,#000 94%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0,#000 6%,#000 94%,transparent 100%);
+}
+.oldxp-track{
+  display:flex;align-items:flex-start;gap:1.75rem;width:max-content;
+  animation:oldxp-scroll 32s linear infinite;
+}
+.oldxp-carousel:hover .oldxp-track{animation-play-state:paused;}
+@keyframes oldxp-scroll{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+.oldxp-slide{
+  flex:0 0 auto;
+  display:flex;flex-direction:column;align-items:center;
+}
+.oldxp-slide img{
+  height:340px;width:auto;display:block;
+  filter:drop-shadow(0 16px 32px rgba(21,33,25,.14));
+}
+.oldxp-cap{
+  margin-top:.875rem;font-size:.75rem;font-weight:600;color:var(--paper);
+  display:flex;align-items:center;gap:.5rem;
+}
+.oldxp-cap::before{content:'';width:14px;height:1px;background:var(--accent);}
+@media(max-width:720px){
+  .oldxp-slide img{height:260px;}
+}
+
+/* ─── AUDIT LAYOUT ─── */
+.audit-layout{margin-top:3rem;}
+.audit-list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.audit-item{
+  background:#fff;border-radius:16px;padding:1.5rem 1.375rem;
+  box-shadow:0 1px 2px rgba(21,33,25,.04), 0 12px 28px rgba(21,33,25,.07);
+  border:1px solid rgba(21,33,25,.04);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.audit-item:hover{transform:translateY(-2px);box-shadow:0 1px 2px rgba(21,33,25,.04), 0 18px 36px rgba(21,33,25,.1);}
+.audit-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.015em;margin-bottom:.5rem;}
+.audit-d{font-size:.75rem;line-height:1.6;color:var(--ash);}
+@media(max-width:1100px){
+  .audit-list{grid-template-columns:repeat(2,1fr);}
+}
+
+.proscons{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;}
+.pc-box{border-radius:12px;padding:1.5rem 1.75rem;}
+.pc-pros{background:rgba(14,107,74,.06);border:1px solid rgba(14,107,74,.18);}
+.pc-cons{background:rgba(232,80,80,.05);border:1px solid rgba(232,80,80,.16);}
+.pc-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.875rem;}
+.pc-pros .pc-lbl{color:var(--accent);}
+.pc-cons .pc-lbl{color:#C0392B;}
+.pc-box ul{list-style:none;display:flex;flex-direction:column;gap:.625rem;}
+.pc-box li{font-size:.8125rem;line-height:1.55;color:var(--paper);padding-left:1rem;position:relative;}
+.pc-box li::before{content:'—';position:absolute;left:0;color:var(--ash-2);}
+
+/* ─── PRINCIPLES ROW ─── */
+.principles-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:3rem;}
+.principle-card{background:var(--bg2);padding:1.75rem 1.25rem;text-align:center;}
+.principle-n{font-family:'Space Grotesk',sans-serif;font-size:.5rem;color:var(--accent);margin-bottom:.75rem;}
+.principle-t{font-size:.8125rem;font-weight:700;color:var(--paper);line-height:1.45;letter-spacing:-.01em;}
+
+/* ─── TWO DIRECTIONS ─── */
+.directions-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:3rem;}
+.direction-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:2.5rem;display:flex;flex-direction:column;}
+.dir-tag{display:inline-flex;align-self:flex-start;padding:.3rem .875rem;border-radius:100px;background:var(--accent);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem;}
+.dir-tag.dir-tag-2{background:var(--dark);}
+.dir-title{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;}
+.dir-body{font-size:.8438rem;line-height:1.72;color:var(--ash);font-weight:300;margin-bottom:1.75rem;}
+.dir-body strong{color:var(--paper);font-weight:600;}
+.dir-shot{display:flex;justify-content:center;margin-top:auto;padding-top:1rem;}
+.dir-shot .phone-shell{width:190px;}
+.dir-shot.dir-shot-wide .phone-shell{width:auto;max-width:100%;box-shadow:none;border-radius:12px;}
+
+/* ─── SCROLL BEHAVIOR ─── */
+.scroll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;align-items:start;}
+.scroll-item{display:flex;flex-direction:column;align-items:center;}
+.scroll-item .phone-shell{width:190px;}
+.scroll-lbl{margin-top:1.25rem;text-align:center;max-width:200px;}
+.scroll-lbl strong{display:block;font-size:.875rem;font-weight:700;letter-spacing:-.01em;color:var(--paper);margin-bottom:.25rem;}
+.scroll-lbl span{font-size:.75rem;color:var(--ash);line-height:1.5;}
+
+/* ─── SECTION 04: DECISIONS ─── */
+.decisions-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  margin-top:3rem;
+}
+.dec{background:var(--bg2);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ─── SUPPORT / TEST CALLOUT ─── */
+.test-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-top:3rem;}
+.test-q{display:flex;flex-direction:column;gap:.875rem;}
+.test-q-item{display:flex;gap:.75rem;align-items:flex-start;padding:.875rem 0;border-bottom:1px solid var(--line);}
+.test-q-item:last-child{border-bottom:none;}
+.test-q-mark{font-family:'Space Grotesk',sans-serif;font-size:.6875rem;color:var(--accent);flex-shrink:0;}
+.test-q-item p{font-size:.8438rem;line-height:1.6;color:var(--paper);}
+
+/* ─── INSIGHTS ─── */
+.insights-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1rem;
+  margin-top:3rem;
+}
+.ins{padding:1.75rem;border:1px solid var(--line);border-radius:12px;background:var(--bg2);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ─── DARK CALLOUT ─── */
+.callout{
+  background:var(--dark);border-radius:16px;padding:2.5rem;
+}
+.co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.3;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.6);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:1.5rem;flex-wrap:wrap;}
+.cos-v{font-size:1.25rem;font-weight:800;letter-spacing:-.03em;color:var(--lime);}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.4);margin-top:.125rem;}
+
+/* ─── FOOTER ─── */
+.footer{
+  padding:2rem 4rem;
+  border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-l,.footer-r{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);
+}
+
+/* ─── BACK NAV ─── */
+.back-nav{
+  position:sticky;
+  top:0;z-index:100;
+  background:rgba(245,244,240,0.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(21,33,25,.08);
+  padding:1rem 4rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);
+  background:none;border:none;cursor:pointer;
+  text-decoration:none;
+  transition:gap .2s;
+}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.back-nav-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(21,33,25,.4);
+}
+.back-nav-right{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ash);
+}
+
+/* Section divider label */
+.section-label{
+  display:flex;align-items:center;gap:1.5rem;
+  margin-bottom:3rem;
+}
+.sl-text{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash-2);
+  white-space:nowrap;
+}
+.sl-line{flex:1;height:1px;background:var(--line);}
+
+@media(max-width:900px){
+  .overview-grid,.pill-row,.comp-grid,.principles-row,.directions-grid,.scroll-grid,.decisions-grid,.audit-layout,.test-layout,.insights-grid,.proscons{grid-template-columns:1fr !important;}
+  .audit-list{grid-template-columns:1fr;}
+}
+</style>
+
+<style>
+/* ── DESIGN SYSTEM SECTION ── */
+.ds-intro { margin-bottom:3.5rem; }
+.ds-title {
+  font-family:'Inter',sans-serif;
+  font-size:clamp(2.25rem,4vw,3.75rem);
+  font-weight:800;letter-spacing:-.04em;color:var(--paper);
+  line-height:1.02;margin-bottom:1rem;
+}
+.ds-title em { font-style:normal;color:var(--accent); }
+.ds-sub {
+  font-family:'Inter',sans-serif;font-size:1rem;
+  line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;
+}
+
+.ds-group {
+  margin-bottom:4rem;
+  padding-bottom:4rem;
+  border-bottom:1px solid var(--line);
+}
+.ds-group-label {
+  display:flex;align-items:center;gap:.875rem;
+  font-family:'Inter',sans-serif;font-size:1.125rem;font-weight:700;
+  color:var(--paper);letter-spacing:-.02em;
+  margin-bottom:.875rem;
+}
+.ds-group-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5625rem;
+  letter-spacing:.12em;color:var(--accent);
+  border:1px solid rgba(14,107,74,.3);border-radius:100px;
+  padding:.2rem .625rem;
+}
+.ds-group-desc {
+  font-family:'Inter',sans-serif;font-size:.9375rem;
+  line-height:1.7;color:var(--ash);font-weight:300;
+  max-width:720px;margin-bottom:2rem;
+}
+
+.ds-comp-grid { display:grid;gap:1.5rem; }
+.ds-2col { grid-template-columns:1fr 1fr; }
+
+.ds-comp {
+  background:var(--ghost);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;
+  transition:border-color .3s;
+}
+.ds-comp:hover { border-color:var(--line-md); }
+.ds-comp-label {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ash);padding:.875rem 1.25rem;
+  border-bottom:1px solid var(--line);
+}
+.ds-comp-img {
+  padding:1.75rem;background:var(--ghost-2);
+  display:flex;align-items:center;justify-content:center;
+}
+.ds-comp-img img {
+  max-width:50%;height:auto;display:block;
+}
+.ds-comp-img-wide img { max-width:70%; }
+.ds-comp-img-full img { max-width:100%; }
+.ds-comp-meta {
+  display:flex;flex-wrap:wrap;gap:.375rem;
+  padding:.875rem 1.25rem;
+}
+
+.ds-tag {
+  padding:.25rem .75rem;border-radius:100px;
+  border:1px solid var(--line-md);
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ash-2);
+}
+.ds-tag-accent { border-color:rgba(174,235,59,.5);color:#5B7A0E; }
+.ds-tag-green { border-color:rgba(14,107,74,.35);color:var(--accent); }
+.ds-tag-red { border-color:rgba(232,80,80,.3);color:#C0392B; }
+
+.ds-type-card{
+  display:grid;grid-template-columns:1fr 1.4fr;gap:2rem;align-items:center;
+  background:var(--ghost);border:1px solid var(--line);border-radius:14px;
+  padding:2rem;margin-bottom:4rem;
+}
+.ds-type-sample{font-family:'Inter',sans-serif;font-weight:800;font-size:3rem;letter-spacing:-.04em;color:var(--paper);}
+.ds-type-desc{font-size:.8438rem;line-height:1.7;color:var(--ash);font-weight:300;}
+.ds-type-desc strong{color:var(--paper);font-weight:600;}
+
+/* DS Principles */
+.ds-principles {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-radius:12px;overflow:hidden;margin-top:3rem;
+}
+.ds-principle { background:var(--ghost);padding:2rem; }
+.dsp-num {
+  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
+  letter-spacing:.12em;color:var(--accent);margin-bottom:.875rem;
+}
+.dsp-title {
+  font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;
+}
+.dsp-desc {
+  font-family:'Inter',sans-serif;font-size:.8125rem;
+  line-height:1.65;color:var(--ash);font-weight:300;
+}
+
+@media(max-width:768px){
+  .ds-2col { grid-template-columns:1fr; }
+  .ds-principles { grid-template-columns:1fr; }
+  .ds-type-card{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="back-nav-title">SukuPay · Case Study</div>
+  <div class="back-nav-right">Paula Elffman · Sr Product Designer</div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Remittance App · Fintech · SukuPay · 2026</div>
+    <div class="cover-title">
+      suku<span class="dim">pay</span><br><span class="dim">home xp</span>
+    </div>
+  </div>
+  <div class="cover-meta">
+    <div class="cm-row"><div class="cm-label">Company</div><div class="cm-val">🇬🇹 SukuPay</div></div>
+    <div class="cm-row"><div class="cm-label">Role</div><div class="cm-val">Sr Product Designer · UX Audit & Redesign</div></div>
+    <div class="cm-row"><div class="cm-label">Method</div><div class="cm-val">ERA Framework</div></div>
+    <div class="cm-row"><div class="cm-label">Surface</div><div class="cm-val">Home · Conversion & Trust</div></div>
+    <div class="cm-row"><div class="cm-label">Goal</div><div class="cm-val">100M transactions by 2026</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 01 — SITUATION & TASK
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Situation & Task</div>
+  <div class="overview-grid">
+    <div class="ov-left">
+      <div class="ov-title">The most critical<br>conversion <span class="accent">surface.</span></div>
+      <p class="ov-body">SukuPay is a remittance platform that lets users in the US send money to Guatemala using only a phone number. <strong>Home is where users decide whether to send money, compare rates, and build trust.</strong><br><br>The current version introduced repeat transfer, FX visibility and promotions — but still presents opportunities to improve clarity, hierarchy and conversion.<br><br>My goal was to evaluate how effectively Home supports fast, trust-driven repeat transfers, and redesign it to improve clarity, confidence and conversion while balancing growth needs.</p>
+    </div>
+    <div class="stats-col">
+      <div class="stat-item"><div class="stat-val">&lt;5s</div><div class="stat-lbl">Target time to send money</div></div>
+      <div class="stat-item"><div class="stat-val">$0.99</div><div class="stat-lbl">Flat fee · Key value driver</div></div>
+      <div class="stat-item"><div class="stat-val">2</div><div class="stat-lbl">Directions explored · Minimal & North Star</div></div>
+      <div class="stat-item"><div class="stat-val">100M</div><div class="stat-lbl">Transactions goal by 2026</div></div>
+    </div>
+    <div class="accent-card">
+      <div class="ac-lbl">The opportunity</div>
+      <div class="ac-val">Transform Home from a feature-based layout into a conversion engine optimized for repeat transfers and trust.</div>
+      <div class="ac-desc">Send money in &lt;5 seconds · Build trust instantly · Reduce cognitive load · Make FX & fees transparent · Support repetition behavior.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 02 — ASSUMPTIONS & BEHAVIOR
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Action · 01 Assumptions & User Behavior</div>
+  <div class="section-label">
+    <div class="sl-text">In remittances</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Trust & speed drive conversion more than visual design</div>
+  </div>
+  <div class="pill-row">
+    <div class="pill-card"><div class="pill-ico">01</div><div class="pill-t">Trust driven</div></div>
+    <div class="pill-card"><div class="pill-ico">02</div><div class="pill-t">Repeat transfers monthly</div></div>
+    <div class="pill-card"><div class="pill-ico">03</div><div class="pill-t">Speed focused</div></div>
+    <div class="pill-card"><div class="pill-ico">04</div><div class="pill-t">Price sensitive (FX rate)</div></div>
+  </div>
+  <div class="pill-note">Users often compare apps before choosing where to send money.</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 03 — COMPETITOR ANALYSIS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Action · 02 Competitor Analysis</div>
+  <div class="section-label">
+    <div class="sl-text">Four leading remittance apps</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">How they balance trust, speed & price transparency</div>
+  </div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-name">Remitly</div>
+      <div class="comp-owns">Owns: Speed & repetition</div>
+      <ul class="comp-list">
+        <li>Fast repeat transfers</li>
+        <li>Clear delivery promise</li>
+        <li>Emotion-driven ("send to family")</li>
+        <li>Optimized for frequent sending</li>
+      </ul>
+      <div class="comp-insight"><span>Insight</span>Speed reduces friction and increases monthly retention.</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">Wise</div>
+      <div class="comp-owns">Owns: Transparency</div>
+      <ul class="comp-list">
+        <li>Real FX clarity</li>
+        <li>Fee breakdown upfront</li>
+        <li>"What arrives" visible instantly</li>
+        <li>Minimal, functional UI</li>
+      </ul>
+      <div class="comp-insight"><span>Insight</span>Users trust what they can clearly calculate.</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">Western Union</div>
+      <div class="comp-owns">Owns: Global trust</div>
+      <ul class="comp-list">
+        <li>Strong brand recognition</li>
+        <li>Security perception</li>
+        <li>Tracking & reliability</li>
+        <li>Massive global coverage</li>
+      </ul>
+      <div class="comp-insight"><span>Insight</span>In remittances, perceived safety drives conversion.</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">Zigi</div>
+      <div class="comp-owns">Owns: Local trust & receiving</div>
+      <ul class="comp-list">
+        <li>Bank-backed (Banco Industrial)</li>
+        <li>Instant wallet/bank receive</li>
+        <li>Phone-number based</li>
+        <li>Daily financial ecosystem in Guatemala</li>
+      </ul>
+      <div class="comp-insight"><span>Insight</span>Recipients trust Zigi's local ecosystem — senders must feel the same confidence.</div>
+    </div>
+  </div>
+  <div class="opportunity-box">
+    <div class="co-lbl">Opportunity</div>
+    <div class="co-t">SukuPay can win by combining <span class="lime">Remitly's speed</span>, <span class="lime">Wise's transparency</span>, <span class="lime">Western Union's trust</span>, and <span class="lime">Zigi's local ecosystem confidence.</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 04 — UX AUDIT
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Action · 03 UX Audit of Current Home</div>
+  <div class="section-label">
+    <div class="sl-text">Clear within 3 seconds</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Fast, simple, accessible — but with room to grow</div>
+  </div>
+  <div class="audit-layout">
+    <div class="oldxp-block">
+      <div class="oldxp-tag">Before — original SukuPay experience</div>
+      <div class="oldxp-carousel" id="oldxpCarousel">
+        <div class="oldxp-track" id="oldxpTrack">
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 456 962'%3E%3C/svg%3E" data-img-id="sukupay_old_01" alt="Welcome & login">
+            <div class="oldxp-cap">Welcome &amp; login</div>
+          </div>
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 488 994'%3E%3C/svg%3E" data-img-id="sukupay_old_02" alt="Home">
+            <div class="oldxp-cap">Home</div>
+          </div>
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 986'%3E%3C/svg%3E" data-img-id="sukupay_old_03" alt="Send money">
+            <div class="oldxp-cap">Send money</div>
+          </div>
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 488 994'%3E%3C/svg%3E" data-img-id="sukupay_old_04" alt="Digital currency modal">
+            <div class="oldxp-cap">Digital currency modal</div>
+          </div>
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 1168'%3E%3C/svg%3E" data-img-id="sukupay_old_05" alt="My Account">
+            <div class="oldxp-cap">My Account</div>
+          </div>
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 1168'%3E%3C/svg%3E" data-img-id="sukupay_old_06" alt="Requests — empty state">
+            <div class="oldxp-cap">Requests — empty state</div>
+          </div>
+          <div class="oldxp-slide">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 1168'%3E%3C/svg%3E" data-img-id="sukupay_old_07" alt="Activity">
+            <div class="oldxp-cap">Activity</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="audit-list">
+      <div class="audit-item"><div class="audit-t">Space usage</div><div class="audit-d">Home prioritizes balance visibility and simplicity, but there's an opportunity to leverage this space more strategically as the product evolves from transactional tool to trusted financial ally.</div></div>
+      <div class="audit-item"><div class="audit-t">Cognitive load</div><div class="audit-d">Primary actions (Send, Add, Withdraw, Request) appear more than once across hierarchy levels — duplication may dilute importance and slow decision making.</div></div>
+      <div class="audit-item"><div class="audit-t">Repeat send?</div><div class="audit-d">Repeat transfers are a core behavior. Surfacing recent recipients on Home could enable true one-tap sending and increase retention.</div></div>
+      <div class="audit-item"><div class="audit-t">FX rate?</div><div class="audit-d">Missing key decision info: fee, delivery time, and total received — essential for trust and fast conversion in remittances.</div></div>
+      <div class="audit-item"><div class="audit-t">Accessibility</div><div class="audit-d">Some buttons don't appear fully accessible. Stronger consistency between primary and secondary actions would improve clarity and predictability.</div></div>
+      <div class="audit-item"><div class="audit-t">Activity icon</div><div class="audit-d">The current icon may read as "scheduled send" rather than general activity/transaction history — an opportunity to refine iconography and wording.</div></div>
+      <div class="audit-item"><div class="audit-t">Settings hierarchy</div><div class="audit-d">Settings sits at the same hierarchy level as high-frequency actions like Transactions and Request, despite occasional usage.</div></div>
+      <div class="audit-item"><div class="audit-t">Support duplication</div><div class="audit-d">Support and WhatsApp support appear multiple times — does support truly need this prominence, or does it signal unclear communication elsewhere?</div></div>
+      <div class="audit-item"><div class="audit-t">Withdraw / Send overlap</div><div class="audit-d">Both imply "moving money out" but serve different mental models — self-withdrawal vs. remittance. Same hierarchy level creates decision friction.</div></div>
+      <div class="audit-item"><div class="audit-t">Trust</div><div class="audit-d">Strong partners reinforce credibility. Highlighting them more could help build user trust in the product.</div></div>
+    </div>
+  </div>
+  <div class="proscons">
+    <div class="pc-box pc-pros">
+      <div class="pc-lbl">Pros</div>
+      <ul>
+        <li>A focused home that goes straight to the point</li>
+        <li>Users instantly understand available balance and can take action</li>
+        <li>Sending, requesting and managing money is simple — three primary actions clearly visible and easy to access</li>
+      </ul>
+    </div>
+    <div class="pc-box pc-cons">
+      <div class="pc-lbl">Cons</div>
+      <ul>
+        <li>Three primary actions are repeated again with a secondary visual hierarchy</li>
+        <li>Iconography could be refined — particularly Transactions and Request — for faster recognition</li>
+        <li>Settings & Support carry similar visual weight to primary, transactional actions</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 05 — DESIGN PRINCIPLES
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Action · 04 Design Principles</div>
+  <div class="section-label">
+    <div class="sl-text">Definition</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">What every screen must do</div>
+  </div>
+  <div class="principles-row">
+    <div class="principle-card"><div class="principle-n">01</div><div class="principle-t">Send money in &lt;5 seconds</div></div>
+    <div class="principle-card"><div class="principle-n">02</div><div class="principle-t">Build trust instantly</div></div>
+    <div class="principle-card"><div class="principle-n">03</div><div class="principle-t">Reduce cognitive load</div></div>
+    <div class="principle-card"><div class="principle-n">04</div><div class="principle-t">Make FX & fees transparent</div></div>
+    <div class="principle-card"><div class="principle-n">05</div><div class="principle-t">Support repetition behavior</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 06 — RESULT: TWO DIRECTIONS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Result · Two Directions Explored</div>
+  <div class="section-label">
+    <div class="sl-text">While challenging the current Home experience</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">I explored two possible paths</div>
+  </div>
+  <div class="directions-grid">
+    <div class="direction-card">
+      <div class="dir-tag">"Minimal" proposal</div>
+      <div class="dir-title">Strengthen what already works.</div>
+      <p class="dir-body">I chose to respect the existing Home structure while refining key areas for clarity and usability. Improvements focused on <strong>iconography, hierarchy and visual consistency</strong> to reduce cognitive load and strengthen the main conversion path.<br><br>I elevated the "Resend" feature, bringing it forward as a primary element on Home to better support one of the most frequent user behaviors — repeat transfers — directly supporting the goal of reaching 100M transactions by 2026.</p>
+      <div class="dir-shot"><div class="phone-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3C/svg%3E" data-img-id="sukupay_case_003" alt="Minimal proposal"></div></div>
+    </div>
+    <div class="direction-card">
+      <div class="dir-tag dir-tag-2">"The North" proposal</div>
+      <div class="dir-title">Scale into a financial ecosystem.</div>
+      <p class="dir-body">A North Star approach — evolving the product to solve more user needs over time, positioning SukuPay as a <strong>long-term financial ally</strong> rather than just a transactional tool. Brings forward the FX component, enables more prominent repeat sending, and introduces a bottom navigation with room for crypto transactions, investment options, a marketplace and a lightweight FAQ section.</p>
+      <div class="dir-shot dir-shot-wide"><div class="phone-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1254 880'%3E%3C/svg%3E" data-img-id="sukupay_case_007" alt="North proposal montage"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 07 — FULL HOME PROPOSAL
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Result · Full Home Proposal</div>
+  <div class="section-label">
+    <div class="sl-text">Main box: Send money + secondary actions</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Resend · Exchange rate · FAQs</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:1rem;">
+    <div>
+      <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:1.25rem;">An interface that <span class="accent">adapts</span> to the user's stage.</div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;"><strong style="color:var(--paper);font-weight:600;">New users or without funds:</strong> the priority is funding the account, so the primary action shifts to "Add money" — supporting a successful first transaction as fast as possible.<br><br><strong style="color:var(--paper);font-weight:600;">Returning users:</strong> a Resend card reinforces repeat behavior. As users need sufficient balance to complete the transfer, this moment can seamlessly guide them to add funds and continue sending.</p>
+    </div>
+    <div style="padding:1.75rem 2rem;background:var(--bg2);border:1px solid var(--line);border-radius:12px;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.25rem;">Next steps</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem;">
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Bring recent transaction history to the front</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Elevate Resend as a primary Home element</span></div>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Surface Exchange rate & FAQs directly on Home</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-grid" style="margin-top:2.5rem;">
+    <div class="scroll-item">
+      <div class="phone-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3C/svg%3E" data-img-id="sukupay_case_004" alt="Home scroll"></div>
+      <div class="scroll-lbl"><strong>Home · Full scroll</strong><span>Balance, Resend card, exchange rate and FAQs in one continuous flow</span></div>
+    </div>
+    <div class="scroll-item">
+      <div class="phone-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3C/svg%3E" data-img-id="sukupay_case_005" alt="Home scroll min header"></div>
+      <div class="scroll-lbl"><strong>Sticky min header</strong><span>Header collapses on scroll, keeping balance and Send money always reachable</span></div>
+    </div>
+    <div class="scroll-item">
+      <div class="phone-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3C/svg%3E" data-img-id="sukupay_case_006" alt="Digital currency modal"></div>
+      <div class="scroll-lbl"><strong>Digital currency modal</strong><span>Explains USDC conversion the first time balance is revealed — builds trust proactively</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 08 — KEY DESIGN DECISIONS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Key Design Decisions</div>
+  <div class="decisions-grid">
+    <div class="dec">
+      <div class="dec-n">Decision 01</div>
+      <div class="dec-t">Elevate "Send again" to primary</div>
+      <div class="dec-d">Repeat transfer surfaced directly on Home, supporting the goal of reaching 100M transactions through faster repeat sends.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 02</div>
+      <div class="dec-t">Sticky min header on scroll</div>
+      <div class="dec-d">Balance and Send money stay reachable as the user scrolls through Resend, Exchange rate and FAQs.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 03</div>
+      <div class="dec-t">Exchange rate always visible</div>
+      <div class="dec-d">USD ⇄ GTQ rate surfaced on Home instead of buried in a flow — closing the "what do I actually send / what arrives" trust gap.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 04</div>
+      <div class="dec-t">FAQ progressive disclosure</div>
+      <div class="dec-d">A lightweight, expandable FAQ answers the most common doubts in place — reducing dependency on WhatsApp support.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 05</div>
+      <div class="dec-t">Adaptive primary CTA</div>
+      <div class="dec-d">"Add money" for new/unfunded users, "Send again" for returning users — the interface adapts to the user's stage.</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">Decision 06</div>
+      <div class="dec-t">Fee transparency as a value driver</div>
+      <div class="dec-d">The low $0.99 transaction fee is brought forward as a visible value proposition — reinforcing trust and affordability vs. competitors.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 09 — USER TEST / SUPPORT
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">User Test · Support Strategy</div>
+  <div class="section-label">
+    <div class="sl-text">WhatsApp / support visibility test</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Understanding why users still need to ask</div>
+  </div>
+  <div class="test-layout">
+    <div>
+      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">If WhatsApp support is a critical channel, the next step is to test its placement and prominence within Home. Understanding the main drivers behind user contact — the most frequent questions, and how they're currently resolved — will help determine whether support truly needs this level of visibility, or whether we should instead reduce friction by proactively addressing the most common concerns inside the product itself.</p>
+    </div>
+    <div class="test-q">
+      <div class="test-q-item"><div class="test-q-mark">?</div><p>What are the most frequent questions, and how are we resolving them today?</p></div>
+      <div class="test-q-item"><div class="test-q-mark">?</div><p>Are users interacting with a human agent or an automated bot?</p></div>
+      <div class="test-q-item"><div class="test-q-mark">?</div><p>Are cases managed through a CRM such as Salesforce?</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION — DESIGN SYSTEM
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Design System · Components</div>
+  <div class="ds-intro">
+    <h2 class="ds-title">Built to scale.<br><em>Documented to ship.</em></h2>
+    <p class="ds-sub">Every component was designed with clear states, real content and system logic — from the balance box to the smallest FAQ item — so the Home experience stays consistent as SukuPay grows into a broader financial ecosystem.</p>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="ds-type-card">
+    <div class="ds-type-sample">Aa</div>
+    <div class="ds-type-desc">I chose <strong>Inter</strong> as the primary typeface because it's widely adopted in fintech products, offers a modern and clean aesthetic, and provides a broad range of weights and variables that support flexibility and accessibility across the interface.</div>
+  </div>
+
+  <!-- REPEAT TRANSFER CARD -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">01</span>
+      Repeat Transfer Card · States
+    </div>
+    <p class="ds-group-desc">The Resend card surfaces the most recent recipient directly on Home, enabling true one-tap sending. Recipient, phone (masked), last amount and two clear actions — Send again or Edit amount.</p>
+    <div class="ds-comp-grid">
+      <div class="ds-comp">
+        <div class="ds-comp-label">Repeat transfer · Card</div>
+        <div class="ds-comp-img ds-comp-img-wide">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 970 544'%3E%3C/svg%3E" data-img-id="sukupay_case_008" alt="Repeat transfer card">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag ds-tag-accent">Send again · Primary</span>
+          <span class="ds-tag">Edit amount</span>
+          <span class="ds-tag">Masked phone number</span>
+          <span class="ds-tag">One-tap repetition</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXCHANGE RATE -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">02</span>
+      Exchange Rate · Currency Converter
+    </div>
+    <p class="ds-group-desc">A single, always-visible module answers the core trust question in remittances: what does the recipient actually get? USD and GTQ sit side by side with a swap control between them.</p>
+    <div class="ds-comp-grid">
+      <div class="ds-comp">
+        <div class="ds-comp-label">Exchange rate · USD ⇄ GTQ</div>
+        <div class="ds-comp-img">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 450'%3E%3C/svg%3E" data-img-id="sukupay_case_009" alt="Exchange rate box">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag ds-tag-green">Live rate</span>
+          <span class="ds-tag">Swap icon</span>
+          <span class="ds-tag">Currency dropdowns</span>
+          <span class="ds-tag">FX transparency</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ ACCORDION -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">03</span>
+      FAQ Accordion · Progressive Disclosure
+    </div>
+    <p class="ds-group-desc">A lightweight, expandable FAQ answers the most common doubts — bank account requirements, fee cost, withdrawals — right where the decision happens, reducing dependency on WhatsApp support.</p>
+    <div class="ds-comp-grid">
+      <div class="ds-comp">
+        <div class="ds-comp-label">FAQs · Expand / collapse</div>
+        <div class="ds-comp-img">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 866 994'%3E%3C/svg%3E" data-img-id="sukupay_case_010" alt="FAQ accordion">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag">+ / − affordance</span>
+          <span class="ds-tag">One question open at a time</span>
+          <span class="ds-tag">"Ver más" expansion</span>
+          <span class="ds-tag ds-tag-green">Reduces support load</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="ds-group">
+    <div class="ds-group-label">
+      <span class="ds-group-num">04</span>
+      Bottom Navigation · States
+    </div>
+    <p class="ds-group-desc">Home, Activity, Contacts and Withdraw sit around a floating Send money action. Every tab has a clear active state, and the pattern was documented for both light and dark surfaces.</p>
+    <div class="ds-comp-grid">
+      <div class="ds-comp">
+        <div class="ds-comp-label">Bottom nav · Light & dark variants</div>
+        <div class="ds-comp-img ds-comp-img-full">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2188 1408'%3E%3C/svg%3E" data-img-id="sukupay_case_011" alt="Bottom nav variants">
+        </div>
+        <div class="ds-comp-meta">
+          <span class="ds-tag">Home · Activity · Contacts · Withdraw</span>
+          <span class="ds-tag ds-tag-accent">Floating Send money FAB</span>
+          <span class="ds-tag">Active state per tab</span>
+          <span class="ds-tag">Light & dark surface</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DS PRINCIPLES -->
+  <div class="ds-principles">
+    <div class="ds-principle">
+      <div class="dsp-num">01</div>
+      <div class="dsp-title">State-adaptive</div>
+      <p class="dsp-desc">The Home interface adapts to the user's funding and return status — new users see "Add money" first, returning users see Resend.</p>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">02</div>
+      <div class="dsp-title">Trust through transparency</div>
+      <p class="dsp-desc">Fees and exchange rate are always visible upfront — no hidden costs, no surprises at checkout.</p>
+    </div>
+    <div class="ds-principle">
+      <div class="dsp-num">03</div>
+      <div class="dsp-title">One-tap repetition</div>
+      <p class="dsp-desc">The Resend flow reduces the most common behavior — a repeat transfer — to a single, confident tap.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION — EXPECTED IMPACT
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Expected Impact</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+    <div class="insights-grid" style="grid-template-columns:1fr;margin-top:0;">
+      <div class="ins">
+        <div class="ins-n">Reflection 01</div>
+        <div class="ins-t">Repetition is the retention lever</div>
+        <div class="ins-d">In remittances, the second and third transfer matter more than the first. Designing for "Send again" directly serves the 100M transaction goal.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Reflection 02</div>
+        <div class="ins-t">Transparency removes support burden</div>
+        <div class="ins-d">Surfacing FX rate and fees on Home — instead of relying on WhatsApp — turns a support cost into a self-serve trust signal.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="co-lbl">The core principle</div>
+      <div class="co-t">"Simplicity and transparency are the foundation of trust in remittances."</div>
+      <div class="co-d">Every improvement — from the sticky header to the FAQ accordion — exists to answer one question faster: is my money safe, and how much will arrive?</div>
+      <div class="co-stats">
+        <div><div class="cos-v">↑</div><div class="cos-l">Repeat transfers</div></div>
+        <div><div class="cos-v">↑</div><div class="cos-l">Conversion rate</div></div>
+        <div><div class="cos-v">↓</div><div class="cos-l">Decision time</div></div>
+        <div><div class="cos-v">↑</div><div class="cos-l">Trust perception</div></div>
+        <div><div class="cos-v">↑</div><div class="cos-l">Retention</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">SukuPay · Home XP · UX Audit & Redesign · 2026</div>
+  <div class="footer-r">Sr Product Designer · Paula Elffman</div>
+</div>
+
+
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  function coverFrom(x,y,dark,cb){
+    overlay.classList.toggle('dark',!!dark);
+    overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    });
+    setTimeout(cb,600);
+  }
+  function revealFrom(x,y){
+    overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+    overlay.classList.remove('animate');
+    void overlay.offsetWidth;
+    overlay.classList.add('animate');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      });
+    });
+  }
+  var entry=sessionStorage.getItem('wipeEntry');
+  if(entry){
+    sessionStorage.removeItem('wipeEntry');
+    try{ var p=JSON.parse(entry); revealFrom(p.x,p.y); }catch(e){}
+  }
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+      coverFrom(x,y,true,function(){ window.location.href='index.html'; });
+    });
+  }
+})();
+</script>
+
+
+<script>
+/* LAZY LOAD IMAGES */
+(function(){
+  var IMG_STORE = window.SUKUPAY_CASE_IMAGES;
+  function applyImages(){
+    if(!window.SUKUPAY_CASE_IMAGES) return;
+    IMG_STORE = window.SUKUPAY_CASE_IMAGES;
+    document.querySelectorAll('[data-img-id]').forEach(function(el){
+      if(el.__loaded) return;
+      var id = el.getAttribute('data-img-id');
+      var src = IMG_STORE[id];
+      if(!src) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            el.src = src;
+            el.__loaded = true;
+            io.disconnect();
+          }
+        });
+      }, {rootMargin:'400px 0px'});
+      io.observe(el);
+    });
+  }
+  if(window.SUKUPAY_CASE_IMAGES){
+    applyImages();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'sukupay-case-images.js';
+    s.onload = applyImages;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+<script>
+/* OLD XP CAROUSEL — continuous multi-item marquee */
+(function(){
+  var carousel = document.getElementById('oldxpCarousel');
+  var track = document.getElementById('oldxpTrack');
+  if(!carousel || !track) return;
+
+  // duplicate the slide set once so the -50% translateX loop is seamless
+  var original = Array.prototype.slice.call(track.children);
+  original.forEach(function(node){
+    track.appendChild(node.cloneNode(true));
+  });
+
+  // assign images directly (clones aren't covered by the other lazy-load observer)
+  function applyOldxpImages(){
+    var store = window.SUKUPAY_CASE_IMAGES;
+    if(!store) return false;
+    var imgs = track.querySelectorAll('img[data-img-id]');
+    imgs.forEach(function(img){
+      var id = img.getAttribute('data-img-id');
+      if(store[id]) img.src = store[id];
+    });
+    return true;
+  }
+  if(!applyOldxpImages()){
+    var tries = 0;
+    var poll = setInterval(function(){
+      tries++;
+      if(applyOldxpImages() || tries > 50){ clearInterval(poll); }
+    }, 100);
+  }
+
+  // pause the CSS animation when the carousel isn't in view (perf)
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      track.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+    });
+  }, {threshold:.1});
+  io.observe(carousel);
+})();
+</script>
+
+
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{
+  position:fixed;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9700;
+  display:flex;
+  align-items:center;
+  gap:0;
+  background:rgba(240,239,236,0.85);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(26,26,34,0.1);
+  border-radius:100px;
+  padding:.375rem .5rem;
+  font-family:'Inter','Geist',sans-serif;
+}
+body.dark-mode #portfolio-dock{
+  background:rgba(26,25,22,0.85);
+  border-color:rgba(244,244,246,0.13);
+}
+#portfolio-dock .pd-btn{
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:500;
+  color:#6B6B7A;
+  background:transparent;
+  border:none;
+  border-radius:100px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color .3s cubic-bezier(0.22,1,0.36,1), background .3s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;
+}
+#portfolio-dock .pd-btn:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(26,26,34,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(244,244,246,0.13);}
+#portfolio-dock .pd-link{
+  display:flex;align-items:center;justify-content:center;
+  padding:.5rem .75rem;
+  font-size:.8125rem;font-weight:500;
+  color:#6B6B7A;text-decoration:none;
+  border-radius:100px;
+  transition:color .3s, background .3s;
+  white-space:nowrap;
+}
+#portfolio-dock .pd-link:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:#6B6B7A;cursor:pointer;
+  transition:color .3s, background .3s;margin-left:.25rem;
+}
+#portfolio-dock .pd-theme:hover{color:#1A1A22;background:rgba(26,26,34,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#7A7A90;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F4F4F6;background:rgba(244,244,246,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+
+/* Dark mode case overrides */
+body.dark-mode{
+  --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
+  --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6;
+  --ash:#7A7A90; --ash-2:#56566A;
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+  --line2:rgba(244,244,246,0.14);
+  /* --accent:#0E6B4A was near-invisible on this dark bg (deep green on near-black).
+     Swapped for the brand lime per request. */
+  --accent:#61FF61;
+  background:var(--bg); color:var(--paper);
+}
+/* .cover-title .dim ("pay" / "home xp") is a literal, not a variable -- rgba(21,33,25,.15)
+   is near-black-on-light, meant as a ghost effect, but reads as near-invisible dark-on-dark.
+   Same fix pattern as smartpass's .dim. */
+body.dark-mode .cover-title .dim{
+  color:var(--accent);
+  text-shadow:0 0 28px rgba(97,255,97,.35);
+}
+/* .back-nav bg is hardcoded to the light cream value with no dark counterpart -- fixed per portfolio-bible.md dark-mode audit (Sep 2026). */
+body.dark-mode .back-nav{background:rgba(30,30,38,.85);}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in my workflow — preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Muli:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --void:#24242C; --void-2:#1E1E26; --ghost:#2C2C36; --ghost-2:#32323E;
+  --paper:#F4F4F6; --paper-2:#DDDDE6; --ash:#7A7A90; --ash-2:#56566A;
+  --accent:#22F0A4; --accent-2:#42E8A8;
+  --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
+}
+body.light-mode {
+  --void:#F5F4F0; --void-2:#EDECEA; --ghost:#E8E7E3; --ghost-2:#DDDCDA;
+  --paper:#1A1A22; --paper-2:#2C2C36; --ash:#6B6B7A; --ash-2:#9090A0;
+  --accent:#009d71; --accent-2:#00875f;
+  --line:rgba(26,26,34,0.07); --line-md:rgba(26,26,34,0.13);
+}
+
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--void); color:var(--paper); font-family:'Muli',sans-serif; transition:background .4s ease, color .4s ease; }
+.wrap { max-width:1100px; margin:0 auto; }
+.dv-section { padding:5rem 3.5rem; }
+.dv-label { font-family:'JetBrains Mono',monospace; font-size:.5625rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:2.5rem; display:flex; align-items:center; gap:.75rem; }
+.dv-label::before { content:''; width:20px; height:1px; background:var(--accent); }
+.dv-human-h { font-family:'Geist',sans-serif; font-size:clamp(2rem,4vw,4rem); font-weight:800; letter-spacing:-.04em; color:var(--paper); line-height:.95; margin-bottom:3rem; }
+.dv-human-h em { font-style:normal; color:var(--accent); }
+.pv-toggle { position:fixed; top:18px; right:18px; z-index:50; display:flex; align-items:center; gap:8px; padding:8px 14px; border:1px solid var(--line-md); border-radius:100px; background:var(--ghost); color:var(--paper); font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; }
+@media(max-width:768px){ .dv-section { padding:3.5rem 1.5rem; } }
+
+/* ── AI in my workflow ── */
+.ai-intro { max-width:780px; display:flex; flex-direction:column; gap:1.5rem; margin-bottom:3rem; }
+.ai-intro p { font-family:'Muli',sans-serif; font-size:clamp(1rem,1.7vw,1.3125rem); line-height:1.75; color:var(--ash); font-weight:300; }
+.ai-intro b { color:var(--paper); font-weight:500; }
+.ai-intro .ai-accent { color:var(--accent); font-weight:500; }
+
+.ai-lab { border:1px solid var(--line-md); border-radius:14px; background:var(--ghost); overflow:hidden; }
+.ai-bar { display:flex; align-items:center; gap:.75rem; padding:.875rem 1.25rem; border-bottom:1px solid var(--line); }
+.ai-dots { display:flex; gap:.4rem; }
+.ai-dot { width:9px; height:9px; border-radius:50%; background:var(--line-md); }
+.ai-dot.live { background:var(--accent); }
+.ai-bar-title { font-family:'JetBrains Mono',monospace; font-size:.625rem; letter-spacing:.06em; color:var(--ash-2); }
+.ai-bar-ctrl { margin-left:auto; display:flex; gap:.35rem; }
+.ai-arrow { width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line-md); border-radius:7px; background:transparent; color:var(--ash); font-family:'JetBrains Mono',monospace; font-size:.9rem; line-height:1; cursor:pointer; transition:border-color .2s,color .2s,background-color .2s; }
+.ai-arrow:hover { border-color:var(--accent); color:var(--accent); background:color-mix(in srgb, var(--accent) 8%, transparent); }
+.ai-progress { display:flex; gap:6px; padding:1rem 1.25rem 0; }
+.ai-seg { flex:1; height:2px; border-radius:2px; background:var(--line-md); overflow:hidden; }
+.ai-seg i { display:block; height:100%; width:0; background:var(--accent); }
+.ai-stage { overflow:hidden; padding:1.75rem 1.25rem 0; }
+.ai-track { display:flex; transition:transform .5s cubic-bezier(.65,0,.35,1); }
+.ai-slide { flex:0 0 100%; min-width:100%; padding:.25rem .25rem 1.75rem; box-sizing:border-box; }
+.ai-slide-eyebrow { font-family:'JetBrains Mono',monospace; font-size:.5625rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ash-2); margin-bottom:1rem; display:flex; align-items:center; gap:.6rem; }
+.ai-slide-eyebrow em { font-style:normal; color:var(--accent); }
+.ai-slide-title { font-family:'Geist',sans-serif; font-size:clamp(1.5rem,2.6vw,2.25rem); font-weight:800; letter-spacing:-.03em; color:var(--paper); line-height:1.05; margin-bottom:1rem; }
+.ai-slide-desc { font-family:'Muli',sans-serif; font-size:clamp(.9375rem,1.4vw,1.0625rem); line-height:1.7; color:var(--ash); font-weight:300; max-width:640px; }
+.ai-prompt { margin-top:1.5rem; display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; padding:.75rem 1rem; border:1px solid var(--line); border-radius:9px; background:var(--void); font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--ash); }
+.ai-caret-glyph { color:var(--accent); }
+.ai-typed { white-space:pre-wrap; }
+.ai-cursor { width:7px; height:1.05em; background:var(--accent); display:inline-block; vertical-align:-2px; animation:aiBlink 1s steps(1) infinite; }
+@keyframes aiBlink { 50% { opacity:0; } }
+.ai-nav { display:flex; flex-wrap:wrap; gap:.5rem; padding:1.25rem; border-top:1px solid var(--line); }
+.ai-nav-item { padding:.5rem 1rem; border:1px solid var(--line-md); border-radius:100px; background:transparent; font-family:'Geist',sans-serif; font-size:.8125rem; font-weight:500; color:var(--ash); cursor:pointer; transition:border-color .2s,color .2s,background-color .2s; }
+.ai-nav-item:hover { color:var(--paper); }
+.ai-nav-item.active { color:var(--accent); border-color:var(--accent); background:color-mix(in srgb, var(--accent) 9%, transparent); }
+@media(prefers-reduced-motion:reduce){
+  .ai-track { transition:none; }
+  .ai-seg i { transition:none !important; }
+  .ai-cursor { animation:none; }
+}
+
+
+</style>
+</head>
+<body class="light-mode">
+<button class="pv-toggle" id="pvToggle" type="button">◐ Light / Dark</button>
+<div class="wrap">
+<div class="dv-section">
+  <div class="dv-label">AI in my workflow</div>
+  <h2 class="dv-human-h">AI as a <em>force multiplier.</em></h2>
+  <div class="ai-intro">
+    <p>AI is <b>deeply integrated</b> into my design workflow — not as a replacement for design thinking, but as a <span class="ai-accent">force multiplier</span> that lets me spend more time on <b>strategy, user experience</b> and cross-functional collaboration.</p>
+    <p>My primary tool is <b>Claude</b>, which I use across the whole product design lifecycle. A few of the ways:</p>
+  </div>
+
+  <div class="ai-lab" id="aiLab">
+    <div class="ai-bar">
+      <div class="ai-dots"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot live"></span></div>
+      <span class="ai-bar-title">claude · design-workflow</span>
+      <div class="ai-bar-ctrl">
+        <button class="ai-arrow" id="aiPrev" type="button" aria-label="Previous">‹</button>
+        <button class="ai-arrow" id="aiNext" type="button" aria-label="Next">›</button>
+      </div>
+    </div>
+
+    <div class="ai-progress" id="aiProgress"></div>
+
+    <div class="ai-stage">
+      <div class="ai-track" id="aiTrack">
+
+        <div class="ai-slide" data-nav="Research">
+          <div class="ai-slide-eyebrow"><em>01</em> · Research &amp; benchmarking</div>
+          <div class="ai-slide-title">Map the landscape, fast.</div>
+          <p class="ai-slide-desc">Analyze competitors, surface UX patterns, summarize findings and compare design approaches across products — turning hours of manual research into minutes.</p>
+          <div class="ai-prompt" data-prompt="compare onboarding across 5 fintech apps → patterns + gaps"><span class="ai-caret-glyph">▸</span><span class="ai-typed"></span><span class="ai-cursor"></span></div>
+        </div>
+
+        <div class="ai-slide" data-nav="Prototyping">
+          <div class="ai-slide-eyebrow"><em>02</em> · Rapid prototyping</div>
+          <div class="ai-slide-title">Idea to clickable, in minutes.</div>
+          <p class="ai-slide-desc">Build functional prototypes using my Design System, GitHub repos and existing components as context — validating ideas far faster than assembling every screen by hand.</p>
+          <div class="ai-prompt" data-prompt="prototype the send-money flow using our DS tokens + components"><span class="ai-caret-glyph">▸</span><span class="ai-typed"></span><span class="ai-cursor"></span></div>
+        </div>
+
+        <div class="ai-slide" data-nav="Exploration">
+          <div class="ai-slide-eyebrow"><em>03</em> · Design exploration</div>
+          <div class="ai-slide-title">Explore wide before committing.</div>
+          <p class="ai-slide-desc">Brainstorm interaction patterns, challenge assumptions and explore alternative flows. I rarely take the first output — I iterate, critique and refine it with my own product thinking and design judgment.</p>
+          <div class="ai-prompt" data-prompt="give me 3 alternative flows for empty-state → first transfer"><span class="ai-caret-glyph">▸</span><span class="ai-typed"></span><span class="ai-cursor"></span></div>
+        </div>
+
+        <div class="ai-slide" data-nav="UX writing">
+          <div class="ai-slide-eyebrow"><em>04</em> · UX writing</div>
+          <div class="ai-slide-title">Copy options, on brand.</div>
+          <p class="ai-slide-desc">Reusable prompt libraries and workflows that generate multiple copy options per scenario — exploring tone and messaging while keeping the final content aligned to product and brand voice.</p>
+          <div class="ai-prompt" data-prompt="3 tones for a failed-payment error, aligned to brand voice"><span class="ai-caret-glyph">▸</span><span class="ai-typed"></span><span class="ai-cursor"></span></div>
+        </div>
+
+        <div class="ai-slide" data-nav="Critique">
+          <div class="ai-slide-eyebrow"><em>05</em> · Critique &amp; iteration</div>
+          <div class="ai-slide-title">Review through real user eyes.</div>
+          <p class="ai-slide-desc">Custom workflows built on our user personas, usability insights and product metrics — reviewing designs from different user perspectives, catching friction points and iterating before handing off to engineering.</p>
+          <div class="ai-prompt" data-prompt="review this flow as our 8-persona panel → friction points"><span class="ai-caret-glyph">▸</span><span class="ai-typed"></span><span class="ai-cursor"></span></div>
+        </div>
+
+        <div class="ai-slide" data-nav="Production">
+          <div class="ai-slide-eyebrow"><em>06</em> · UI production</div>
+          <div class="ai-slide-title">Design System → live UI.</div>
+          <p class="ai-slide-desc">With Claude Design I turn my Design System straight into UI explorations and interactive prototypes — cutting repetitive production work while keeping every component consistent.</p>
+          <div class="ai-prompt" data-prompt="explore 3 home layouts from the DS → interactive preview"><span class="ai-caret-glyph">▸</span><span class="ai-typed"></span><span class="ai-cursor"></span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ai-nav" id="aiNav"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var lab=document.getElementById('aiLab'); if(!lab) return;
+  var track=document.getElementById('aiTrack');
+  var slides=[].slice.call(track.children);
+  var prog=document.getElementById('aiProgress');
+  var nav=document.getElementById('aiNav');
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var DUR=5200, i=0, timer=null, typeTimer=null, startT=0, elapsed=0, paused=false, started=false;
+
+  slides.forEach(function(s,idx){
+    var seg=document.createElement('span'); seg.className='ai-seg'; seg.appendChild(document.createElement('i')); prog.appendChild(seg);
+    var b=document.createElement('button'); b.className='ai-nav-item'; b.type='button'; b.textContent=s.getAttribute('data-nav');
+    b.addEventListener('click',function(){ show(idx); });
+    nav.appendChild(b);
+  });
+  var bars=[].slice.call(prog.children).map(function(s){ return s.firstChild; });
+  var navs=[].slice.call(nav.children);
+
+  function typePrompt(slide){
+    if(typeTimer){ clearInterval(typeTimer); typeTimer=null; }
+    var box=slide.querySelector('.ai-prompt'); if(!box) return;
+    var typed=box.querySelector('.ai-typed'), full=box.getAttribute('data-prompt')||'';
+    if(reduce){ typed.textContent=full; return; }
+    typed.textContent=''; var n=0;
+    typeTimer=setInterval(function(){ n++; typed.textContent=full.slice(0,n); if(n>=full.length){ clearInterval(typeTimer); typeTimer=null; } },26);
+  }
+
+  function show(n){
+    i=((n%slides.length)+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    navs.forEach(function(b,idx){ b.classList.toggle('active',idx===i); });
+    bars.forEach(function(bar,idx){ bar.style.transition='none'; bar.style.width=idx<i?'100%':'0'; });
+    typePrompt(slides[i]);
+    clearTimeout(timer); elapsed=0;
+    if(reduce){ bars[i].style.width='100%'; return; }
+    var bar=bars[i]; void bar.offsetWidth;
+    startT=performance.now(); bar.style.transition='width '+DUR+'ms linear'; bar.style.width='100%';
+    timer=setTimeout(function(){ show(i+1); }, DUR);
+  }
+
+  document.getElementById('aiNext').addEventListener('click',function(){ show(i+1); });
+  document.getElementById('aiPrev').addEventListener('click',function(){ show(i-1); });
+
+  function pause(){
+    if(reduce||paused||!started) return; paused=true; clearTimeout(timer);
+    elapsed+=performance.now()-startT;
+    var bar=bars[i], w=getComputedStyle(bar).width; bar.style.transition='none'; bar.style.width=w;
+  }
+  function resume(){
+    if(reduce||!paused) return; paused=false;
+    var rem=Math.max(DUR-elapsed,400), bar=bars[i]; void bar.offsetWidth;
+    startT=performance.now(); bar.style.transition='width '+rem+'ms linear'; bar.style.width='100%';
+    timer=setTimeout(function(){ show(i+1); }, rem);
+  }
+  lab.addEventListener('mouseenter',pause);
+  lab.addEventListener('mouseleave',resume);
+
+  function boot(){ if(started) return; started=true; show(0); }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ boot(); io.disconnect(); } }); },{threshold:.25});
+    io.observe(lab);
+  } else { boot(); }
+})();
+</script>
+
+</div>
+<script>
+document.getElementById('pvToggle').addEventListener('click',function(){
+  document.body.classList.toggle('light-mode');
+});
+</script>
+</body>
+</html>

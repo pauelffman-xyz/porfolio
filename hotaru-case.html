@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotaru — Design Showcase · Paula Elffman</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F6F1E6;
+  --bg2:#EEE6D5;
+  --bg3:#E4D8BE;
+  --paper:#241F19;
+  --ash:rgba(36,31,25,.55);
+  --ash2:rgba(36,31,25,.15);
+  --gold:#B9873B;
+  --gold-soft:#E0C08D;
+  --navy:#2E3B4E;
+  --green:#5C8A6B;
+  --line:rgba(36,31,25,.08);
+  --line2:rgba(36,31,25,.14);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --ghost:var(--bg2);
+  --ghost-2:var(--bg3);
+  --accent:var(--gold);
+  --line-md:var(--line2);
+  --ash-2:var(--ash2);
+}
+html{font-size:16px;}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+#wipe-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:var(--bg);
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+}
+#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
+#wipe-overlay.dark{ background:#24242C; }
+
+/* ─── SHARED ─── */
+.mono{font-family:'Space Grotesk',sans-serif;}
+.gold{color:var(--gold);}
+
+/* ─── SECTION WRAPPER ─── */
+.section{padding:5rem 4rem;}
+.section + .section{border-top:1px solid var(--line2);}
+
+/* ─── EYEBROW ─── */
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--gold);flex-shrink:0;}
+
+/* ─── SECTION DIVIDER LABEL ─── */
+.section-label{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;}
+.sl-text{font-family:'Space Grotesk',sans-serif;font-size:.5875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);white-space:nowrap;}
+.sl-line{flex:1;height:1px;background:var(--line);}
+
+/* ─── SECTION 01: OVERVIEW ─── */
+.overview-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:3rem;align-items:start;}
+.ov-title{font-size:clamp(2.5rem,4vw,4rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;}
+.ov-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.ov-body strong{color:var(--paper);font-weight:500;}
+.stats-col{display:flex;flex-direction:column;gap:0;}
+.stat-item{padding:1.25rem 0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:.875rem;}
+.stat-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--paper);}
+.stat-lbl{font-size:.8125rem;color:var(--ash);line-height:1.4;}
+.accent-card{background:var(--gold);border-radius:8px;padding:2rem;}
+.ac-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(36,31,25,.55);margin-bottom:.875rem;}
+.ac-val{font-size:2rem;font-weight:800;letter-spacing:-.03em;color:#241F19;line-height:1.15;margin-bottom:.5rem;}
+.ac-desc{font-size:.8125rem;color:rgba(36,31,25,.75);line-height:1.6;}
+.ac-sub{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(36,31,25,.18);display:flex;gap:1.5rem;flex-wrap:wrap;}
+.acsub-item .acsub-v{font-size:1.25rem;font-weight:800;letter-spacing:-.03em;color:#241F19;}
+.acsub-item .acsub-l{font-size:.625rem;color:rgba(36,31,25,.6);}
+
+/* ─── FULL IMAGE BLOCKS ─── */
+.img-frame{border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(36,31,25,.14);background:#fff;}
+.img-frame img{display:block;width:100%;height:auto;}
+.img-caption{margin-top:1rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);text-align:center;}
+
+/* ─── SECTION 04: HMW / DECISIONS GRID ─── */
+.decisions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:3rem;}
+.dec{background:var(--bg2);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+/* ─── INSIGHTS ─── */
+.insights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem;}
+.ins{padding:1.75rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+/* ─── NAVY CALLOUT ─── */
+.callout{background:var(--navy);border-radius:16px;padding:2.5rem;}
+.co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1rem;}
+.co-t{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;line-height:1.3;margin-bottom:.875rem;color:#fff;font-style:italic;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.65);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:2rem;flex-wrap:wrap;}
+.cos-v{font-size:1.25rem;font-weight:800;letter-spacing:-.03em;color:var(--gold-soft);}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.45);margin-top:.125rem;}
+
+/* ─── PERSONA CARD ─── */
+.persona-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;align-items:center;margin-top:3rem;}
+.persona-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;}
+.persona-tag{font-family:'Space Grotesk',sans-serif;font-size:.625rem;letter-spacing:.06em;padding:.375rem .75rem;border-radius:100px;background:var(--bg3);color:var(--paper);border:1px solid var(--line2);}
+.persona-quote{font-size:1.0625rem;font-style:italic;font-weight:500;line-height:1.55;color:var(--paper);border-left:2px solid var(--gold);padding-left:1.25rem;margin:1.25rem 0;}
+.persona-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:1.5rem;}
+.persona-col-t{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.625rem;}
+.persona-col ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.persona-col li{font-size:.8125rem;line-height:1.5;color:var(--ash);padding-left:.875rem;position:relative;}
+.persona-col li::before{content:'';position:absolute;left:0;top:.5em;width:4px;height:4px;border-radius:50%;background:var(--gold);}
+
+/* ─── PROCESS STEPS (double diamond) ─── */
+.dd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:3rem;}
+.dd-step{background:var(--bg2);padding:1.75rem 1.5rem;}
+.dd-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;}
+.dd-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.01em;margin-bottom:.375rem;}
+.dd-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+/* ─── SKETCH STRIP ─── */
+.sketch-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-top:3rem;}
+.sketch-item{border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--line2);}
+.sketch-item img{display:block;width:100%;height:auto;}
+.sketch-lbl{padding:.875rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);border-top:1px solid var(--line);}
+
+/* ─── FINAL UI FLOW LABELS ─── */
+.ui-flow-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:1.5rem;}
+.ui-label{padding:1rem 1.125rem;background:var(--bg2);border-radius:8px;border:1px solid var(--line);}
+.ui-label-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.ui-label-t{font-size:.8125rem;font-weight:700;color:var(--paper);margin-bottom:.25rem;}
+.ui-label-d{font-size:.6875rem;line-height:1.5;color:var(--ash);}
+
+/* ─── FOOTER ─── */
+.footer{padding:2rem 4rem;border-top:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;}
+.footer-l,.footer-r{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+
+/* ─── COVER ─── */
+.cover{display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:end;padding:5rem 4rem 4rem;}
+.cover-title{font-size:clamp(5rem,11vw,12rem);font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--paper);}
+.cover-title .dim{color:rgba(36,31,25,.15);}
+.cover-meta{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:.5rem;}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.25rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--paper);}
+
+/* ─── BACK NAV ─── */
+.back-nav{position:sticky;top:0;z-index:100;background:rgba(246,241,230,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(36,31,25,.08);padding:1rem 4rem;display:flex;justify-content:space-between;align-items:center;}
+.back-btn{display:inline-flex;align-items:center;gap:.625rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:none;border:none;cursor:pointer;text-decoration:none;transition:gap .2s;}
+.back-btn:hover{gap:1rem;}
+.back-btn span{font-size:.875rem;}
+.back-nav-title{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(36,31,25,.4);}
+.back-nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(36,31,25,.3);}
+
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none;} }
+
+/* ═══ MOBILE PASS ═══ */
+@media(max-width:768px){
+  .section{padding:3rem 20px;}
+  .cover{grid-template-columns:1fr;align-items:start;gap:2rem;padding:2.5rem 20px 2rem;}
+  .back-nav{padding:1rem 20px;}
+  .footer{padding:1.5rem 20px;flex-direction:column;align-items:flex-start;gap:.5rem;}
+  .overview-grid{grid-template-columns:1fr;gap:2rem;}
+  .decisions-grid,.dd-grid{grid-template-columns:1fr;}
+  .insights-grid{grid-template-columns:1fr;}
+  .persona-grid{grid-template-columns:1fr;gap:2rem;}
+  .persona-cols{grid-template-columns:1fr;}
+  .sketch-strip{grid-template-columns:1fr;}
+  .ui-flow-labels{grid-template-columns:1fr 1fr;}
+}
+
+/* ─── DARK MODE ─── */
+body.dark-mode{
+  --bg:#241F19; --bg2:#2C261E; --bg3:#3A3125;
+  --paper:#F6F1E6; --ash:rgba(246,241,230,.55); --ash2:rgba(246,241,230,.15);
+  --line:rgba(246,241,230,.08); --line2:rgba(246,241,230,.14);
+  background:var(--bg); color:var(--paper);
+}
+body.dark-mode .back-nav{background:rgba(36,31,25,0.9);border-bottom-color:rgba(246,241,230,.08);}
+body.dark-mode .back-nav-title{color:rgba(246,241,230,.4);}
+body.dark-mode .back-nav-right{color:rgba(246,241,230,.3);}
+body.dark-mode .cover-title .dim{color:rgba(246,241,230,.12);}
+body.dark-mode .accent-card{background:var(--gold-soft);}
+body.dark-mode .img-frame{background:#1c1812;}
+</style>
+</head>
+<body>
+<div id="wipe-overlay"></div>
+
+<nav class="back-nav">
+  <a class="back-btn" id="back-to-portfolio" href="index.html">
+    <span>←</span> Back to portfolio
+  </a>
+  <div class="back-nav-title">Hotaru · Case Study</div>
+  <div class="back-nav-right">Paula Elffman · Product Designer</div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Wellness App · UX Challenge · UXER School · 2020</div>
+    <div class="cover-title">Hotaru<br><span class="dim">light your way</span></div>
+  </div>
+  <div class="cover-meta">
+    <div class="cm-row"><div class="cm-label">Equipo</div><div class="cm-val">Maialen Zapirain, Paula Elffman, Maria Gabriela Laurentin</div></div>
+    <div class="cm-row"><div class="cm-label">Rol</div><div class="cm-val">UX Research & UI Design</div></div>
+    <div class="cm-row"><div class="cm-label">Origen</div><div class="cm-val">Mentoría UXER School España</div></div>
+    <div class="cm-row"><div class="cm-label">Después</div><div class="cm-val">Programa de aceleración · La Nave Madrid</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- ══════════════════════════════════════════
+     SHOWCASE — Hero visual
+══════════════════════════════════════════ -->
+<div class="section" style="padding:3.5rem 4rem;background:var(--bg2);">
+  <div class="img-frame" style="max-width:1100px;margin:0 auto;">
+    <img src="hotaru-images/hotaru-final-ui.jpeg" alt="Hotaru — onboarding biométrico, alimentación, relajación y rincón verde">
+  </div>
+  <div class="img-caption">Onboarding biométrico · Alimentación · Relajación · Rincón verde</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 01 — OVERVIEW & CONTEXT
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Overview & Contexto</div>
+  <div class="overview-grid">
+    <div class="ov-left">
+      <div class="ov-title">Aislamiento.<br><span class="gold">Reconexión.</span></div>
+      <p class="ov-body">Hotaru nació durante una mentoría de UXER School España en 2020, en pleno aislamiento por la pandemia. Como equipo planteamos distintos problemas relacionados con "aislamiento – reconexión" y, por votación, elegimos el que más nos interpelaba.<br><br>Detectamos que <strong>teníamos la tecnología para acompañarnos, pero no sabíamos usarla para conectar con nosotros mismos.</strong><br><br>¿Cómo podríamos usar la tecnología de forma apropiada para conectar con nosotros mismos?</p>
+    </div>
+    <div class="stats-col">
+      <div class="stat-item"><div class="stat-val">3</div><div class="stat-lbl">Integrantes del equipo de diseño</div></div>
+      <div class="stat-item"><div class="stat-val">37–55</div><div class="stat-lbl">Rango etario del target definido</div></div>
+      <div class="stat-item"><div class="stat-val">3</div><div class="stat-lbl">How Might We priorizados</div></div>
+      <div class="stat-item"><div class="stat-val">4</div><div class="stat-lbl">Etapas de Double Diamond</div></div>
+    </div>
+    <div class="accent-card">
+      <div class="ac-lbl">De mentoría a startup</div>
+      <div class="ac-val">La Nave Madrid</div>
+      <div class="ac-desc">Ganamos un lugar en su programa de aceleración y pitcheamos ante angel investors.</div>
+      <div class="ac-sub">
+        <div class="acsub-item"><div class="acsub-v">Business Plan</div><div class="acsub-l">Formato startup</div></div>
+        <div class="acsub-item"><div class="acsub-v">Pitch Deck</div><div class="acsub-l">Angel investors</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 02 — PROCESS (DOUBLE DIAMOND)
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Proceso · Double Diamond</div>
+  <div class="section-label">
+    <div class="sl-text">Understand & Define → Think Up → Decide → Prototype</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Metodología UXER</div>
+  </div>
+  <div class="dd-grid">
+    <div class="dd-step">
+      <div class="dd-n">Step 1</div>
+      <div class="dd-t">Understand and define</div>
+      <div class="dd-d">Research de patrones de uso de tecnología durante el aislamiento y construcción de insights.</div>
+    </div>
+    <div class="dd-step">
+      <div class="dd-n">Step 2</div>
+      <div class="dd-t">Think up</div>
+      <div class="dd-d">Formulación de los How Might We a partir de los insights relevados.</div>
+    </div>
+    <div class="dd-step">
+      <div class="dd-n">Step 3</div>
+      <div class="dd-t">Decide</div>
+      <div class="dd-d">Votación en equipo para priorizar HMW y direcciones de solución.</div>
+    </div>
+    <div class="dd-step">
+      <div class="dd-n">Step 4</div>
+      <div class="dd-t">Prototype</div>
+      <div class="dd-d">Crazy Eights, sketches y prototipo final navegable.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 03 — RESEARCH: USER PERSONA
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Research · User Persona</div>
+  <div class="persona-grid">
+    <div class="img-frame">
+      <img src="hotaru-images/hotaru-persona.png" alt="User persona — María Gómez Martín">
+    </div>
+    <div>
+      <div class="ov-title" style="font-size:clamp(2rem,3vw,3rem);margin-bottom:1rem;">María Gómez Martín, <span class="gold">45</span></div>
+      <p class="ov-body">Analizando patrones en las entrevistas y datos relevados llegamos a un insight clave: <strong>las mujeres de entre 37 y 55 años, con hijos, eran quienes estaban atravesando un loop emocional más marcado</strong> — y donde teníamos mayor oportunidad de generar impacto.</p>
+      <div class="persona-quote">"Intento que no me afecte pero tengo muchas cosas en las que pensar y me cuesta desconectar de lo que siento."</div>
+      <div class="persona-tags">
+        <span class="persona-tag">Amistosa</span>
+        <span class="persona-tag">Tímida</span>
+        <span class="persona-tag">Observadora</span>
+        <span class="persona-tag">Tranquila</span>
+        <span class="persona-tag">Consultora de RRHH</span>
+      </div>
+      <div class="persona-cols">
+        <div class="persona-col">
+          <div class="persona-col-t">Objetivos</div>
+          <ul>
+            <li>Fortalecer vínculos familiares</li>
+            <li>Ser productiva en su nueva situación laboral</li>
+            <li>Aprender a gestionar sus emociones</li>
+          </ul>
+        </div>
+        <div class="persona-col">
+          <div class="persona-col-t">Gains</div>
+          <ul>
+            <li>Redescubrir la relación con hijos y marido</li>
+            <li>Crear rutinas y nuevas habilidades</li>
+            <li>Tiempo para sí misma</li>
+          </ul>
+        </div>
+        <div class="persona-col">
+          <div class="persona-col-t">Pains</div>
+          <ul>
+            <li>Prioriza a su familia por sobre sí misma</li>
+            <li>Incertidumbre y preocupación por su entorno</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 04 — CUSTOMER JOURNEY MAP
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Customer Journey Map</div>
+  <div class="section-label">
+    <div class="sl-text">De la incertidumbre a la confianza</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">Mañana · Tarde · Noche</div>
+  </div>
+  <p class="ov-body" style="max-width:760px;margin-bottom:2rem;">Mapeamos el día completo de María cruzando sus actividades con tres fases: <strong>antes de descargar la app</strong>, <strong>durante su uso</strong> y <strong>después</strong>. El recorrido emocional es elocuente: arranca en preocupación e incertidumbre, durante el uso de la app aparece la ilusión de planificar una vida más saludable, y después, confianza y valoración de lo que se tiene. Ese arco emocional terminó siendo el corazón de la propuesta de valor de Hotaru.</p>
+  <div class="img-frame">
+    <img src="hotaru-images/hotaru-journey.png" alt="Customer journey map de María">
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 05 — HOW MIGHT WE
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">How Might We</div>
+  <p class="ov-body" style="max-width:760px;">Con los insights ya analizados, y tras varias sesiones de diálogo y votación, llegamos a tres HMW que organizaron el trabajo de ideación en cuatro ejes: emociones/incertidumbre/seguridad, tiempo/rutinas/actividades, uso de la tecnología y conexión con otros.</p>
+  <div class="decisions-grid">
+    <div class="dec">
+      <div class="dec-n">HMW 01</div>
+      <div class="dec-t">Gestionar la incertidumbre</div>
+      <div class="dec-d">¿Cómo podemos dar herramientas para gestionar la incertidumbre, con uno mismo y con el entorno?</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">HMW 02</div>
+      <div class="dec-t">Valorar lo que se tiene</div>
+      <div class="dec-d">¿Cómo podríamos lograr que las personas valoren más lo que tienen que lo que no tienen?</div>
+    </div>
+    <div class="dec">
+      <div class="dec-n">HMW 03</div>
+      <div class="dec-t">Tecnología como aliada</div>
+      <div class="dec-d">¿Cómo podríamos convertir a la tecnología en una aliada del desarrollo personal?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 06 — IDEATION: CRAZY EIGHTS
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Ideación · Crazy Eights</div>
+  <p class="ov-body" style="max-width:760px;margin-bottom:1rem;">Hicimos una dinámica de Crazy Eights en equipo para explorar rápido muchas soluciones posibles antes de converger. De ahí surgió el primer flujo: apertura de la app, escaneo biométrico, nivel de ánimo del día, informes y recomendaciones de actividades, baúl de felicidad, perfil y cierre del día con una frase reflexiva.</p>
+  <div class="sketch-strip">
+    <div class="sketch-item">
+      <img src="hotaru-images/crazy8-panel1.png" alt="Sketch 1 — onboarding y escaneo biométrico">
+      <div class="sketch-lbl">Onboarding · Escaneo biométrico</div>
+    </div>
+    <div class="sketch-item">
+      <img src="hotaru-images/crazy8-panel2.png" alt="Sketch 1 — informes, recomendaciones y actividades">
+      <div class="sketch-lbl">Informes · Recomendaciones · Actividades</div>
+    </div>
+    <div class="sketch-item">
+      <img src="hotaru-images/crazy8-panel3.png" alt="Sketch 1 — baúl de felicidad, perfil y notificación final">
+      <div class="sketch-lbl">Baúl de felicidad · Perfil · Cierre del día</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 07 — PROCESS OVERVIEW IMAGE
+══════════════════════════════════════════ -->
+<div class="section" style="background:var(--bg2);">
+  <div class="eyebrow">Framework de trabajo</div>
+  <div class="img-frame" style="max-width:640px;margin:0 auto;">
+    <img src="hotaru-images/hotaru-process.png" alt="Double Diamond — Understand and define, Think up, Decide, Prototype">
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 08 — FINAL UI
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Final UI · Prototipo</div>
+  <div class="section-label">
+    <div class="sl-text">De la incertidumbre a la acción</div>
+    <div class="sl-line"></div>
+    <div class="sl-text">4 momentos clave</div>
+  </div>
+  <div class="img-frame" style="background:#0A0A10;">
+    <img src="hotaru-images/hotaru-final-ui.jpeg" alt="Hotaru — pantallas finales del prototipo">
+  </div>
+  <div class="ui-flow-labels">
+    <div class="ui-label">
+      <div class="ui-label-n">01</div>
+      <div class="ui-label-t">Onboarding biométrico</div>
+      <div class="ui-label-d">Selfie de referencia comparada semana a semana.</div>
+    </div>
+    <div class="ui-label">
+      <div class="ui-label-n">02</div>
+      <div class="ui-label-t">Selfie exitosa</div>
+      <div class="ui-label-d">Confirmación amable, baja el umbral de fricción del onboarding.</div>
+    </div>
+    <div class="ui-label">
+      <div class="ui-label-n">03</div>
+      <div class="ui-label-t">Alimentación</div>
+      <div class="ui-label-d">Recetas simples y guiadas, con tiempo e ingredientes.</div>
+    </div>
+    <div class="ui-label">
+      <div class="ui-label-n">04</div>
+      <div class="ui-label-t">Relajación</div>
+      <div class="ui-label-d">Meditaciones guiadas con beneficios explicados.</div>
+    </div>
+    <div class="ui-label">
+      <div class="ui-label-n">05</div>
+      <div class="ui-label-t">Rincón verde</div>
+      <div class="ui-label-d">Mini huerta vertical paso a paso, conexión con la naturaleza.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 09 — LEARNINGS + CALLOUT
+══════════════════════════════════════════ -->
+<div class="section">
+  <div class="eyebrow">Aprendizajes</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+    <div class="insights-grid" style="grid-template-columns:1fr;margin-top:0;">
+      <div class="ins">
+        <div class="ins-n">Learning 01</div>
+        <div class="ins-t">El insight de research define todo</div>
+        <div class="ins-d">Encontrar el segmento correcto (mujeres 37–55, con hijos) fue lo que hizo que cada decisión de diseño posterior tuviera dirección.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Learning 02</div>
+        <div class="ins-t">El journey emocional es el producto</div>
+        <div class="ins-d">Diseñar para el arco de incertidumbre → confianza terminó siendo más relevante que cualquier feature puntual.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-n">Learning 03</div>
+        <div class="ins-t">De ejercicio a validación real</div>
+        <div class="ins-d">Pitchear ante angel investors en La Nave Madrid nos obligó a convertir insights de research en un modelo de negocio defendible.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="co-lbl">De proyecto de mentoría a startup</div>
+      <div class="co-t">"Use technology as an ally to connect with ourselves."</div>
+      <div class="co-d">Hotaru no se quedó en el ejercicio académico. Con el proyecto ganamos un lugar en el programa de aceleración de La Nave Madrid, donde hicimos pitch ante angel investors, y avanzamos en el business plan para darle formato de startup real.</div>
+      <div class="co-stats">
+        <div><div class="cos-v">2020</div><div class="cos-l">Origen · UXER School</div></div>
+        <div><div class="cos-v">La Nave</div><div class="cos-l">Madrid · Aceleradora</div></div>
+        <div><div class="cos-v">3</div><div class="cos-l">Co-founders</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CLOSING — LINKS
+══════════════════════════════════════════ -->
+<div class="section" style="text-align:center;">
+  <div class="eyebrow" style="justify-content:center;">Material del proyecto</div>
+  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.15;max-width:640px;margin:0 auto 1.5rem;">Light your way.</div>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="https://www.canva.com/design/DAEawFhldPw/FQdjkjZFYVzSxCGbM5Inbw/view" target="_blank" rel="noopener" style="font-family:'Space Grotesk',sans-serif;font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;padding:.875rem 1.5rem;border-radius:100px;background:var(--gold);color:#241F19;text-decoration:none;font-weight:600;">Ver deck completo</a>
+    <a href="https://www.youtube.com/watch?v=AtlR0FOaa5E" target="_blank" rel="noopener" style="font-family:'Space Grotesk',sans-serif;font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;padding:.875rem 1.5rem;border-radius:100px;border:1px solid var(--line2);color:var(--paper);text-decoration:none;font-weight:600;">Ver video del producto</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">Hotaru · Wellness App · UXER School × La Nave Madrid · 2020</div>
+  <div class="footer-r">Product Designer · Paula Elffman</div>
+</div>
+
+<script>
+/* WIPE TRANSITION */
+(function(){
+  var overlay=document.getElementById('wipe-overlay');
+  var backBtn=document.getElementById('back-to-portfolio');
+  if(backBtn){
+    backBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var x=e.clientX,y=e.clientY;
+      try{ sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y})); }catch(err){}
+      overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
+      overlay.classList.remove('animate');
+      void overlay.offsetWidth;
+      overlay.classList.add('animate');
+      requestAnimationFrame(function(){
+        overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
+      });
+      setTimeout(function(){ window.location.href='index.html'; },600);
+    });
+  }
+})();
+
+/* SCROLL REVEAL */
+(function(){
+  var targets=document.querySelectorAll('.reveal');
+  if(!targets.length) return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+    });
+  },{threshold:.2,rootMargin:'0px 0px -60px 0px'});
+  targets.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+<!-- Portfolio Navigation Dock -->
+<style>
+#portfolio-dock{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9700;display:flex;align-items:center;gap:0;background:rgba(246,241,230,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(36,31,25,0.1);border-radius:100px;padding:.375rem .5rem;font-family:'Inter','Geist',sans-serif;}
+body.dark-mode #portfolio-dock{background:rgba(36,31,25,0.85);border-color:rgba(246,241,230,0.13);}
+#portfolio-dock .pd-btn{padding:.5rem 1.25rem;font-size:.8125rem;font-weight:500;color:#6B6B5A;background:transparent;border:none;border-radius:100px;cursor:pointer;text-decoration:none;transition:color .3s var(--ease),background .3s var(--ease);white-space:nowrap;}
+#portfolio-dock .pd-btn:hover{color:#241F19;background:rgba(36,31,25,0.06);}
+body.dark-mode #portfolio-dock .pd-btn{color:#A99A80;}
+body.dark-mode #portfolio-dock .pd-btn:hover{color:#F6F1E6;background:rgba(246,241,230,0.07);}
+#portfolio-dock .pd-sep{width:1px;height:20px;background:rgba(36,31,25,0.13);margin:0 .25rem;}
+body.dark-mode #portfolio-dock .pd-sep{background:rgba(246,241,230,0.13);}
+#portfolio-dock .pd-link{display:flex;align-items:center;justify-content:center;padding:.5rem .75rem;font-size:.8125rem;font-weight:500;color:#6B6B5A;text-decoration:none;border-radius:100px;transition:color .3s, background .3s;white-space:nowrap;}
+#portfolio-dock .pd-link:hover{color:#241F19;background:rgba(36,31,25,0.06);}
+body.dark-mode #portfolio-dock .pd-link{color:#A99A80;}
+body.dark-mode #portfolio-dock .pd-link:hover{color:#F6F1E6;background:rgba(246,241,230,0.07);}
+#portfolio-dock .pd-theme{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:none;background:transparent;color:#6B6B5A;cursor:pointer;transition:color .3s, background .3s;margin-left:.25rem;}
+#portfolio-dock .pd-theme:hover{color:#241F19;background:rgba(36,31,25,0.06);}
+body.dark-mode #portfolio-dock .pd-theme{color:#A99A80;}
+body.dark-mode #portfolio-dock .pd-theme:hover{color:#F6F1E6;background:rgba(246,241,230,0.07);}
+#portfolio-dock .pd-theme svg{width:18px;height:18px;}
+body:not(.dark-mode) #portfolio-dock .icon-sun{display:inline;}
+body:not(.dark-mode) #portfolio-dock .icon-moon{display:none;}
+body.dark-mode #portfolio-dock .icon-sun{display:none;}
+body.dark-mode #portfolio-dock .icon-moon{display:inline;}
+</style>
+<nav id="portfolio-dock">
+  <a class="pd-btn" href="index.html" title="Back to Home">Home</a>
+  <a class="pd-btn" href="index.html#about" title="About Me">About Me</a>
+  <div class="pd-sep"></div>
+  <a class="pd-link" href="https://www.linkedin.com/in/paula-elffman/" target="_blank" rel="noopener">LinkedIn</a>
+  <button class="pd-theme" onclick="document.body.classList.toggle('dark-mode');try{localStorage.setItem('pe-theme',document.body.classList.contains('dark-mode')?'dark':'light')}catch(e){}" aria-label="Toggle light/dark mode">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+<script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+
+</body>
+</html>

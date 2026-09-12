@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>About statement — preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Muli:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#24242C;--void-2:#1E1E26;--ghost:#2C2C36;--ghost-2:#32323E;--paper:#F4F4F6;--paper-2:#DDDDE6;--ash:#7A7A90;--ash-2:#56566A;--accent:#22F0A4;--accent-2:#42E8A8;--line:rgba(244,244,246,0.07);--line-md:rgba(244,244,246,0.13);}
+body.light-mode{--void:#F5F4F0;--void-2:#EDECEA;--ghost:#E8E7E3;--ghost-2:#DDDCDA;--paper:#1A1A22;--paper-2:#2C2C36;--ash:#6B6B7A;--ash-2:#9090A0;--accent:#009d71;--accent-2:#00875f;--line:rgba(26,26,34,0.07);--line-md:rgba(26,26,34,0.13);}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--void);color:var(--paper);font-family:'Muli',sans-serif;transition:background .4s,color .4s;}
+.wrap{max-width:1100px;margin:0 auto;}
+.dv-section{padding:5rem 3.5rem;}
+.dv-label{font-family:'JetBrains Mono',monospace;font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:2.5rem;display:flex;align-items:center;gap:.75rem;}
+.dv-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+.dv-story{max-width:780px;display:flex;flex-direction:column;gap:1.75rem;margin-bottom:3.5rem;}
+.dv-story p{font-family:'Muli',sans-serif;font-size:clamp(1rem,1.8vw,1.375rem);line-height:1.75;color:var(--ash);font-weight:300;}
+.dv-story b{color:var(--paper);font-weight:500;}
+.dv-statement{border-top:1px solid var(--line);padding-top:2.75rem;max-width:920px;}
+.dv-statement-h{font-family:'Geist',sans-serif;font-size:clamp(1.5rem,2.7vw,2.375rem);font-weight:700;letter-spacing:-.03em;line-height:1.28;color:var(--paper);margin-bottom:1.75rem;}
+.dv-statement-h em{font-style:normal;color:var(--accent);}
+.dv-statement-tags{font-family:'JetBrains Mono',monospace;font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);}
+.dv-statement-tags span{color:var(--accent);}
+.pv-toggle{position:fixed;top:18px;right:18px;z-index:50;padding:8px 14px;border:1px solid var(--line-md);border-radius:100px;background:var(--ghost);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+@media(max-width:768px){.dv-section{padding:3.5rem 1.5rem;}}
+</style></head>
+<body class="light-mode">
+<button class="pv-toggle" id="pvToggle" type="button">◐ Light / Dark</button>
+<div class="wrap">
+<div class="dv-section">
+  <div class="dv-label">About</div>
+  <div class="dv-story">
+    <p>I'm a <b>product thinker</b> at heart. I love mapping messy workflows, asking the right questions and turning complexity into intuitive experiences that actually make sense to real people.</p>
+    <p>For more than <b>10 years</b> I've designed products across fintech, mobility, food-tech, AI and SaaS — with startups, scale-ups and enterprise teams across Latin America, Europe and the US.</p>
+  </div>
+  <div class="dv-statement">
+    <p class="dv-statement-h">I design <em>complex digital products</em> and use <em>AI</em> to accelerate research, exploration, prototyping and iteration — without losing the <em>human judgment</em> behind the work.</p>
+    <div class="dv-statement-tags">Product Designer<span> · </span>AI-native workflows<span> · </span>FinTech<span> · </span>B2B SaaS</div>
+  </div>
+</div>
+</div>
+<script>document.getElementById('pvToggle').addEventListener('click',function(){document.body.classList.toggle('light-mode');});</script>
+</body></html>
