@@ -171,9 +171,6 @@ body.dark-mode .process-grid .proc-step:nth-child(1) .proc-num{
 /* ── WIREFRAME / SCREEN GALLERY ── */
 .shot-frame{
   border-radius:10px;overflow:hidden;
-  border:1px solid var(--line2);
-  background:#fff;
-  box-shadow:0 1px 2px rgba(20,21,26,.04), 0 8px 24px rgba(20,21,26,.08);
 }
 .shot-frame img{display:block;width:100%;height:auto;}
 .shot-label{margin-top:1.25rem;}
@@ -639,7 +636,7 @@ body.dark-mode .process-grid .proc-step:nth-child(1) .proc-num{
       </div>
     </div>
     <div>
-      <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 641 1268'%3E%3Crect width='641' height='1268' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_006" alt="Smartpass landing mobile"></div>
+      <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 655 1123'%3E%3Crect width='655' height='1123' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_006" alt="Smartpass landing mobile"></div>
       <div class="shot-label">
         <div class="sh-n">Screen 01b</div>
         <div class="sh-t">Landing · Mobile</div>
@@ -647,11 +644,11 @@ body.dark-mode .process-grid .proc-step:nth-child(1) .proc-num{
       </div>
     </div>
     <div>
-      <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1882 1454'%3E%3Crect width='1882' height='1454' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_002" alt="Smartpass registration modal"></div>
+      <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2394 1448'%3E%3Crect width='2394' height='1448' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_002" alt="Smartpass authentication flow: sign in, sign up, OTP verification"></div>
       <div class="shot-label">
         <div class="sh-n">Screen 02</div>
-        <div class="sh-t">Sign up · Multi-step registration</div>
-        <div class="sh-d">Registration is split into steps (dot progress indicator) — phone, email, and password confirmation — reducing perceived effort on a form that otherwise needs several fields validated up front.</div>
+        <div class="sh-t">Authentication · Sign up + OTP verification</div>
+        <div class="sh-d">Registration is split into steps (dot progress indicator) — phone, email, and password confirmation — then closes with a 6-digit OTP sent to the phone number entered, keeping the account tied to a verified line before any credential is issued.</div>
       </div>
     </div>
   </div>
@@ -664,30 +661,20 @@ body.dark-mode .process-grid .proc-step:nth-child(1) .proc-num{
     <div class="sl-l"></div>
     <div class="sl-t">Gestores & acreditaciones</div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-bottom:3rem;">
-    <div>
-      <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1882 1514'%3E%3Crect width='1882' height='1514' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_003" alt="Admin events list"></div>
-      <div class="shot-label">
-        <div class="sh-n">Screen 03</div>
-        <div class="sh-t">Events list · Admin home</div>
-        <div class="sh-d">A simple table surfaces every event the admin manages — name, dates, location — with search and quick view action. Empty date fields (DD/MM/AAAA) signal draft events not yet configured.</div>
-      </div>
-    </div>
-    <div>
-      <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1882 1387'%3E%3Crect width='1882' height='1387' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_004" alt="Event detail empty gestores state"></div>
-      <div class="shot-label">
-        <div class="sh-n">Screen 04</div>
-        <div class="sh-t">Event detail · Empty state</div>
-        <div class="sh-d">Total / accepted / rejected accreditation counters sit above the event card. An explicit empty state ("¡Aún no tienes lista de gestores!") guides the admin to import a CSV before anything can be assigned.</div>
-      </div>
+  <div style="max-width:72%;margin:0 auto 3rem;">
+    <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2550 2058'%3E%3Crect width='2550' height='2058' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_003" alt="Admin events list and event dashboard overview"></div>
+    <div class="shot-label" style="text-align:center;">
+      <div class="sh-n">Screen 03</div>
+      <div class="sh-t">Events list · Admin home &amp; dashboard</div>
+      <div class="sh-d">A simple table surfaces every event the admin manages — name, dates, location — with search and quick view action. Opening one drops into the full event view: accreditation counters, the event card, and the Gestores(100) table populated and paginated.</div>
     </div>
   </div>
   <div style="max-width:60%;margin:0 auto;">
-    <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1882 1387'%3E%3Crect width='1882' height='1387' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_005" alt="Event detail with gestores and company filter"></div>
+    <div class="shot-frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1720 1760'%3E%3Crect width='1720' height='1760' fill='%23EDEAE4'/%3E%3C/svg%3E" data-img-id="smartpass_case_005" alt="Event dashboard with populated gestores and acreditados sections"></div>
     <div class="shot-label" style="text-align:center;">
-      <div class="sh-n">Screen 05</div>
-      <div class="sh-t">Gestores table · Filter by Empresa</div>
-      <div class="sh-d">Once imported, gestores populate a filterable table (name, empresa, servicio, cédula). The multi-select company filter with checkboxes lets admins narrow large lists — this event alone manages 100 gestores across 5 companies.</div>
+      <div class="sh-n">Screen 04</div>
+      <div class="sh-t">Event dashboard · Gestores & Acreditados</div>
+      <div class="sh-d">The full event view: accreditation counters up top, the Gestores(100) table populated and paginated, and an Acreditados panel below with its own search — an explicit empty state appears until a gestor accredits someone into it.</div>
     </div>
   </div>
 </div>
