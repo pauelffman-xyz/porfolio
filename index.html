@@ -2458,8 +2458,17 @@ mark.mk{background:transparent;color:var(--paper);font-weight:500;}
 .hs-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; }
 .hs-feature { margin-top:2.5rem; background:var(--surface); border:1px solid var(--line-md); border-radius:14px; padding:2.5rem; box-shadow:var(--shadow-card); }
 .hs-eyebrow { font-family:'JetBrains Mono',monospace; font-size:.5625rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:1rem; }
-.hs-super-title { font-family:'Geist',sans-serif; font-size:clamp(1.75rem,3.2vw,2.75rem); font-weight:800; letter-spacing:-.03em; color:var(--paper); line-height:1.02; margin-bottom:.75rem; }
+.hs-eyebrow-lg { font-size:clamp(.8125rem,1.1vw,.9375rem); font-weight:700; letter-spacing:.14em; margin-bottom:1.25rem; }
+.hs-super-title { font-family:'Geist',sans-serif; font-size:clamp(1.75rem,3.2vw,2.75rem); font-weight:800; letter-spacing:-.03em; color:var(--paper); line-height:1.02; margin-bottom:.75rem; min-height:1.15em; }
+.hs-scramble-char { color:var(--accent); opacity:.75; }
 .hs-super-sub { font-family:'Muli',sans-serif; font-size:clamp(.9375rem,1.4vw,1.125rem); line-height:1.65; color:var(--ash); font-weight:300; max-width:620px; margin-bottom:2.5rem; }
+.hs-super-flow { display:flex; align-items:center; flex-wrap:wrap; gap:.6rem; max-width:620px; }
+.hs-super-chip { font-family:'JetBrains Mono',monospace; font-size:.6875rem; letter-spacing:.08em; text-transform:uppercase; color:var(--paper); background:var(--void); border:1px solid var(--line-md); border-radius:100px; padding:.6rem 1.1rem; opacity:0; transform:translateY(8px); transition:opacity .5s var(--ease), transform .5s var(--ease), border-color .3s ease; }
+.hs-super-flow.is-live .hs-super-chip { opacity:1; transform:translateY(0); }
+.hs-super-flow.is-live .hs-super-chip:nth-of-type(3) { transition-delay:.15s; }
+.hs-super-flow.is-live .hs-super-chip:nth-of-type(5) { transition-delay:.3s; }
+.hs-super-arrow { color:var(--accent); font-family:'JetBrains Mono',monospace; font-size:.8125rem; opacity:0; transition:opacity .6s ease; }
+.hs-super-flow.is-live .hs-super-arrow { opacity:.65; }
 .hs-bridge { position:relative; display:grid; grid-template-columns:repeat(3,1fr); max-width:620px; }
 .hs-line { position:absolute; top:7px; left:16.6%; right:16.6%; height:2px; background:var(--line-md); overflow:hidden; }
 .hs-line i { display:block; height:100%; width:100%; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform 1.4s cubic-bezier(.65,0,.35,1); }
@@ -2482,6 +2491,7 @@ mark.mk{background:transparent;color:var(--paper);font-weight:500;}
 @media(prefers-reduced-motion:reduce){
   .hs-cell { opacity:1; transform:none; transition:border-color .25s ease, background-color .25s ease; }
   .hs-line i, .hs-node-dot { transition:none; }
+  .hs-super-chip, .hs-super-arrow { opacity:1 !important; transform:none !important; }
 }
 
 @media(max-width:768px){
@@ -2505,6 +2515,8 @@ mark.mk{background:transparent;color:var(--paper);font-weight:500;}
   .hs-node { display:flex; align-items:center; gap:.75rem; text-align:left; padding:.4rem 0; }
   .hs-node-dot { margin:0; }
   .hs-node-label { margin-top:0; }
+  .hs-super-flow { flex-direction:column; align-items:flex-start; }
+  .hs-super-arrow { display:none; }
 }
 @media(max-width:480px){
   .dv-cards { grid-template-columns:1fr; }
@@ -3535,18 +3547,77 @@ body.light-mode .tile-sukupay-ds .tile-name {
     <span class="dv-pill">Business Thinking</span>
   </div>
 
-  <div class="hs-feature">
-    <div class="hs-eyebrow">My superpower</div>
-    <h3 class="hs-super-title">I bridge the gap.</h3>
+  <div class="hs-feature" id="hsFeature">
+    <div class="hs-eyebrow hs-eyebrow-lg">My superpower</div>
+    <h3 class="hs-super-title" id="hsSuperTitle" data-text="I bridge the gap.">I bridge the gap.</h3>
     <p class="hs-super-sub">From stakeholder language, to dev handoff, to shipped product — I keep the original intent intact the whole way through.</p>
-    <div class="hs-bridge" id="hsBridge">
-      <span class="hs-line"><i></i></span>
-      <div class="hs-node"><span class="hs-node-dot"></span><span class="hs-node-label">Stakeholder language</span></div>
-      <div class="hs-node"><span class="hs-node-dot"></span><span class="hs-node-label">Dev handoff</span></div>
-      <div class="hs-node"><span class="hs-node-dot"></span><span class="hs-node-label">Shipped product</span></div>
+    <div class="hs-super-flow" id="hsSuperFlow">
+      <span class="hs-super-chip">Stakeholder language</span>
+      <span class="hs-super-arrow">&#8594;</span>
+      <span class="hs-super-chip">Dev handoff</span>
+      <span class="hs-super-arrow">&#8594;</span>
+      <span class="hs-super-chip">Shipped product</span>
     </div>
   </div>
 </div>
+
+<script>
+(function(){
+  var titleEl=document.getElementById('hsSuperTitle');
+  var feature=document.getElementById('hsFeature');
+  var flow=document.getElementById('hsSuperFlow');
+  if(!titleEl||!feature) return;
+  var finalText=titleEl.getAttribute('data-text')||titleEl.textContent;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var CHARS='!<>-_\\/[]{}—=+*^?#$%&01';
+
+  function Scrambler(el){ this.el=el; this.frame=0; this.queue=[]; this.frameReq=null; this.resolve=null; this.update=this.update.bind(this); }
+  Scrambler.prototype.setText=function(newText){
+    var oldText=this.el.textContent;
+    var length=Math.max(oldText.length,newText.length);
+    var self=this;
+    var promise=new Promise(function(res){ self.resolve=res; });
+    this.queue=[];
+    for(var i=0;i<length;i++){
+      var from=oldText[i]||'';
+      var to=newText[i]||'';
+      var start=Math.floor(Math.random()*24);
+      var end=start+Math.floor(Math.random()*24)+14;
+      this.queue.push({from:from,to:to,start:start,end:end,char:null});
+    }
+    if(this.frameReq) cancelAnimationFrame(this.frameReq);
+    this.frame=0;
+    this.update();
+    return promise;
+  };
+  Scrambler.prototype.update=function(){
+    var output='',complete=0;
+    for(var i=0;i<this.queue.length;i++){
+      var q=this.queue[i];
+      if(this.frame>=q.end){ complete++; output+=q.to; }
+      else if(this.frame>=q.start){
+        if(!q.char||Math.random()<0.3){ q.char=CHARS[Math.floor(Math.random()*CHARS.length)]; }
+        output+='<span class="hs-scramble-char">'+q.char+'</span>';
+      } else { output+=q.from; }
+    }
+    this.el.innerHTML=output;
+    if(complete>=this.queue.length){ if(this.resolve) this.resolve(); }
+    else { this.frame++; this.frameReq=requestAnimationFrame(this.update); }
+  };
+
+  var fx=new Scrambler(titleEl);
+  function reveal(){
+    if(flow) flow.classList.add('is-live');
+    if(reduce){ titleEl.textContent=finalText; return; }
+    titleEl.textContent='';
+    fx.setText(finalText);
+  }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ reveal(); io.disconnect(); } }); },{threshold:.4});
+    io.observe(feature);
+  } else { reveal(); }
+})();
+</script>
 
 <div class="dv-section">
   <div class="dv-label">Experience</div>
