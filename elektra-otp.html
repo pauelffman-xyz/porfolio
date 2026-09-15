@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elektra · Una palabra en el CTA — Case Study · Paula Elffman</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#FAF7F6;
+  --bg2:#F4EEEC;
+  --paper:#FFFFFF;
+  --ink:#1C1512;
+  --ash:rgba(28,21,18,.58);
+  --ash-2:rgba(28,21,18,.32);
+  --line:rgba(28,21,18,.10);
+  --line-md:rgba(28,21,18,.16);
+  --red:#DA291C;
+  --red-bright:#EE2E24;
+  --red-deep:#7A0703;
+  --red-soft:#FBEAE7;
+  --good:#1E8449;
+  --good-soft:rgba(30,132,73,.08);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+html{font-size:16px;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+.mono{font-family:'Space Grotesk',sans-serif;}
+
+/* ── layout shells ── */
+.section{padding:4.5rem 4rem;}
+.section+.section{border-top:1px solid var(--line);}
+.wrap{max-width:1180px;margin:0 auto;}
+
+/* ── nav ── */
+.back-nav{
+  position:sticky;top:0;z-index:50;background:rgba(250,247,246,.9);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);padding:1rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.back-btn{display:inline-flex;align-items:center;gap:.6rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);text-decoration:none;transition:gap .2s;}
+.back-btn:hover{gap:.95rem;}
+.back-nav-r{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);}
+
+/* ── eyebrow ── */
+.eyebrow{font-family:'Space Grotesk',sans-serif;font-size:.5875rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:1.1rem;display:flex;align-items:center;gap:.75rem;}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--red);flex-shrink:0;}
+
+/* ── cover ── */
+.cover{padding:4.5rem 4rem 3.5rem;}
+.cover-title{font-size:clamp(2.5rem,6vw,4.75rem);font-weight:800;letter-spacing:-.045em;line-height:1.02;color:var(--ink);max-width:16ch;}
+.cover-title .r{color:var(--red);}
+.cover-lede{font-size:1rem;line-height:1.7;color:var(--ash);font-weight:300;max-width:56ch;margin-top:1.5rem;}
+.cover-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:2.75rem;padding-top:2rem;border-top:1px solid var(--line);}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash-2);margin-bottom:.35rem;}
+.cm-val{font-size:.875rem;font-weight:600;color:var(--ink);}
+
+/* ── section titles ── */
+.s-title{font-size:clamp(1.75rem,3.2vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:1.1rem;}
+.s-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:62ch;}
+.s-body strong{color:var(--ink);font-weight:600;}
+
+/* ── collision diagram ── */
+.collision{display:grid;grid-template-columns:1fr auto 1fr;gap:2.5rem;align-items:center;margin-top:3rem;}
+.col-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1.75rem;text-align:center;}
+.col-step{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash-2);margin-bottom:1rem;}
+.col-pill{display:inline-block;background:var(--red);color:#fff;font-weight:700;font-size:.9375rem;letter-spacing:-.01em;padding:.75rem 1.75rem;border-radius:100px;margin-bottom:1.25rem;}
+.col-does{font-size:.8125rem;color:var(--ash);line-height:1.55;}
+.col-does b{color:var(--ink);font-weight:600;}
+.col-mid{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.col-eq{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--red);line-height:1;}
+.col-mid-t{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);text-align:center;}
+.col-mid-t b{color:var(--red);display:block;font-size:.6875rem;letter-spacing:.06em;margin-top:.2rem;}
+
+/* ── quote ── */
+.quote-block{margin-top:3.5rem;background:var(--ink);border-radius:18px;padding:2.75rem 3rem;display:grid;grid-template-columns:auto 1fr;gap:2.25rem;align-items:center;}
+.quote-mark{font-family:'Space Grotesk',sans-serif;font-size:3.5rem;color:var(--red-bright);line-height:.6;font-weight:700;}
+.quote-txt{font-size:1.3125rem;font-weight:600;color:#fff;line-height:1.5;letter-spacing:-.01em;}
+.quote-src{font-family:'Space Grotesk',sans-serif;font-size:.6875rem;letter-spacing:.04em;color:rgba(255,255,255,.5);margin-top:1rem;}
+
+/* ── panel ── */
+.panel-note{font-size:.8125rem;color:var(--ash-2);margin-top:-.5rem;margin-bottom:2.25rem;}
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;}
+.panel-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:2rem;}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.25rem;}
+.panel-name{font-size:1.0625rem;font-weight:800;letter-spacing:-.015em;color:var(--ink);}
+.panel-dl{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ash-2);white-space:nowrap;padding-top:.2rem;}
+.panel-seg{font-family:'Space Grotesk',sans-serif;font-size:.625rem;letter-spacing:.04em;color:var(--red);margin-bottom:1.4rem;}
+.pf{margin-bottom:1rem;}
+.pf-k{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);margin-bottom:.3rem;}
+.pf-k.fear{color:var(--red);}
+.pf-v{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+.panel-spont{margin-top:1.25rem;background:var(--red-soft);border-radius:10px;padding:1.1rem 1.25rem;font-size:.875rem;font-style:italic;color:var(--ink);line-height:1.55;}
+.panel-spont::before{content:'"';color:var(--red);font-weight:800;margin-right:.15rem;font-style:normal;}
+.pm-row{display:flex;gap:1.75rem;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line);}
+.pm-item{flex:1;}
+.pm-label{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ash-2);margin-bottom:.45rem;display:flex;justify-content:space-between;}
+.pm-label b{color:var(--ink);font-weight:700;}
+.pm-bar{height:5px;border-radius:100px;background:var(--bg2);overflow:hidden;}
+.pm-fill{height:100%;border-radius:100px;background:var(--red);}
+.panel-foot{margin-top:2rem;padding:1.25rem 1.5rem;background:var(--ink);border-radius:12px;font-size:.8125rem;line-height:1.65;color:rgba(255,255,255,.82);}
+.panel-foot b{color:#fff;}
+
+/* ── compare row / phones ── */
+.compare-row{display:grid;grid-template-columns:1fr auto 1fr;gap:3rem;align-items:start;margin-top:3rem;}
+.compare-col{display:flex;flex-direction:column;align-items:center;}
+.compare-tag{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem;border-radius:100px;margin-bottom:1.5rem;}
+.compare-tag.bad{color:var(--red);background:var(--red-soft);}
+.compare-tag.good{color:var(--good);background:var(--good-soft);}
+.compare-arrow{align-self:center;font-size:1.5rem;color:var(--ash-2);margin-top:4rem;}
+.phone-stack{display:flex;flex-direction:column;gap:1.5rem;align-items:center;}
+
+.otp-phone{width:236px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:.55rem;box-shadow:0 26px 60px -24px rgba(122,7,3,.28);}
+.otp-screen{background:#fff;border-radius:22px;padding:1.4rem 1.15rem 1.15rem;}
+.otp-notch{height:14px;display:flex;justify-content:center;margin-bottom:.6rem;}
+.otp-notch::after{content:'';width:54px;height:4px;border-radius:100px;background:rgba(28,21,18,.14);}
+.otp-brand{text-align:center;font-weight:800;font-size:1.05rem;color:var(--red);letter-spacing:-.02em;margin-bottom:1.15rem;}
+.otp-title{font-size:.875rem;font-weight:800;color:var(--ink);text-align:center;line-height:1.3;margin-bottom:.4rem;}
+.otp-sub{font-size:.6875rem;color:var(--ash);text-align:center;line-height:1.5;margin-bottom:1.25rem;}
+.otp-sub b{color:var(--ink);font-weight:600;}
+.otp-digits{display:flex;justify-content:center;gap:.55rem;margin-bottom:1.25rem;}
+.otp-digit{width:18px;text-align:center;font-size:1.05rem;font-weight:700;color:var(--ink);border-bottom:2px solid rgba(28,21,18,.35);padding-bottom:.2rem;}
+.otp-resend{font-size:.625rem;color:var(--ash);text-align:center;line-height:1.55;margin-bottom:1.1rem;}
+.otp-cta{border-radius:100px;padding:.7rem;text-align:center;font-size:.75rem;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;gap:.45rem;}
+.otp-cta.on{background:var(--red);color:#fff;}
+.otp-cta.wait{background:#F1EBEA;color:rgba(28,21,18,.32);}
+.otp-spinner{width:10px;height:10px;border-radius:50%;border:2px solid rgba(28,21,18,.18);border-top-color:rgba(28,21,18,.55);animation:spin .8s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.otp-state-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);text-align:center;margin-top:-.4rem;}
+
+/* ── fix table ── */
+.fix-table{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:2.75rem;background:var(--paper);}
+.fix-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--line);}
+.fix-row:last-child{border-bottom:none;}
+.fix-row.head{background:var(--bg2);}
+.fix-cell{padding:1.1rem 1.5rem;font-size:.8125rem;line-height:1.55;}
+.fix-row.head .fix-cell{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash-2);}
+.fix-cell:not(:last-child){border-right:1px solid var(--line);}
+.fix-cell .k{font-weight:700;color:var(--ink);}
+.fix-cell.bad{color:var(--red);text-decoration:line-through;text-decoration-color:rgba(218,41,28,.4);}
+.fix-cell.good{color:var(--good);font-weight:600;}
+
+/* ── impact ── */
+.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.75rem;}
+.impact-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:1.75rem;}
+.impact-n{font-family:'Space Grotesk',sans-serif;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;}
+.impact-t{font-size:.9375rem;font-weight:700;color:var(--ink);line-height:1.4;margin-bottom:.6rem;}
+.impact-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+.next-note{margin-top:1.75rem;padding:1.25rem 1.5rem;background:var(--bg2);border-radius:12px;font-size:.8125rem;line-height:1.6;color:var(--ash);}
+.next-note b{color:var(--ink);}
+
+/* ── footer ── */
+.footer{padding:2.25rem 4rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.footer-l,.footer-r{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash-2);}
+
+@media(max-width:900px){
+  .section{padding:3rem 1.5rem;}
+  .back-nav{padding:1rem 1.5rem;}
+  .footer{padding:2rem 1.5rem;}
+  .cover{padding:3rem 1.5rem 2.5rem;}
+  .cover-meta{grid-template-columns:1fr 1fr;}
+  .collision{grid-template-columns:1fr;}
+  .col-mid{flex-direction:row;justify-content:center;}
+  .compare-row{grid-template-columns:1fr;}
+  .compare-arrow{transform:rotate(90deg);margin:0;}
+  .quote-block{grid-template-columns:1fr;text-align:center;padding:2.25rem 1.75rem;}
+  .fix-row{grid-template-columns:1fr;}
+  .fix-cell:not(:last-child){border-right:none;border-bottom:1px solid var(--line);}
+  .impact-grid{grid-template-columns:1fr;}
+  .panel-grid{grid-template-columns:1fr;}
+  .panel-head{flex-direction:column;gap:.35rem;}
+  .pm-row{flex-direction:column;gap:1rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="back-nav">
+  <a class="back-btn" href="#"><span>←</span> Volver al portfolio</a>
+  <div class="back-nav-r">Elektra × SukuPay · UX Writing</div>
+</nav>
+
+<!-- ── COVER ── -->
+<div class="cover wrap">
+  <div class="eyebrow">UX Writing Case Study</div>
+  <div class="cover-title">Una palabra en el CTA<br>puede costarte<span class="r"> la conversión.</span></div>
+  <p class="cover-lede">En el login de Elektra (powered by SukuPay), el botón para confirmar el código de verificación decía lo mismo que el botón para pedirlo. Un solo string, dos acciones distintas — y una duda silenciosa en el paso más crítico del onboarding.</p>
+  <div class="cover-meta">
+    <div><div class="cm-label">Cliente</div><div class="cm-val">Elektra México</div></div>
+    <div><div class="cm-label">Producto</div><div class="cm-val">Verificación OTP · Login</div></div>
+    <div><div class="cm-label">Rol</div><div class="cm-val">Product Design · UX Writing</div></div>
+    <div><div class="cm-label">Plataforma</div><div class="cm-val">powered by SukuPay</div></div>
+  </div>
+</div>
+
+<!-- ── SITUATION ── -->
+<div class="section">
+  <div class="wrap">
+    <div class="eyebrow">El contexto</div>
+    <div class="s-title">Un flujo de remesas,<br>con una verificación por SMS.</div>
+    <p class="s-body">Elektra envía dinero de EE.UU. a México y usa la infraestructura de SukuPay para su login: número de teléfono → código de 6 dígitos por SMS → acceso. Es el primer punto de fricción real del producto — antes de esto, el usuario todavía no confía en la app.</p>
+  </div>
+</div>
+
+<!-- ── THE PROBLEM ── -->
+<div class="section">
+  <div class="wrap">
+    <div class="eyebrow">El hallazgo</div>
+    <div class="s-title">El mismo texto, para dos<br>acciones completamente distintas.</div>
+    <p class="s-body">El CTA <strong>"Enviar código"</strong> aparecía dos veces en el mismo flujo. La primera vez pide que te manden un código. La segunda vez — en la pantalla de al lado — se usa para confirmar el código que ya escribiste. El usuario lee "código" en el título, en el botón, y en el link de reenvío. Nada le dice cuál de esos tres botones hace qué.</p>
+
+    <div class="collision">
+      <div class="col-card">
+        <div class="col-step">Pantalla 1 · Ingreso de teléfono</div>
+        <div class="col-pill">Enviar código</div>
+        <div class="col-does">Acción real: <b>pedir</b> que te manden un SMS con el código.</div>
+      </div>
+      <div class="col-mid">
+        <div class="col-eq">=</div>
+        <div class="col-mid-t">mismo texto<b>acciones distintas</b></div>
+      </div>
+      <div class="col-card">
+        <div class="col-step">Pantalla 2 · Verificación OTP</div>
+        <div class="col-pill">Enviar código</div>
+        <div class="col-does">Acción real: <b>confirmar</b> el código que ya tenés escrito.</div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <div>
+        <div class="quote-txt">No entiendo si sí se concretó la operación o no.</div>
+        <div class="quote-src">TICKET REAL DE SOPORTE · SEGMENTO MAINSTREAM REMITTER (n=125, 22% de usuarios activos)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PANEL ── -->
+<div class="section">
+  <div class="wrap">
+    <div class="eyebrow">Validación</div>
+    <div class="s-title">Lo puse frente a un panel<br>de usuarios antes de tocar nada.</div>
+    <p class="panel-note">Panel de testing sintético construido sobre comportamiento real de usuarios de SukuPay (n=581, jun 2026). Cada perfil está calibrado con su frecuencia de envío, tickets de soporte y nivel digital real — no son opiniones inventadas, son reacciones simuladas de un segmento documentado.</p>
+
+    <div class="panel-grid">
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="panel-name">Carmen Villalobos</div>
+          <div class="panel-dl">Nivel digital 3/10</div>
+        </div>
+        <div class="panel-seg">MAINSTREAM REMITTER · n=125 · 22% activos · $177/mes</div>
+
+        <div class="pf">
+          <div class="pf-k">Comprensión</div>
+          <div class="pf-v">"Ok me llegó un código al teléfono, ya lo puse aquí (1,2,3,4,5,6). Ahora hay un botón rojo que dice 'Enviar código'."</div>
+        </div>
+        <div class="pf">
+          <div class="pf-k">Dudas</div>
+          <div class="pf-v">"¿Enviar a dónde? ¿Se lo tengo que volver a enviar a alguien? Arriba dice que si no me llegó lo puedo reenviar en 30 segundos, ¿es lo mismo? Fíjese que no sé si ya lo mandé o si tengo que mandarlo yo otra vez."</div>
+        </div>
+        <div class="pf">
+          <div class="pf-k fear">Miedo</div>
+          <div class="pf-v">"Que si aprieto y me manda otro código, se me tranque y ya no sirva el primero."</div>
+        </div>
+
+        <div class="panel-spont">Yo pensé que ese botón era pa' que me llegue el código otra vez, no para decir que ya lo puse bien.</div>
+
+        <div class="pm-row">
+          <div class="pm-item">
+            <div class="pm-label">Confianza <b>5/10</b></div>
+            <div class="pm-bar"><div class="pm-fill" style="width:50%"></div></div>
+          </div>
+          <div class="pm-item">
+            <div class="pm-label">Prob. de completar <b>6/10</b></div>
+            <div class="pm-bar"><div class="pm-fill" style="width:60%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="panel-name">Lucas Padilla</div>
+          <div class="panel-dl">Nivel digital 4/10</div>
+        </div>
+        <div class="panel-seg">CHURNED · n=338 · 58% del universo total</div>
+
+        <div class="pf">
+          <div class="pf-k">Comprensión</div>
+          <div class="pf-v">"Puse el número que me llegó por SMS."</div>
+        </div>
+        <div class="pf">
+          <div class="pf-k">Dudas</div>
+          <div class="pf-v">"Dice 'Enviar código' pero yo no quiero enviar nada, yo lo que quiero es que me deje pasar. ¿Por qué dice enviar si yo ya lo recibí?"</div>
+        </div>
+        <div class="pf">
+          <div class="pf-k fear">Miedo</div>
+          <div class="pf-v">Que el intento no cuente y tenga que empezar todo de nuevo — ya viene de perder confianza en otros pasos del flujo.</div>
+        </div>
+
+        <div class="panel-spont">Se ve igual que el botón de antes cuando pedí que me manden el código. Le doy pero no sé si va a funcionar.</div>
+
+        <div class="pm-row">
+          <div class="pm-item">
+            <div class="pm-label">Confianza <b>4/10</b></div>
+            <div class="pm-bar"><div class="pm-fill" style="width:40%"></div></div>
+          </div>
+          <div class="pm-item">
+            <div class="pm-label">Prob. de completar <b>5/10</b></div>
+            <div class="pm-bar"><div class="pm-fill" style="width:50%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-foot"><b>Por qué importa este perfil:</b> Lucas representa el 58% de la base (n=338) — usuarios que hacen 1-2 envíos y no vuelven. No necesitan un motivo grande para irse: una duda de 2 segundos frente a un botón es justo el tipo de fricción que los empuja a cerrar la app.</div>
+  </div>
+</div>
+
+<!-- ── BEFORE / AFTER ── -->
+<div class="section">
+  <div class="wrap">
+    <div class="eyebrow">La solución</div>
+    <div class="s-title">Separar el verbo por intención,<br>no reutilizarlo por comodidad.</div>
+    <p class="s-body">"Enviar" quedó solo donde la acción real es enviar. En la pantalla de verificación, el CTA pasó a nombrar lo que el botón realmente hace: confirmar el código.</p>
+
+    <div class="compare-row">
+      <div class="compare-col">
+        <div class="compare-tag bad">Antes</div>
+        <div class="phone-stack">
+          <div class="otp-phone">
+            <div class="otp-screen">
+              <div class="otp-notch"></div>
+              <div class="otp-brand">elektra</div>
+              <div class="otp-title">Ingresá tu código de verificación</div>
+              <div class="otp-sub">Enviamos un código de 6 dígitos al<br><b>+1 (251) 162 4567</b></div>
+              <div class="otp-digits"><span class="otp-digit">1</span><span class="otp-digit">2</span><span class="otp-digit">3</span><span class="otp-digit">4</span><span class="otp-digit">5</span><span class="otp-digit">6</span></div>
+              <div class="otp-resend">¿No has recibido el código?<br>Podrás reenviarlo en 30 segundos</div>
+              <div class="otp-cta on">Enviar código</div>
+            </div>
+          </div>
+          <div class="otp-state-lbl">botón activo</div>
+          <div class="otp-phone">
+            <div class="otp-screen">
+              <div class="otp-notch"></div>
+              <div class="otp-brand">elektra</div>
+              <div class="otp-title">Ingresá tu código de verificación</div>
+              <div class="otp-sub">Enviamos un código de 6 dígitos al<br><b>+1 (251) 162 4567</b></div>
+              <div class="otp-digits"><span class="otp-digit">1</span><span class="otp-digit">2</span><span class="otp-digit">3</span><span class="otp-digit">4</span><span class="otp-digit">5</span><span class="otp-digit">6</span></div>
+              <div class="otp-resend">¿No has recibido el código?<br>Podrás reenviarlo en 30 segundos</div>
+              <div class="otp-cta wait"><span class="otp-spinner"></span>Enviar código</div>
+            </div>
+          </div>
+          <div class="otp-state-lbl">cargando — mismo verbo, más duda</div>
+        </div>
+      </div>
+
+      <div class="compare-arrow">→</div>
+
+      <div class="compare-col">
+        <div class="compare-tag good">Después</div>
+        <div class="phone-stack">
+          <div class="otp-phone">
+            <div class="otp-screen">
+              <div class="otp-notch"></div>
+              <div class="otp-brand">elektra</div>
+              <div class="otp-title">Ingresá tu código de verificación</div>
+              <div class="otp-sub">Enviamos un código de 6 dígitos al<br><b>+1 (251) 162 4567</b></div>
+              <div class="otp-digits"><span class="otp-digit">1</span><span class="otp-digit">2</span><span class="otp-digit">3</span><span class="otp-digit">4</span><span class="otp-digit">5</span><span class="otp-digit">6</span></div>
+              <div class="otp-resend">¿No has recibido el código?<br>Podrás reenviarlo en 30 segundos</div>
+              <div class="otp-cta on">Verificar código</div>
+            </div>
+          </div>
+          <div class="otp-state-lbl">botón activo</div>
+          <div class="otp-phone">
+            <div class="otp-screen">
+              <div class="otp-notch"></div>
+              <div class="otp-brand">elektra</div>
+              <div class="otp-title">Ingresá tu código de verificación</div>
+              <div class="otp-sub">Enviamos un código de 6 dígitos al<br><b>+1 (251) 162 4567</b></div>
+              <div class="otp-digits"><span class="otp-digit">1</span><span class="otp-digit">2</span><span class="otp-digit">3</span><span class="otp-digit">4</span><span class="otp-digit">5</span><span class="otp-digit">6</span></div>
+              <div class="otp-resend">¿No has recibido el código?<br>Podrás reenviarlo en 30 segundos</div>
+              <div class="otp-cta wait"><span class="otp-spinner"></span>Verificando</div>
+            </div>
+          </div>
+          <div class="otp-state-lbl">cargando — el verbo confirma el estado real</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fix-table">
+      <div class="fix-row head">
+        <div class="fix-cell">Estado</div>
+        <div class="fix-cell">Antes</div>
+        <div class="fix-cell">Después</div>
+      </div>
+      <div class="fix-row">
+        <div class="fix-cell k">Botón activo</div>
+        <div class="fix-cell bad">"Enviar código"</div>
+        <div class="fix-cell good">"Verificar código"</div>
+      </div>
+      <div class="fix-row">
+        <div class="fix-cell k">Cargando</div>
+        <div class="fix-cell bad">"Enviar código" + spinner</div>
+        <div class="fix-cell good">"Verificando"</div>
+      </div>
+      <div class="fix-row">
+        <div class="fix-cell k">Link de reenvío</div>
+        <div class="fix-cell">"Podrás reenviarlo en 30 segundos"</div>
+        <div class="fix-cell good">Sin cambios — ya usaba el verbo correcto</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── IMPACT ── -->
+<div class="section">
+  <div class="wrap">
+    <div class="eyebrow">Por qué importa</div>
+    <div class="s-title">Es un cambio de una palabra,<br>en el paso de mayor abandono.</div>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-n">01</div>
+        <div class="impact-t">Menos duda antes de tocar el botón</div>
+        <div class="impact-d">El usuario ya no tiene que decidir si "Enviar código" significa pedir un SMS nuevo o confirmar el que escribió.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-n">02</div>
+        <div class="impact-t">Menos reenvíos de OTP innecesarios</div>
+        <div class="impact-d">Un usuario que duda tiende a tocar el link de reenvío "por las dudas" — un SMS que no hacía falta.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-n">03</div>
+        <div class="impact-t">Coherencia en un paso de baja tolerancia al error</div>
+        <div class="impact-d">Es el primer contacto real con el producto. Cada palabra ambigua ahí cuesta más que en cualquier otra pantalla.</div>
+      </div>
+    </div>
+    <div class="next-note"><b>Nota honesta:</b> este cambio salió de una auditoría de copy + tickets reales de soporte, no de un A/B test corrido en producción. El siguiente paso lógico es medir completion rate del paso OTP antes/después del cambio.</div>
+  </div>
+</div>
+
+<div class="footer wrap">
+  <div class="footer-l">Paula Elffman · Product Designer</div>
+  <div class="footer-r">Elektra × SukuPay · 2026</div>
+</div>
+
+</body>
+</html>

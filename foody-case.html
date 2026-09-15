@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foody — Design Challenge · Paula Elffman</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#FFFFFF;
+  --bg2:#F7F5F1;
+  --bg3:#EFEBE3;
+  --paper:#25314C;
+  --ash:rgba(37,49,76,.55);
+  --ash2:rgba(37,49,76,.15);
+  --orange:#FAA41A;
+  --navy:#25314C;
+  --green:#1aac79;
+  --line:rgba(37,49,76,.09);
+  --line2:rgba(37,49,76,.15);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --ghost:var(--bg2);
+  --ghost-2:var(--bg3);
+  --accent:var(--orange);
+}
+html{font-size:16px;}
+body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--paper);-webkit-font-smoothing:antialiased;}
+.mono{font-family:'Space Grotesk',sans-serif;}
+.orange{color:var(--orange);}
+.navy{color:var(--navy);}
+.green{color:var(--green);}
+
+.section{padding:5rem 4rem;}
+.section + .section{border-top:1px solid var(--line2);}
+
+.eyebrow{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--orange);flex-shrink:0;}
+.eyebrow.center{justify-content:center;}
+
+.section-label{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;}
+.sl-text{font-family:'Space Grotesk',sans-serif;font-size:.5875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);white-space:nowrap;}
+.sl-line{flex:1;height:1px;background:var(--line);}
+
+/* phone / wireframe shells */
+.phone-shell{border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(37,49,76,.08), 0 16px 48px rgba(37,49,76,.14), 0 4px 12px rgba(37,49,76,.08);}
+.phone-shell img{display:block;width:100%;height:auto;}
+.phone-shell.flat{background:none;box-shadow:none;border-radius:0;}
+.wire-shell{border-radius:10px;overflow:hidden;border:1px solid var(--line2);background:#fff;}
+.wire-shell img{display:block;width:100%;height:auto;}
+
+.badge{margin-top:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .875rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;}
+.badge-o{background:var(--orange);color:#fff;}
+.badge-n{background:var(--navy);color:#fff;}
+.badge-gr{background:rgba(26,172,121,.12);color:var(--green);border:1px solid rgba(26,172,121,.25);}
+
+.plabel{margin-top:1.25rem;text-align:center;max-width:190px;}
+.pl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:.375rem;}
+.pl-t{font-size:.875rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.25rem;}
+.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
+
+.wf-lbl{margin-top:1.1rem;text-align:center;max-width:200px;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
+.wf-lbl strong{display:block;font-size:.8125rem;font-family:'Geist',sans-serif;font-weight:700;letter-spacing:-.01em;color:var(--paper);margin-bottom:.25rem;text-transform:none;}
+
+.arrow-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.375rem;padding-top:5rem;}
+.arr-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);}
+.arr-line{width:1px;height:28px;background:linear-gradient(to bottom,var(--orange),rgba(37,49,76,0));position:relative;overflow:visible;}
+.arr-line::after{content:'';position:absolute;left:50%;top:0;width:3px;height:3px;border-radius:50%;background:var(--orange);transform:translate(-50%,0);animation:arrFlow 1.8s linear infinite;}
+@keyframes arrFlow{0%{top:0;opacity:0;}15%{opacity:1;}85%{opacity:1;}100%{top:100%;opacity:0;}}
+.arr-lbl{font-family:'Space Grotesk',sans-serif;font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);writing-mode:vertical-rl;margin-top:.25rem;}
+
+.flow-item,.wf-item,.phone-wrap{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.flow-item.in-view,.wf-item.in-view,.phone-wrap.in-view{opacity:1;transform:translateY(0);}
+
+/* cover */
+.cover{display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:end;padding:5rem 4rem 4rem;}
+.cover-title{font-size:clamp(4.5rem,10vw,10.5rem);font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--paper);}
+.cover-title .dim{color:rgba(37,49,76,.16);}
+.cover-meta{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:.5rem;}
+.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.25rem;}
+.cm-val{font-size:.875rem;font-weight:500;color:var(--paper);}
+
+/* overview */
+.overview-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:3rem;align-items:start;}
+.ov-title{font-size:clamp(2.25rem,3.6vw,3.75rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;}
+.ov-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.ov-body strong{color:var(--paper);font-weight:500;}
+.stats-col{display:flex;flex-direction:column;gap:0;}
+.stat-item{padding:1.25rem 0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:.875rem;}
+.stat-val{font-size:2.1rem;font-weight:800;letter-spacing:-.04em;color:var(--paper);}
+.stat-lbl{font-size:.8125rem;color:var(--ash);line-height:1.4;}
+.accent-card{background:var(--orange);border-radius:12px;padding:2rem;}
+.ac-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(37,26,0,.6);margin-bottom:.875rem;}
+.ac-val{font-size:2.5rem;font-weight:800;letter-spacing:-.05em;color:#25190A;line-height:1;margin-bottom:.5rem;}
+.ac-desc{font-size:.8125rem;color:rgba(37,26,0,.75);line-height:1.6;}
+.ac-sub{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(37,26,0,.15);display:flex;gap:1.25rem;flex-wrap:wrap;}
+.acsub-item .acsub-v{font-size:1.25rem;font-weight:800;letter-spacing:-.03em;color:#25190A;}
+.acsub-item .acsub-l{font-size:.625rem;color:rgba(37,26,0,.65);}
+
+/* grids */
+.wf-grid{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;gap:0;align-items:start;margin-top:3rem;}
+.wf-item{display:flex;flex-direction:column;align-items:center;}
+.wf-item .wire-shell{width:170px;}
+
+.flow-grid5{display:grid;grid-template-columns:1fr 32px 1fr 32px 1fr;gap:0;align-items:start;margin-top:3rem;}
+.flow-item .phone-shell{width:160px;}
+
+/* ── PROCESS TIMELINE — line / text / line / text ── */
+.ptl{margin-top:1rem;}
+.ptl-row{position:relative;display:grid;grid-template-columns:repeat(4,1fr);column-gap:2rem;row-gap:0;padding-top:1.5rem;margin-top:2rem;}
+.ptl-row:first-child{margin-top:1rem;}
+.ptl-line{position:absolute;top:0;left:0;right:0;height:2px;background:var(--line2);z-index:0;}
+.ptl-line-fill{position:absolute;top:0;left:0;height:2px;width:0;background:var(--orange);transition:width 1.4s var(--ease) .1s;}
+.ptl.in-view .ptl-line-fill{width:100%;}
+.ptl-row-3 .ptl-line{right:25%;}
+.ptl-vconn{position:absolute;top:-2rem;left:0;width:2px;height:2rem;background:var(--line2);}
+.ptl-step{position:relative;z-index:1;opacity:0;transform:translateY(14px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
+.ptl.in-view .ptl-step{opacity:1;transform:translateY(0);}
+.ptl-dot{position:absolute;top:-1.5rem;left:0;width:10px;height:10px;margin-top:-4px;border-radius:50%;background:var(--bg);border:2px solid var(--orange);transition:background .4s var(--ease) .2s;}
+.ptl.in-view .ptl-dot{background:var(--orange);}
+.ptl-num{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.625rem;}
+.ptl-title{font-size:1rem;font-weight:800;letter-spacing:-.02em;color:var(--paper);margin-bottom:.5rem;}
+.ptl-desc{font-size:.8125rem;line-height:1.55;color:var(--ash);padding-right:.5rem;}
+@media(max-width:768px){
+  .ptl-row{grid-template-columns:1fr;row-gap:2rem;padding-top:0;}
+  .ptl-line{display:none;}
+  .ptl-step{padding-left:1.5rem;border-left:2px solid var(--line2);padding-bottom:.25rem;}
+  .ptl.in-view .ptl-step{border-left-color:var(--orange);}
+  .ptl-dot{top:2px;left:-6px;}
+  .ptl-vconn{display:none;}
+}
+
+.jmap{margin-top:2.5rem;padding-top:1.5rem;}
+.jmap-mood{width:100%;height:70px;display:block;overflow:visible;}
+.jmap-mood-path{fill:none;stroke:var(--orange);stroke-width:2;stroke-linecap:round;stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.8s var(--ease);}
+.jmap.in-view .jmap-mood-path{stroke-dashoffset:0;}
+.jmap-mood-labels{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin:.25rem 2px 1.75rem;}
+.jmap-track{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+.jmap-connector{position:absolute;top:27px;left:calc(12.5% - 1px);right:calc(12.5% - 1px);height:2px;background:var(--line2);z-index:0;overflow:visible;}
+.jmap-connector-fill{position:absolute;top:0;left:0;height:2px;width:0;background:var(--orange);transition:width 1.6s var(--ease) .1s;}
+.jmap.in-view .jmap-connector-fill{width:100%;}
+.jmap-dot{position:absolute;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 5px rgba(250,164,26,.16);opacity:0;left:0;}
+.jmap.in-view .jmap-dot{animation:jmapTravel 4.5s linear 1.8s infinite;}
+@keyframes jmapTravel{0%{left:0%;opacity:0;}6%{opacity:1;}94%{opacity:1;}100%{left:calc(100% - 8px);opacity:0;}}
+@media(prefers-reduced-motion:reduce){.jmap-dot{display:none;}}
+.jmap-stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
+.jmap.in-view .jmap-stop{opacity:1;transform:translateY(0);}
+.jmap-node{width:56px;height:56px;flex-shrink:0;border-radius:50%;background:var(--bg);border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--orange);font-size:1rem;margin-bottom:.875rem;transition:background .5s var(--ease) .3s,color .5s var(--ease) .3s;}
+.jmap.in-view .jmap-node{background:var(--orange);color:#fff;}
+.jmap-stage{font-size:1.0625rem;font-weight:800;letter-spacing:-.02em;color:var(--paper);margin-bottom:.875rem;}
+.jmap-card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:1rem 1.125rem;text-align:left;width:100%;}
+.jmap-label{font-family:'Space Grotesk',sans-serif;font-size:.4375rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.25rem;}
+.jmap-action{font-size:.8125rem;color:var(--paper);font-weight:500;margin-bottom:.75rem;line-height:1.45;}
+.jmap-goal{font-size:.75rem;color:var(--ash);line-height:1.55;}
+@media(max-width:768px){
+  .jmap-track{grid-template-columns:1fr;gap:2.5rem;}
+  .jmap-connector{top:0;left:27px;right:auto;bottom:0;width:2px;height:auto;}
+  .jmap-connector-fill{width:2px;height:0;transition:height 1.6s var(--ease) .1s;}
+  .jmap.in-view .jmap-connector-fill{height:100%;width:2px;}
+  .jmap-dot{top:0;left:-3px;}
+  .jmap.in-view .jmap-dot{animation:jmapTravelV 4.5s linear 1.8s infinite;}
+  @keyframes jmapTravelV{0%{top:0%;opacity:0;}6%{opacity:1;}94%{opacity:1;}100%{top:calc(100% - 8px);opacity:0;}}
+  .jmap-stop{flex-direction:row;text-align:left;align-items:flex-start;gap:1.25rem;}
+  .jmap-node{margin-bottom:0;}
+  .jmap-stage{margin-bottom:.625rem;}
+  .jmap-mood{display:none;}
+  .jmap-mood-labels{display:none;}
+}
+
+.decisions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:3rem;}
+.dec{background:var(--bg2);padding:2rem 1.75rem;}
+.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.875rem;}
+.dec-t{font-size:1rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;}
+.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
+
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:2rem;}
+.metric{background:var(--bg2);padding:1.75rem;}
+.metric-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:.75rem;}
+.metric-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
+.metric-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+.insights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem;}
+.ins{padding:1.75rem;border:1px solid var(--line);border-radius:10px;background:var(--bg2);}
+.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
+.ins-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
+.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
+
+.callout{background:var(--navy);border-radius:16px;padding:2.5rem;}
+.co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1rem;}
+.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.3;margin-bottom:.875rem;color:#fff;}
+.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.62);}
+.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:2rem;flex-wrap:wrap;}
+.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:var(--orange);}
+.cos-l{font-size:.625rem;color:rgba(255,255,255,.45);margin-top:.125rem;}
+
+.footer{padding:2rem 4rem;border-top:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;}
+.footer-l,.footer-r{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+
+.back-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(37,49,76,.08);padding:1rem 4rem;display:flex;justify-content:space-between;align-items:center;}
+.back-btn{display:inline-flex;align-items:center;gap:.625rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);background:none;border:none;cursor:pointer;text-decoration:none;transition:gap .2s;}
+.back-btn:hover{gap:1rem;}
+.back-nav-title{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(37,49,76,.42);}
+.back-nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(37,49,76,.32);}
+
+/* two col generic */
+.cs-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;}
+.cs-h2{font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:1.25rem;}
+.cs-p{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
+.side-card{padding:2rem;background:var(--bg2);border:1px solid var(--line);border-radius:10px;}
+.side-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.25rem;}
+.side-row{display:flex;align-items:flex-start;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);}
+.side-row:last-child{border-bottom:none;}
+.side-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:.45rem;}
+.side-row span{font-size:.875rem;color:var(--paper);line-height:1.5;}
+
+.chip{display:inline-flex;align-items:center;padding:.3rem .8rem;border-radius:100px;border:1px solid var(--line2);font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);margin:.2rem .3rem .2rem 0;}
+.chip-o{border-color:rgba(250,164,26,.4);color:#B4700D;background:rgba(250,164,26,.08);}
+.chip-n{border-color:rgba(37,49,76,.25);color:var(--navy);background:rgba(37,49,76,.05);}
+
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;align-items:start;}
+.comp-card{opacity:0;transform:translateY(26px);background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:2rem 2rem 1.75rem;display:flex;flex-direction:column;align-items:center;transition:opacity .7s var(--ease),transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);}
+.comp-card.in-view{opacity:1;transform:translateY(0);}
+.comp-card:hover{transform:translateY(-10px) scale(1.015);box-shadow:0 24px 56px rgba(37,49,76,.16),0 6px 16px rgba(37,49,76,.07);border-color:transparent;z-index:2;}
+.comp-card.wide{grid-column:span 3;flex-direction:row;align-items:center;gap:3rem;padding:2.5rem 3rem;}
+.comp-cap{margin-top:1.5rem;text-align:center;}
+.comp-card.wide .comp-cap{margin-top:0;text-align:left;}
+.comp-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.5rem;}
+.comp-t{font-size:1rem;font-weight:800;letter-spacing:-.02em;color:var(--paper);margin-bottom:.5rem;}
+.comp-d{font-size:.8125rem;line-height:1.6;color:var(--ash);max-width:340px;}
+/* Visa-style floating tilt: outer .comp-tilt gets a live 3D tilt from JS on pointermove,
+   inner .comp-media img keeps a slow independent idle float — the two transforms live on
+   different elements so they never fight each other. */
+.comp-tilt{transform-style:preserve-3d;transition:transform .35s cubic-bezier(0.22,1,0.36,1);}
+.comp-media{width:100%;display:flex;justify-content:center;}
+.comp-card.wide .comp-media{width:auto;}
+.comp-media img{max-width:100%;height:auto;display:block;animation:compFloat 5s ease-in-out infinite;}
+.comp-card.wide .comp-media img{max-width:260px;flex-shrink:0;}
+@keyframes compFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+.comp-card:hover .comp-media img{animation-play-state:paused;}
+@media(prefers-reduced-motion:reduce){.comp-media img{animation:none;}}
+@media(max-width:768px){
+  .comp-grid{grid-template-columns:1fr;}
+  .comp-card.wide{grid-column:span 1;flex-direction:column;text-align:center;padding:2rem;}
+  .comp-card.wide .comp-cap{text-align:center;}
+}
+
+.gallery3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem;}
+.gitem{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bg2);}
+.gitem-cap{padding:.875rem 1.125rem;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);border-bottom:1px solid var(--line);}
+.gitem img{display:block;width:100%;height:auto;}
+
+@media(max-width:768px){
+  .section{padding:3rem 20px;}
+  .cover{grid-template-columns:1fr;gap:2rem;padding:2.5rem 20px 2rem;}
+  .back-nav{padding:1rem 20px;}
+  .footer{padding:1.5rem 20px;flex-direction:column;align-items:flex-start;gap:.5rem;}
+  .overview-grid{grid-template-columns:1fr;gap:2rem;}
+  .wf-grid,.flow-grid5{grid-template-columns:1fr;gap:2.5rem;}
+  .decisions-grid,.metric-grid,.insights-grid,.gallery3{grid-template-columns:1fr;}
+  .cs-grid2{grid-template-columns:1fr;gap:2rem;}
+  .arrow-col{padding:.75rem 0;}
+  .arr-lbl{writing-mode:horizontal-tb;margin-top:.25rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="back-nav">
+  <a class="back-btn" href="index.html"><span>←</span> Back to portfolio</a>
+  <div class="back-nav-title">Foody · Recipe App · Design Challenge</div>
+  <div class="back-nav-right">Paula Elffman · Product Designer</div>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div>
+    <div class="eyebrow" style="margin-bottom:2rem;">Recipe Mobile App · Design Challenge · 3-Day Sprint · 2026</div>
+    <div class="cover-title">Foody<br><span class="dim">your buddy chef</span></div>
+  </div>
+  <div class="cover-meta">
+    <div><div class="cm-label">Brief</div><div class="cm-val">🥑 Recipe discovery app</div></div>
+    <div><div class="cm-label">Role</div><div class="cm-val">Product Designer (end-to-end, solo)</div></div>
+    <div><div class="cm-label">Time</div><div class="cm-val">3 days · Research → Prototype → UI</div></div>
+    <div><div class="cm-label">Audience</div><div class="cm-val">Men & women, 20–35 · LatAm & Europe</div></div>
+    <div><div class="cm-label">Deliverable</div><div class="cm-val">Figma file + Loom walkthrough</div></div>
+  </div>
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- HERO SHOWCASE -->
+<div style="width:100%;line-height:0;">
+  <img src="assets/foody-header.jpg" alt="Foody — recipe screen, AI ingredient assistant, personalized home and search on a lineup of phones" style="width:100%;height:auto;display:block;">
+</div>
+<div style="height:1px;background:var(--line);"></div>
+
+<!-- SECTION 01 — OVERVIEW -->
+<div class="section">
+  <div class="eyebrow">Overview & Brief</div>
+  <div class="overview-grid">
+    <div>
+      <div class="ov-title">A recipe app that<br><span class="orange">learns who's cooking.</span></div>
+      <p class="ov-body">The brief: design an interface for a food-recipe mobile app and propose a USP or feature that makes it stand out from the competition and drives engagement, for an audience of <strong>men and women aged 20–35</strong>.<br><br>Most recipe apps treat every user the same — an endless, un-personalized feed of dishes. I designed <strong>Foody</strong> around the opposite idea: a recipe platform that gets to know your taste, your time, your cooking level and your rhythms fast, and a community layer (Foody = Food + Buddy) that turns beginners into contributors instead of passive scrollers.<br><br>Solo, end-to-end: discovery, wireframes, hi-fi UI and prototype in 3 days.</p>
+    </div>
+    <div class="stats-col">
+      <div class="stat-item"><div class="stat-val">3</div><div class="stat-lbl">Research methods used<br>Survey · Benchmark · User test</div></div>
+      <div class="stat-item"><div class="stat-val">7</div><div class="stat-lbl">Steps in my design process<br>Problem → Monitoring</div></div>
+      <div class="stat-item"><div class="stat-val">2</div><div class="stat-lbl">Core flows delivered<br>Search + Filters · Cooking mode</div></div>
+      <div class="stat-item"><div class="stat-val">18</div><div class="stat-lbl">Screens & states designed</div></div>
+    </div>
+    <div class="accent-card">
+      <div class="ac-lbl">Scope at a glance</div>
+      <div class="ac-val">3 Days</div>
+      <div class="ac-desc">Onboarding, filters, home, search, recipe detail and profile — designed and prototyped solo.</div>
+      <div class="ac-sub">
+        <div class="acsub-item"><div class="acsub-v">4-step</div><div class="acsub-l">Onboarding</div></div>
+        <div class="acsub-item"><div class="acsub-v">3 levels</div><div class="acsub-l">Beginner→Master Chef</div></div>
+        <div class="acsub-item"><div class="acsub-v">#FAA41A</div><div class="acsub-l">Brand orange</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — RESEARCH & PROCESS -->
+<div class="section">
+  <div class="eyebrow">Design Process & Research</div>
+  <div class="cs-grid2">
+    <div>
+      <div class="cs-h2">How I worked<br>through <span class="orange">3 days.</span></div>
+      <p class="cs-p">I followed my usual 7-step process, compressed to fit the sprint: <strong style="color:var(--paper);font-weight:500">Problem →</strong> defining scope (a recipe app, interaction with filters & recipes at the core). <strong style="color:var(--paper);font-weight:500">Research →</strong> competitive benchmark, a quick user persona and success metrics. <strong style="color:var(--paper);font-weight:500">Design exploration →</strong> wireframes to validate logic before pixels. <strong style="color:var(--paper);font-weight:500">Design creation →</strong> high-fidelity UI, ready to test. Then preparation, support and monitoring — the steps I'd carry into a real handoff.</p>
+    </div>
+    <div class="side-card">
+      <div class="side-lbl">UX artifacts used in this project</div>
+      <div class="side-row"><div class="side-dot"></div><span><strong>Opportunity map</strong> — onboarding, filters & sort, content and community, scored for impact</span></div>
+      <div class="side-row"><div class="side-dot"></div><span><strong>Hypotheses</strong> — 3 assumptions to validate before building</span></div>
+      <div class="side-row"><div class="side-dot"></div><span><strong>Journey map</strong> — WHERE / ACTION / GOAL across onboarding, home, filters & recipe</span></div>
+      <div class="side-row"><div class="side-dot"></div><span><strong>Low-fidelity wireframes</strong> — onboarding flow + filters, tested for hierarchy</span></div>
+      <div class="side-row"><div class="side-dot"></div><span><strong>Research methods</strong> — survey, user testing and metric/competitive analysis</span></div>
+    </div>
+  </div>
+
+  <div class="ptl">
+    <div class="ptl-row ptl-row-4">
+      <div class="ptl-line"><div class="ptl-line-fill"></div></div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 1</div>
+        <div class="ptl-title">Problem</div>
+        <div class="ptl-desc">Recipe mobile app — interaction with filters and recipes at the core.</div>
+      </div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 2</div>
+        <div class="ptl-title">Research</div>
+        <div class="ptl-desc">Metrics, competitive benchmark and a quick user persona.</div>
+      </div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 3</div>
+        <div class="ptl-title">Design Exploration</div>
+        <div class="ptl-desc">Wireframes to validate logic and hierarchy before pixels.</div>
+      </div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 4</div>
+        <div class="ptl-title">Design Creation</div>
+        <div class="ptl-desc">High-fidelity UI, built to be tested — wireframes into prototype.</div>
+      </div>
+    </div>
+    <div class="ptl-row ptl-row-3">
+      <div class="ptl-vconn"></div>
+      <div class="ptl-line"><div class="ptl-line-fill"></div></div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 5</div>
+        <div class="ptl-title">Project Preparation</div>
+        <div class="ptl-desc">Preparing the design for developers, documenting decisions made.</div>
+      </div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 6</div>
+        <div class="ptl-title">Project Support</div>
+        <div class="ptl-desc">Working closely with developers during implementation.</div>
+      </div>
+      <div class="ptl-step">
+        <div class="ptl-dot"></div>
+        <div class="ptl-num">Step 7</div>
+        <div class="ptl-title">Project Monitoring</div>
+        <div class="ptl-desc">Monitoring post-launch to gain knowledge and improve.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+    <div class="side-card">
+      <div class="side-lbl">Hypotheses I wanted to validate</div>
+      <div class="side-row"><div class="side-dot"></div><span>Users see value in the content once they've been through onboarding and seen the value proposition.</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>An AI search assistant would make it easier to find the right recipe, if it genuinely saves effort.</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Community matters for this category — and users can be nudged to participate, not just consume.</span></div>
+    </div>
+    <div class="side-card">
+      <div class="side-lbl">Research participants</div>
+      <div class="side-row"><div class="side-dot"></div><span>Men and women, <strong>20–35 years old</strong></span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Based in <strong>LatAm and Europe</strong></span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Mixed cooking confidence — from "rarely cooks" to "cooks daily"</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Mixed device fluency, all comfortable with mobile apps</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — JOURNEY MAP -->
+<div class="section">
+  <div class="eyebrow">Research Artifact · Journey Map</div>
+  <div class="section-label"><div class="sl-text">Where the user is</div><div class="sl-line"></div><div class="sl-text">Action → Goal</div></div>
+  <p class="cs-p" style="max-width:760px;margin-bottom:1rem;">Mapping onboarding, home, filters and the recipe screen against action and goal made the priorities obvious: onboarding exists to <em>know</em> the user, home exists to let them <em>browse</em>, filters exist so they <em>find</em>, and the recipe screen exists so they can <em>share the experience</em> — not just read a list of steps.</p>
+
+  <div class="jmap">
+    <svg class="jmap-mood" viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true">
+      <path class="jmap-mood-path" d="M20,60 C160,60 190,20 330,20 C470,20 500,45 630,45 C760,45 790,10 980,10"/>
+    </svg>
+    <div class="jmap-mood-labels">
+      <span>Uncertain</span><span>Confident</span>
+    </div>
+    <div class="jmap-track">
+      <div class="jmap-connector"><div class="jmap-connector-fill"></div><div class="jmap-dot"></div></div>
+
+      <div class="jmap-stop">
+        <div class="jmap-node">01</div>
+        <div class="jmap-stage">Onboarding</div>
+        <div class="jmap-card">
+          <div class="jmap-label">Action</div>
+          <div class="jmap-action">Complete 3 quick steps</div>
+          <div class="jmap-label">Goal</div>
+          <div class="jmap-goal">Know the user, to offer a personalized homepage</div>
+        </div>
+      </div>
+
+      <div class="jmap-stop">
+        <div class="jmap-node">02</div>
+        <div class="jmap-stage">Home</div>
+        <div class="jmap-card">
+          <div class="jmap-label">Action</div>
+          <div class="jmap-action">Read, save & share recipes</div>
+          <div class="jmap-label">Goal</div>
+          <div class="jmap-goal">Let the user browse and discover valuable content</div>
+        </div>
+      </div>
+
+      <div class="jmap-stop">
+        <div class="jmap-node">03</div>
+        <div class="jmap-stage">Filters</div>
+        <div class="jmap-card">
+          <div class="jmap-label">Action</div>
+          <div class="jmap-action">Discover recipes through filters — always &gt;1 result</div>
+          <div class="jmap-label">Goal</div>
+          <div class="jmap-goal">The user finds what they're looking for</div>
+        </div>
+      </div>
+
+      <div class="jmap-stop">
+        <div class="jmap-node">04</div>
+        <div class="jmap-stage">Recipe</div>
+        <div class="jmap-card">
+          <div class="jmap-label">Action</div>
+          <div class="jmap-action">View the recipe & vote</div>
+          <div class="jmap-label">Goal</div>
+          <div class="jmap-goal">Share the experience</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — THE USP -->
+<div class="section">
+  <div class="eyebrow">The USP · Foody Match</div>
+  <div class="cs-grid2" style="align-items:start;">
+    <div>
+      <div class="cs-h2">Recipes that adjust to<br><span class="orange">who you are today.</span></div>
+      <p class="cs-p">Most recipe apps ask you to search. <strong style="color:var(--paper);font-weight:500">Foody Match</strong> is a lightweight personalization engine, built from three ingredients instead of a 20-question form:</p>
+      <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+        <div><div style="font-size:.875rem;font-weight:700;color:var(--paper);margin-bottom:.25rem;">1 · A 4-step onboarding, not an interrogation</div><div style="font-size:.8125rem;line-height:1.6;color:var(--ash);">Cooking confidence, time available and diet leaning captured through simple thumb sliders — done in under a minute, ending in 3 recipes picked just for you.</div></div>
+        <div><div style="font-size:.875rem;font-weight:700;color:var(--paper);margin-bottom:.25rem;">2 · Context-aware surfacing</div><div style="font-size:.8125rem;line-height:1.6;color:var(--ash);">Home reads the time of day — "Breakfast time!" at 9am — and re-sorts around it automatically, no filter tap required.</div></div>
+        <div><div style="font-size:.875rem;font-weight:700;color:var(--paper);margin-bottom:.25rem;">3 · Opt-in rhythm personalization</div><div style="font-size:.8125rem;line-height:1.6;color:var(--ash);">Users can optionally connect Apple Health or their zodiac sign so Foody can nudge more nourishing, energizing or lighter meals across the menstrual cycle — a signal most food apps ignore entirely.</div></div>
+        <div><div style="font-size:.875rem;font-weight:700;color:var(--paper);margin-bottom:.25rem;">4 · Cooking-level gamification</div><div style="font-size:.8125rem;line-height:1.6;color:var(--ash);">Beginner → Adventure → Master Chef. Reaching Master Chef unlocks recipe uploads — turning the most engaged users into the app's content engine, and feeding the freemium model (free tier + premium recipes/features).</div></div>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <span class="chip chip-o">AI-assisted search</span>
+        <span class="chip chip-o">Time-of-day aware</span>
+        <span class="chip chip-n">Cycle & zodiac tie-in</span>
+        <span class="chip chip-n">Beginner → Master Chef</span>
+        <span class="chip">Fremium + community</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;align-items:center;">
+      <div style="width:100%;">
+        <div style="border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(37,49,76,.14);">
+          <img src="assets/onboarding-flow.png" alt="Foody's 4-step onboarding — welcome, recipe type, dish taste and a taste/time/diet slider screen" style="width:100%;height:auto;display:block;">
+        </div>
+        <div style="text-align:center;margin-top:1rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);">4-step onboarding · sliders, not a form</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:3.5rem;">
+    <div style="border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(37,49,76,.16);">
+      <img src="assets/home-customizadas.png" alt="Foody Match in practice — three different home screens (John, Isa and Ana), each personalized to what that user set in onboarding" style="width:100%;height:auto;display:block;">
+    </div>
+    <div style="text-align:center;margin-top:1rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);">Foody Match · same app, personalized home per user</div>
+  </div>
+
+  <div class="section-label" style="margin-top:3.5rem;"><div class="sl-text">Measuring success</div><div class="sl-line"></div><div class="sl-text">What I'd track post-launch</div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-n">North star</div><div class="metric-t">Onboarding completion rate</div><div class="metric-d">The 4-step flow only pays off if people finish it — this gates every other personalization signal.</div></div>
+    <div class="metric"><div class="metric-n">Engagement</div><div class="metric-t">% sessions using AI search / filters</div><div class="metric-d">Validates whether the AI assistant actually reduces effort, per Hypothesis 2.</div></div>
+    <div class="metric"><div class="metric-n">Engagement</div><div class="metric-t">Recipe saves per session</div><div class="metric-d">A proxy for relevance — are the surfaced recipes actually worth keeping?</div></div>
+    <div class="metric"><div class="metric-n">Retention</div><div class="metric-t">D7 / D30 retention</div><div class="metric-d">Does context-aware surfacing bring people back at the right moments (mealtimes)?</div></div>
+    <div class="metric"><div class="metric-n">Community</div><div class="metric-t">Recipes uploaded per Master Chef user</div><div class="metric-d">Tests whether gamified levels genuinely convert consumers into contributors.</div></div>
+    <div class="metric"><div class="metric-n">Business</div><div class="metric-t">Free → Premium conversion</div><div class="metric-d">The freemium model's core health metric, tied to how much value onboarding + Match deliver upfront.</div></div>
+  </div>
+</div>
+
+<!-- SECTION 02 — WIREFRAMES -->
+<div class="section">
+  <div class="eyebrow">Prototyping · Wireframes</div>
+  <div class="section-label"><div class="sl-text">Low-fidelity validation</div><div class="sl-line"></div><div class="sl-text">Logic before pixels</div></div>
+  <div class="cs-grid2">
+    <div>
+      <div class="cs-h2">The onboarding<br>had to earn its <span class="orange">4 steps.</span></div>
+      <p class="cs-p">Before any visual design, I wireframed the onboarding to pressure-test hierarchy: search demo → cooking-level selection → three quick sliders → a results screen with 3 recipes already picked. Every step had to justify its place, or it got cut.</p>
+    </div>
+    <div class="side-card">
+      <div class="side-lbl">Key wireframe decisions</div>
+      <div class="side-row"><div class="side-dot"></div><span>Sliders over multi-choice forms — faster to answer, still expressive</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Results shown immediately — proves the value proposition before asking for more</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Filters should never block content — always return a result</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Explore categories kept flat and scannable, not nested menus</span></div>
+    </div>
+  </div>
+
+  <div class="wf-grid">
+    <div class="wf-item"><div class="wire-shell"><img src="assets/wf-01.png" alt="Onboarding step 1 wireframe"></div><div class="wf-lbl"><strong>Step 1 · Search demo</strong>Search bar + two content cards</div></div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item"><div class="wire-shell"><img src="assets/wf-02.png" alt="Onboarding step 2 wireframe"></div><div class="wf-lbl"><strong>Step 2 · Cooking level</strong>Beginner / Adventure / Master Chef grid</div></div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item"><div class="wire-shell"><img src="assets/wf-03.png" alt="Onboarding step 3 wireframe"></div><div class="wf-lbl"><strong>Step 3 · Taste & time</strong>3 quick sliders on cooking, time, diet</div></div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item"><div class="wire-shell"><img src="assets/wf-04.png" alt="Onboarding step 4 results wireframe"></div><div class="wf-lbl"><strong>Step 4 · Results</strong>3 recipes picked for you, straight to Home</div></div>
+  </div>
+
+  <div style="margin-top:3.5rem;display:grid;grid-template-columns:1fr 36px 1fr;gap:0;align-items:start;max-width:600px;">
+    <div class="wf-item"><div class="wire-shell"><img src="assets/wf-06.png" alt="Home wireframe with search, filters and trending carousel"></div><div class="wf-lbl"><strong>Home</strong>Search, filter pills, trending carousel, listings</div></div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
+    <div class="wf-item"><div class="wire-shell"><img src="assets/wf-05.png" alt="Filters wireframe with explore category list"></div><div class="wf-lbl"><strong>Filters</strong>Explore / Ingredients / Food type tabs</div></div>
+  </div>
+</div>
+
+<!-- SECTION 03 — VISUAL DESIGN FLOW 1: SEARCH + FILTERS -->
+<div class="section">
+  <div class="eyebrow">Visual Design · Flow 01</div>
+  <div class="section-label"><div class="sl-text">Search for recipes</div><div class="sl-line"></div><div class="sl-text">Filters in action</div></div>
+  <div class="cs-grid2">
+    <div>
+      <div class="cs-h2">Discovery that<br>always <span class="orange">gives you something.</span></div>
+      <p class="cs-p">From a personalized home, the user can free-type into search (with live autocomplete across ingredients and recipes), or tap into structured filters — Explore category, cooking level, or time. Filters are additive chips, never a dead end: there's always a result waiting on the other side.</p>
+    </div>
+    <div class="side-card">
+      <div class="side-lbl">Filter categories designed</div>
+      <div class="side-row"><div class="side-dot"></div><span>Explore — snacks, mains, breakfast, brunch, beverages…</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Cooking level — Beginner, Adventure, Master Chef</span></div>
+      <div class="side-row"><div class="side-dot"></div><span>Ingredients, time to make, diners, sort (newest, trending, relevance, ingredient count)</span></div>
+    </div>
+  </div>
+
+  <div class="flow-grid5">
+    <div class="flow-item"><div class="phone-shell flat"><img src="assets/flow-home.png" alt="Personalized home"></div><div class="badge badge-n">Personalized home</div><div class="plabel"><div class="pl-n">01</div><div class="pl-t">Welcome John!</div><div class="pl-d">Home opens already sorted by taste profile from onboarding.</div></div></div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div><div class="arr-lbl">Types</div></div>
+    <div class="flow-item"><div class="phone-shell flat"><img src="assets/flow-search.png" alt="Search with autocomplete"></div><div class="badge badge-o">Searching "A"</div><div class="plabel"><div class="pl-n">02</div><div class="pl-t">Live autocomplete</div><div class="pl-d">Matches ingredients and recipe titles as you type.</div></div></div>
+    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div><div class="arr-lbl">Filters</div></div>
+    <div class="flow-item"><div class="phone-shell flat"><img src="assets/flow-cookinglevel.png" alt="Cooking level filter dropdown"></div><div class="badge badge-o">Cooking level</div><div class="plabel"><div class="pl-n">03</div><div class="pl-t">Beginner / Adventure / Master Chef</div><div class="pl-d">Filters tie directly to the onboarding-set skill level.</div></div></div>
+  </div>
+
+  <div class="section-label" style="margin-top:3.5rem;"><div class="sl-text">Supporting states</div><div class="sl-line"></div><div class="sl-text">Filtered results & gamified unlock</div></div>
+  <div class="gallery3" style="grid-template-columns:1fr 1fr;max-width:640px;">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="phone-shell" style="max-width:280px;"><img src="assets/home-filterapplied.jpg" alt="Filtered results for breakfast"></div>
+      <div style="margin-top:.875rem;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);text-align:center;">Breakfast time! · filter applied</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <img src="assets/flow-modal.png" alt="Modal celebrating that the user unlocked Master Chef status and can upload recipes" style="width:100%;max-width:280px;height:auto;display:block;">
+      <div style="margin-top:.875rem;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);text-align:center;">Master Chef unlocked — engagement moment</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 04 — VISUAL DESIGN FLOW 2: COOKING PROCESS -->
+<div class="section">
+  <div class="eyebrow">Visual Design · Flow 02</div>
+  <div class="section-label"><div class="sl-text">Recipe detail</div><div class="sl-line"></div><div class="sl-text">The cooking process</div></div>
+  <div class="cs-grid2" style="align-items:start;">
+    <div>
+      <div class="cs-h2">From "I found it"<br>to <span class="orange">"I made it."</span></div>
+      <p class="cs-p">The recipe screen was designed as a full cooking companion, not just an ingredient list:</p>
+      <div style="display:flex;flex-direction:column;gap:1rem;margin-top:1.25rem;">
+        <div class="side-row" style="border:none;padding:.25rem 0;"><div class="side-dot"></div><span>At-a-glance icon row — time, difficulty, allergens, diet tags — before you commit to reading</span></div>
+        <div class="side-row" style="border:none;padding:.25rem 0;"><div class="side-dot"></div><span>Numbered preparation steps paired with in-progress photos, so users can match what they see</span></div>
+        <div class="side-row" style="border:none;padding:.25rem 0;"><div class="side-dot"></div><span>A vote (👍/👎) moment right after the recipe — feeds the community and the recommendation engine</span></div>
+        <div class="side-row" style="border:none;padding:.25rem 0;"><div class="side-dot"></div><span>"Influencers that made this recipe" — the TikTok/creator tie-in from the concept, built into the detail screen itself</span></div>
+        <div class="side-row" style="border:none;padding:.25rem 0;"><div class="side-dot"></div><span>Share and favorite always one tap away, low CO₂ badge for sustainability-minded users</span></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;">
+      <div class="phone-wrap" style="max-width:260px;">
+        <div class="phone-shell flat"><img src="assets/flow-recipe.png" alt="Avocado toast recipe detail screen with preparation steps, voting and creator carousel"></div>
+        <div class="badge badge-gr" style="display:block;text-align:center;margin:1rem auto 0;width:fit-content;">Avocado toast · 7 mins · 3 ingredients</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — COMPONENTS -->
+<div class="section">
+  <div class="eyebrow">UI Components · Mini Design System</div>
+  <div class="section-label"><div class="sl-text">Built once</div><div class="sl-line"></div><div class="sl-text">Reused across every screen</div></div>
+  <div class="cs-h2" style="max-width:640px;">Not screens —<br><span class="orange">a small system.</span></div>
+  <p class="cs-p" style="max-width:640px;">Rather than designing each screen from scratch, I built Foody around a handful of reusable components — a recipe card, a few carousel shapes and a couple of editorial patterns — and let composition do the rest. Same pieces, different shelves.</p>
+
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-food.png" alt="Foody recipe card component — image, title, ingredients, rating and tag chips"></div></div>
+      <div class="comp-cap"><div class="comp-n">Core unit</div><div class="comp-t">Recipe card</div><div class="comp-d">Image, time badge, title, rating and tag chips — the single unit every list in the app is built from.</div></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-row.png" alt="Horizontal recipe carousel row component"></div></div>
+      <div class="comp-cap"><div class="comp-n">Shelf</div><div class="comp-t">Recipe carousel</div><div class="comp-d">The horizontal row behind "Breakfast time", "5-minute recipes" and every other home shelf.</div></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-grid.png" alt="Two by two image grid component with a featured hero image"></div></div>
+      <div class="comp-cap"><div class="comp-n">Gallery</div><div class="comp-t">Image grid</div><div class="comp-d">A 2+1 layout for step photos and gallery moments, reused in the recipe detail screen.</div></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-influencers.png" alt="Influencer carousel card component with follower counts"></div></div>
+      <div class="comp-cap"><div class="comp-n">Social</div><div class="comp-t">Influencer carousel</div><div class="comp-d">The creator tie-in — swipeable cards linking a recipe to the TikTok chef who made it.</div></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-community.png" alt="Community row component with editorial-style collection cards"></div></div>
+      <div class="comp-cap"><div class="comp-n">Social</div><div class="comp-t">Community row</div><div class="comp-d">An editorial pattern for "Follow our community" — collections that feel curated, not algorithmic.</div></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-dishes.png" alt="Six-item category grid component for dish types"></div></div>
+      <div class="comp-cap"><div class="comp-n">Navigation</div><div class="comp-t">Category grid</div><div class="comp-d">Born in onboarding as the taste picker, reused as the Explore filter — six categories, one tap.</div></div>
+    </div>
+    <div class="comp-card wide">
+      <div class="comp-tilt"><div class="comp-media"><img src="assets/comp-card-popup.png" alt="Apple Health integration card inviting the user to connect their menstrual cycle"></div></div>
+      <div class="comp-cap"><div class="comp-n">Personalization</div><div class="comp-t">Integration card</div><div class="comp-d">Where Apple Health — and, more playfully, zodiac sign — plugs into Foody Match, nudging more nourishing meals across the cycle.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — ANIMATED PROTOTYPE -->
+<div class="section" style="text-align:center;">
+  <style>
+    .anim-frame-wrap{max-width:340px;margin:0 auto;}
+    .anim-frame{position:relative;width:100%;padding-bottom:205%;border-radius:32px;overflow:hidden;background:#f7f2e7;box-shadow:0 0 0 1px rgba(37,49,76,.08), 0 24px 64px rgba(37,49,76,.18), 0 6px 16px rgba(37,49,76,.08);}
+    .anim-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
+  </style>
+  <div class="eyebrow center">Prototype · Recorrido Animado</div>
+  <div class="cs-h2" style="max-width:640px;margin:0 auto 1.25rem;">Todo el recorrido, <span class="orange">en movimiento.</span></div>
+  <p class="cs-p" style="max-width:560px;margin:0 auto 2.5rem;">Onboarding, home personalizado, filtros, ficha de receta y búsqueda — el flujo completo de Foody animado en loop, tal como se vive en la app.</p>
+  <div class="anim-frame-wrap">
+    <div class="anim-frame">
+      <iframe src="assets/foody-recorrido-animado.html" loading="lazy" title="Foody — recorrido animado" allow="autoplay"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — KEY DECISIONS -->
+<div class="section">
+  <div class="eyebrow">Key Design Decisions</div>
+  <div class="decisions-grid">
+    <div class="dec"><div class="dec-n">Decision 01</div><div class="dec-t">Sliders instead of forms</div><div class="dec-d">Onboarding trades a long questionnaire for 3 quick thumb-sliders — faster to complete, still rich enough to personalize.</div></div>
+    <div class="dec"><div class="dec-n">Decision 02</div><div class="dec-t">Filters never dead-end</div><div class="dec-d">Every filter combination returns a result. The goal is discovery, never a blocked "no recipes found" state.</div></div>
+    <div class="dec"><div class="dec-n">Decision 03</div><div class="dec-t">Time-of-day aware home</div><div class="dec-d">"Breakfast time!" — content re-sorts around the moment the user opens the app, no extra tap required.</div></div>
+    <div class="dec"><div class="dec-n">Decision 04</div><div class="dec-t">Gamified cooking levels</div><div class="dec-d">Beginner → Adventure → Master Chef. Reaching the top tier unlocks recipe uploads, converting users into contributors.</div></div>
+    <div class="dec"><div class="dec-n">Decision 05</div><div class="dec-t">AI-assisted search</div><div class="dec-d">A chat-style assistant embedded in search to answer "what can I make with X" — reducing the cost of an empty search bar.</div></div>
+    <div class="dec"><div class="dec-n">Decision 06</div><div class="dec-t">Color system 60/30/10</div><div class="dec-d">60% warm neutral · 30% Foody orange (#FAA41A) · 10% navy (#25314C) — food photography stays the hero, chrome stays quiet.</div></div>
+  </div>
+</div>
+
+<!-- SECTION — LEARNINGS -->
+<div class="section">
+  <div class="eyebrow">Learnings</div>
+  <div class="cs-grid2" style="grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+    <div class="insights-grid" style="grid-template-columns:1fr;margin-top:0;">
+      <div class="ins"><div class="ins-n">Learning 01</div><div class="ins-t">Personalization must stay effortless</div><div class="ins-d">The USP only works if the onboarding cost stays under a minute — any more friction and the value proposition never gets seen.</div></div>
+      <div class="ins"><div class="ins-n">Learning 02</div><div class="ins-t">Community is a feature, not a footnote</div><div class="ins-d">Tying gamified cooking levels directly to the ability to upload recipes turns retention into a content engine, not just a badge.</div></div>
+      <div class="ins"><div class="ins-n">Learning 03</div><div class="ins-t">A 3-day constraint sharpens scope</div><div class="ins-d">Wireframing first — before any visual polish — was what made it possible to cover onboarding, discovery and cooking in the time available.</div></div>
+    </div>
+    <div class="callout">
+      <div class="co-lbl">The core principle</div>
+      <div class="co-t">"The best recommendation is the one you didn't have to ask for."</div>
+      <div class="co-d">Foody Match exists so the app does the first pass of thinking for the user — time of day, skill level, mood — and lets search and filters handle everything after that.</div>
+      <div class="co-stats">
+        <div><div class="cos-v">4 steps</div><div class="cos-l">Onboarding</div></div>
+        <div><div class="cos-v">2 flows</div><div class="cos-l">Delivered in full</div></div>
+        <div><div class="cos-v">3 days</div><div class="cos-l">Solo sprint</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">Foody · Recipe App · Design Challenge · 2026</div>
+  <div class="footer-r">Product Designer · Paula Elffman</div>
+</div>
+
+<script>
+(function(){
+  var groups = document.querySelectorAll('.flow-grid5, .wf-grid');
+  groups.forEach(function(grid){
+    var items = grid.querySelectorAll('.flow-item, .wf-item');
+    items.forEach(function(el, i){ el.style.transitionDelay = (i * 100) + 'ms'; });
+  });
+  document.querySelectorAll('.jmap-track').forEach(function(track){
+    var stops = track.querySelectorAll('.jmap-stop');
+    stops.forEach(function(el, i){ el.style.transitionDelay = (i * 180) + 'ms'; });
+  });
+  document.querySelectorAll('.ptl-row').forEach(function(row){
+    var steps = row.querySelectorAll('.ptl-step');
+    steps.forEach(function(el, i){ el.style.transitionDelay = (i * 130) + 'ms'; });
+  });
+  document.querySelectorAll('.comp-grid').forEach(function(grid){
+    var cards = grid.querySelectorAll('.comp-card');
+    cards.forEach(function(el, i){
+      el.style.transitionDelay = (i * 90) + 'ms';
+      var img = el.querySelector('.comp-media img');
+      if(img){
+        img.style.animationDuration = (4.4 + (i % 3) * 0.6) + 's';
+        img.style.animationDelay = (-(i * 0.7)) + 's';
+      }
+    });
+  });
+  // Visa-style pointer tilt on component cards (desktop / fine-pointer only)
+  if(window.matchMedia && window.matchMedia('(pointer: fine)').matches){
+    document.querySelectorAll('.comp-card').forEach(function(card){
+      var tilt = card.querySelector('.comp-tilt');
+      if(!tilt) return;
+      var raf = null, rect = null;
+      card.addEventListener('pointerenter', function(){ rect = card.getBoundingClientRect(); });
+      card.addEventListener('pointermove', function(e){
+        if(!rect) rect = card.getBoundingClientRect();
+        var px = (e.clientX - rect.left) / rect.width;   // 0..1
+        var py = (e.clientY - rect.top) / rect.height;    // 0..1
+        var rx = (0.5 - py) * 14;   // deg
+        var ry = (px - 0.5) * 16;   // deg
+        if(raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(function(){
+          tilt.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateZ(8px)';
+        });
+      });
+      card.addEventListener('pointerleave', function(){
+        if(raf) cancelAnimationFrame(raf);
+        tilt.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+      });
+    });
+  }
+  var targets = document.querySelectorAll('.flow-item, .wf-item, .phone-wrap, .jmap, .ptl, .comp-card');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+    });
+  }, {threshold:.15, rootMargin:'0px 0px -40px 0px'});
+  targets.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+</body>
+</html>

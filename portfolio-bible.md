@@ -1,6 +1,14 @@
 # Paula Elffman — Portfolio OS · Design Bible
 
-*Última actualización: Septiembre 2026 — rediseño de "My superpower" (tercera iteración, ver sección dedicada dentro de DASHBOARD VIEW): título "I bridge the gap." ahora con efecto scramble/decrypt (referencia: oscarhernandez.vercel.app), eyebrow "My superpower" agrandado (`.hs-eyebrow-lg`), `.hs-bridge` (línea + 3 nodos) reemplazado por `.hs-super-flow` (3 chips unidos por flechas), y el trigger de la animación se desacopló del `IntersectionObserver` de "Beyond the work" — ahora tiene el suyo propio sobre `#hsFeature`. `#hsBridge` ya no existe en el DOM.*
+*Última actualización: Septiembre 2026 — `index.html` externalizado: pesaba 16.7MB (98% eran imágenes/videos en base64 inline). Se sacaron los 18 assets únicos a una carpeta `assets/` nueva (webp/jpg/webm reales, `src="assets/..."` en vez de data URI), con tres optimizados de paso — el PNG de Monchis (2.3MB→40KB, resize a 900px alto + WebP), la foto de perfil (1.99MB→23KB, se mostraba a 100×100px pero pesaba 2268×4032px) y el video de `muv` (3.43MB→800KB, era 2560×1440 sin necesidad, se bajó a 960×540 y se sacó el audio que igual estaba muted). `index.html` quedó en 282KB. De paso se corrigió un bug preexistente (no introducido en esta sesión): el `<!DOCTYPE html>` y el `<html lang="en">` de apertura venían corrompidos — el favicon en base64 se había comido ese pedazo, dejando literalmente `<!DOassets/favicon.webp"en">` como primera línea del archivo. Ver detalle y la nueva regla de ARCHIVOS en "ÍNDEX — Assets externalizados" dentro de CASE STUDIES / sección general.*
+
+*Última actualización previa: Septiembre 2026 — `sukupay-case.html`: se embebió el prototipo interactivo real (`sukupay-home-prototype.html`, un "Bundled Page" exportado de la herramienta de prototipado — no un case study nuevo) dentro de la sección "Result · Two Directions Explored", debajo del montage estático de "The North" proposal, vía `<iframe src="sukupay-home-prototype.html" width="100%" height="1000">`. Nuevo archivo agregado a ARCHIVOS y nueva sección "Prototipo interactivo embebido (iframe)" dentro de CASE STUDIES con el gotcha de fondo claro fijo del bundle vs. dark mode del case. Ver detalle ahí.*
+
+*Última actualización previa: Septiembre 2026 — tres assets nuevos en el gallery: (1) `.tile-muv` — el cover de video se reemplazó por contenido real (antes era un placeholder), pero el archivo subido venía en H.264/AAC y **no reproduce como `data:` URI en navegadores sin códecs propietarios** (ver gotcha nuevo en "Covers de tiles animados"); se transcodificó a VP9/Opus WebM, mismo patrón que ya usaba el tile, pero el peso subió de ~624KB a ~3.5MB — queda documentado como excepción al protocolo de IMÁGENES. (2) `.tile-smartpass` — cover cambiado de screenshot del dashboard a screenshot del login, WebP ~74KB (dentro de protocolo). (3) `.tile-memorable` (case `drivers`) — cover cambiado a un mockup nuevo de 3 teléfonos, WebP ~270KB (dentro de protocolo). Ver notas nuevas dentro de PROJECTS VIEW.*
+
+*Última actualización previa: Septiembre 2026 — carousel horizontal: se sacó `memorable` (2 cards, ambas mitades del loop) — el case ya vive solo abajo, en el gallery, para no duplicarlo; la card de Monchis home se reemplazó por un asset nuevo (`02.png`, 1448×1520, mismo PNG con alpha que ya usaba esa card, para respetar el drop-shadow del mockup) en ambas mitades del loop. Gallery: se reordenó visualmente `foody`/`hotaru`/`everyone` (a pedido: `foody` pegado a `memorable`, `everyone` como último tile) usando el mismo patrón ya documentado de "reusar clase para heredar posición" — nunca se tocó ningún `grid-column`/`grid-row` ni gradiente. Ver nota nueva dentro de PROJECTS VIEW → Tiles actuales, incluye un gotcha de implementación para quien edite el HTML del gallery por script.*
+
+*Última actualización previa: Septiembre 2026 — rediseño de "My superpower" (tercera iteración, ver sección dedicada dentro de DASHBOARD VIEW): título "I bridge the gap." ahora con efecto scramble/decrypt (referencia: oscarhernandez.vercel.app), eyebrow "My superpower" agrandado (`.hs-eyebrow-lg`), `.hs-bridge` (línea + 3 nodos) reemplazado por `.hs-super-flow` (3 chips unidos por flechas), y el trigger de la animación se desacopló del `IntersectionObserver` de "Beyond the work" — ahora tiene el suyo propio sobre `#hsFeature`. `#hsBridge` ya no existe en el DOM.*
 
 *Última actualización previa: Septiembre 2026 — segundo bug de dark mode corregido en los 12 case studies: `.back-nav` sticky y su meta (`.nav-right`/`.back-nav-right`) tenían fondo/color hardcodeados al valor de light sin contraparte dark (literales, no variables — el script de auditoría del bug anterior no los detectaba), ver sección "BUG CONOCIDO Y CORREGIDO — .back-nav" dentro de CASE STUDIES; además, cuatro ajustes puntuales en `smartpass-case.html` (único case con su propio token `--green` en paralelo a `var(--accent)`): `--green` sin par dark agregado, wordmark ".dim" mode-aware, contraste de `--ash` subido a AA, tarjetas de `.flow-node` con texto fijo (fondo blanco fijo en los dos modos), y scroll-reveal escalonado en "The design process" — ver sección "smartpass-case.html — ajustes puntuales".*
 
@@ -17,7 +25,8 @@
 
 | Archivo                 | Peso         | Función                                                                  |
 | ----------------------- | ------------ | ------------------------------------------------------------------------ |
-| `index.html`            | ~3MB         | Archivo principal (antes `paula-elffman-portfolio.html`). Contiene todo. |
+| `index.html`            | ~282KB       | Archivo principal (antes `paula-elffman-portfolio.html`). Sept 2026: ya NO contiene las imágenes/videos inline — ver `assets/` abajo. |
+| `assets/`               | ~2.6MB       | Carpeta nueva (Sept 2026) — 18 archivos (webp/jpg/webm) que `index.html` referencia por `src="assets/nombre.ext"`. Ver sección dedicada más abajo. |
 | `portfolio-images.js`   | ~6MB         | Imágenes de tiles (lazy load)                                            |
 | `muv-images.js`         | ~6MB         | Imágenes del case study muv                                              |
 | `muv-case.html`         | ~6MB         | Case study muv completo + Design System section                          |
@@ -27,12 +36,28 @@
 | `everyone-case.html`    | standalone   | Case study Everyone (light)                                              |
 | `smartpass-case.html`   | standalone   | Case study Smartpass (light)                                             |
 | `sukupay-case.html`     | standalone   | Case study SukuPay (light)                                               |
+| `sukupay-home-prototype.html` | 1.4MB  | Prototipo interactivo real de la Home "North" (Bundled Page exportado de la herramienta de prototipado, self-contained: CSS + fuentes + lógica embebidos). **Debe vivir en la misma carpeta que `sukupay-case.html`**, que lo embebe vía `<iframe>` — no es un case aparte, no tiene su propio nav ni Wipe Transition. |
 | `vendor-tool-case.html` | standalone   | Case study Vendor Tool / Monchis (light)                                 |
 | `hugo-case.html`        | ~100KB       | Case study hugo completo (light) — hackathon, no Design System section   |
 | `hugo-case-images.js`   | ~375KB, lazy | Imágenes de `hugo-case.html` (screenshots reales del producto)           |
 
 
-> Todos los archivos deben estar en la **misma carpeta** para que los links funcionen.
+> Todos los archivos deben estar en la **misma carpeta** para que los links funcionen — desde Sept 2026 esto incluye la carpeta `assets/` completa (no solo los `.html`).
+
+### `index.html` — assets externalizados (Septiembre 2026)
+
+El archivo pesaba 16.7MB, de los cuales 16.45MB (98%) eran 18 imágenes/videos distintos incrustados como `data:...;base64,...` directo en el HTML — incluyendo duplicados exactos (el loop del carrusel horizontal guarda cada asset dos veces, y al estar inline cada copia pagaba el peso completo de nuevo, sin beneficio de cache del navegador). Se sacaron los 18 a `assets/`, referenciados por ruta relativa (`src="assets/muv.jpg"`, etc.) en vez de data URI. Resultado: `index.html` 282KB, `assets/` 2.6MB, total 2.9MB (era 16.7MB).
+
+De paso se optimizaron tres que estaban muy sobredimensionados para el lugar donde se muestran:
+- **`monchis-cover.webp`** (el PNG con alpha del carrusel "Monchis") — 2.30MB → 40KB. Era 1448×1520 con canal alpha (para el drop-shadow del mockup, ver nota vieja en PROJECTS VIEW); se bajó a 900px de alto (de sobra para el `height:440px` del `.carousel-card img`) y se convirtió a WebP conservando el alpha.
+- **`paula-elffman.webp`** (foto de perfil, dashboard) — 1.99MB → 23KB. Fuente de 2268×4032px para un `.dv-photo-ring` de apenas 100×100px; se bajó a 700px de lado máximo.
+- **`muv-cover.webm`** (video de fondo del tile `muv`) — 3.43MB → 800KB. Era 2560×1440 a 5.5Mbps; se re-encodeó VP9 a 960×540 (de sobra para el tile, que nunca se ve a más de unos cientos de px) y se sacó el audio (el `<video>` ya tiene `muted`, así que el audio no se usaba y no se pierde nada).
+
+El resto (14 assets) se sacó tal cual, sin recomprimir — mismo bytes, solo movidos a archivo aparte.
+
+**Convención de nombres:** el nombre de archivo sale del `data-case` del tile más cercano cuando existe, si no del `alt` de la imagen (slugificado). Si se agrega un asset nuevo a mano, conviene seguir el mismo criterio para que quede rastreable.
+
+**🐛 Bug encontrado y corregido de paso (preexistente, no introducido en esta sesión):** el `<!DOCTYPE html>` y el `<html lang="en">` de apertura estaban corrompidos — el primer asset en base64 (un favicon webp de 31KB) se había comido ese pedazo de texto, dejando literalmente `<!DOassets/favicon.webp"en">` como primeras dos líneas reales del archivo (el resto de `<head>` — meta charset, viewport, title — estaba intacto, empezaba justo después). Probablemente un bug de algún find-and-replace demasiado amplio en una pasada anterior de inlining de imágenes. Se reconstruyó el boilerplate estándar (`<!DOCTYPE html>\n<html lang="en">`) y el favicon quedó como `<link rel="icon" type="image/webp" href="assets/favicon.webp">` dentro de `<head>`. Sin este fix el navegador entra en quirks mode (no reconoce el doctype), lo cual puede explicar comportamientos raros de CSS que no se hayan atribuido a otra causa — vale la pena revisar si había algo así dando vueltas.
 
 ---
 
@@ -224,11 +249,11 @@ Sección dentro de `#projects-view`, **entre** el `.hello-hero` y el `.projects-
 - Desktop: imágenes a `height: 440px`, ancho auto (cada imagen determina su propio ancho). Padding del contenedor: `2rem 0 4.5rem`.
 - Mobile (`max-width:768px`): imágenes a `height: 250px`.
 - Las imágenes usan `border-radius: 1rem` directamente en el `<img>` (no en el contenedor), sin `overflow: hidden`, para que las esquinas redondeadas originales se respeten al 100%.
-- **Exportar imágenes a 1520px de alto** (760 × 2 para retina), ancho libre. Formatos actuales: 01 Memorable (1420×1520), 02 Monchis app (744×1520), 03 Monchis desktop (2400×1520), 04 MUV (1198×1520).
+- **Exportar imágenes a 1520px de alto** (760 × 2 para retina), ancho libre. Formatos actuales: 02 Monchis app (1448×1520 — actualizado Septiembre 2026, antes 744×1520), 03 Monchis desktop (2400×1520), 04 MUV (1198×1520). *(01 Memorable se sacó del carousel en Septiembre 2026 — el case sigue viviendo abajo, en el gallery.)*
 
 **Fade edges:** pseudo-elementos `::before` y `::after` con gradientes de `var(--void)` a transparente (6rem de ancho) para que las cards se desvanezcan en los bordes.
 
-**Imágenes actuales:** 01.png (Memorable), 02.png (Monchis app), 03.png (Monchis desktop), 04.png (MUV). Están embebidas como base64 JPEG a resolución completa 2x (1520px alto), quality 80.
+**Imágenes actuales:** 02.png (Monchis app), 03.png (Monchis desktop), 04.png (MUV). Están embebidas como base64 a resolución completa 2x (1520px alto) — la mayoría JPEG quality 80; **02.png (Monchis app) es PNG con canal alpha** (el mockup tiene sombra/esquinas transparentes, necesita alpha para no verse con fondo blanco sobre el carousel oscuro).
 
 **Regla para el futuro:** para agregar un proyecto al carousel, agregar un `<div class="carousel-card"><img>` nuevo en **ambas mitades** del track (la original y la duplicada) para mantener el loop. Para quitar los placeholders grises, reemplazar las imágenes 02 y 04 con covers reales de proyectos.
 
@@ -244,10 +269,11 @@ Las 10 `.carousel-card` (5 imágenes × 2 copias del loop) ahora son clickeables
 | Alt de la imagen                | `data-case` | Página                                           |
 | ------------------------------- | ----------- | ------------------------------------------------ |
 | SukuPay — Fintech               | `suku`      | `sukupay-case.html`                              |
-| Memorable — AI creative pretest | `memorable` | `memorable-case.html`                            |
 | Monchis — Food delivery app     | `monchis`   | `monchis-case.html`                              |
 | Monchis — Store management      | `monchis`   | `monchis-case.html` (mismo case que la anterior) |
 | MUV — Ride-hailing              | `muv`       | `muv-case.html`                                  |
+
+*(Memorable se sacó del carousel en Septiembre 2026 — ya no hay card ni fila de mapeo para `memorable` acá; el case sigue clickeable desde su tile en el `#gallery`.)*
 
 
 **Implementación:**
@@ -352,6 +378,20 @@ Los cases son archivos HTML independientes (`memorable-case.html`, `monchis-case
 
 > **Agosto 2026 — ✅ monchis drivers ocupa el lugar de memorable, a pedido:** mismo patrón que arriba. El div de **monchis drivers** (headline "Shift management for 1,200+ drivers.") pasó a usar la clase `.tile-memorable` (1/5, fila 3 — la posición grande de esa fila). El div de **memorable** pasó a usar la clase `.tile-monchis-drivers`, que ahora es auto-flow `span 4` (la posición que dejó monchis drivers, después de sukupay en la fila 3). `data-case` y contenido de ambos tiles sin cambios.
 
+> **Septiembre 2026 — ✅ `everyone` pasa a ser el último tile del gallery y `foody` queda pegado a `memorable`, a pedido:** mismo patrón de "reusar clase para heredar posición" que las dos notas de arriba — no se reordenó el DOM ni se tocó ningún `grid-column`/`grid-row`. Rotación de contenido en 3 wrappers: el div de **thefork-shortlist** pasó a usar la clase `.tile-everyone` (5/9, fila 3 — al lado de `drivers`, la posición fija que dejó `everyone`); el div de **foody** pasó a usar la instancia de `.tile-ph` que antes tenía thefork-shortlist (auto-flow, cae en la fila de al lado de `memorable`); el div de **everyone** pasó a usar la clase `.tile-foody` (auto-flow, es la que queda última en el orden del documento). `data-case`, `data-category` y todo el contenido viajan con cada div — solo cambia qué clase de posicionamiento lleva.
+>
+> **⚠️ Gotcha para quien edite el HTML de `#gallery` por script (regex/split, no a mano):** el bloque de la última tile del gallery termina así:
+> ```
+> ...</div>
+>     </div>
+>     
+> 
+> 
+>   </div>
+> </div>
+> ```
+> El primer `</div>` (indentado 4 espacios) todavía cierra **la tile**, no el `#gallery`. Si el delimitador de "acá termina el contenido y empieza el cierre del contenedor" arranca en ese `</div>`, la última tile pierde un cierre y el browser la anida adentro de la tile anterior — visualmente se ve como si una tapara a la otra o como si el contenido de una "desapareciera" sin ningún error de sintaxis global (el conteo total de `<div>`/`</div>` del archivo sigue dando parejo, así que un chequeo superficial no lo detecta). El delimitador correcto arranca **después** de ese `</div>` de la tile, en el bloque de líneas en blanco que sigue.
+
 ### Para agregar imagen real a un tile
 
 1. Encodear PNG/JPG a base64
@@ -420,18 +460,21 @@ Dos elementos de texto secundario quedaron demasiado chicos/tenues para leerse e
 
 ---
 
-### Covers de tiles animados (video/GIF) — EN PRUEBA
+### Covers de tiles animados (video) — `muv`
 
-*Julio 2026 — 🧪 en prueba sobre* `muv`*, no replicado al resto todavía*
+*Julio 2026 — cover pasó de GIF a `<video>` embebido (migración no quedó documentada en su momento). Septiembre 2026 — ✅ contenido real cargado, con un gotcha importante de compatibilidad.*
 
-Se reemplazó el cover estático de `.tile-muv` por un asset animado exportado desde Jitter, para dar más vida al home.
+`.tile-muv` usa `<video autoplay loop muted playsinline>` (no `<img>`) dentro de `.tile-cover-wrap`, embebido inline como `data:video/webm;base64,...` — a diferencia de `muv-teal.gif`/`monchis-tile.jpg`, este si va inline pese a superar ampliamente los 300KB del protocolo de IMÁGENES (ver excepción documentada ahí).
 
-- **Tamaño del cover:** `800×600px` (mismo tamaño que usaban los covers estáticos, no cambia el layout).
-- **Export actual:** GIF, 89 frames, ~7.5MB (`muv-teal.gif`), archivo separado — **no** va embebido en base64 dentro del HTML, va referenciado por `src` relativo. Por eso `muv-teal.gif` tiene que vivir en la misma carpeta que `index.html` (ver tabla de ARCHIVOS al principio de este doc).
-- **Pendiente antes de dar por bueno:** pasar de `.gif` a `.mp4` (`<video autoplay loop muted playsinline>`) — mismo contenido, mucho menos peso. El GIF es válido solo para prueba visual.
-- **Limitación de Jitter (plan free):** "Video · 1x" está bloqueado, solo está disponible "Video · 0.5x" (cámara lenta). Si el resultado final se ve raro en 0.5x, hay que exportar pensando la animación para esa velocidad, o pagar el plan para 1x.
+- **Tamaño del cover:** `800×600px` en el layout (el archivo real es 2560×1440, el CSS lo recorta/escala con `object-fit`).
+- **Contenido actual:** clip real de 5.17s subido por Pau, reemplazando el placeholder que había antes.
 
-**Para replicar en otro tile:** reemplazar el `src` del `img` (o pasar a `<video>`) dentro de `.tile-cover-wrap` del tile correspondiente — mismo punto que "Para agregar imagen real a un tile" más arriba.
+**🐛 Gotcha (Septiembre 2026) — H.264/AAC no reproduce como `data:` URI en navegadores sin códecs propietarios:** el archivo que subió Pau venía como MP4 (H.264 + AAC). Al embeberlo tal cual (`data:video/mp4;base64,...`), el `<video>` tira `MEDIA_ELEMENT_ERROR: DEMUXER_ERROR_NO_SUPPORTED_STREAMS` en cualquier build de Chromium sin códecs propietarios (`canPlayType('video/mp4')` devuelve `''`) — típico de navegadores/motores basados en Chromium open-source. Esto es independiente de si el `moov atom` está al principio o al final del archivo (probado con `-movflags +faststart`, mismo error) — es directamente falta de decoder H.264/AAC en el motor, no un problema de contenedor.
+  - **Fix aplicado:** transcodificar a **VP9 + Opus dentro de WebM** (`ffmpeg -c:v libvpx-vp9 -crf 32 -b:v 0 -c:a libopus -b:a 96k`), que es el mismo formato que ya usaba este tile y tiene soporte universal en motores basados en Chromium (con o sin códecs propietarios), Firefox y Edge.
+  - **Costo:** el peso subió de ~624KB (loop corto en prueba) a **~3.5MB** (clip real de 5s a mayor resolución). Es el asset más pesado del sitio embebido inline — candidato a bajarle el bitrate o acortar el clip si se nota en tiempo de carga real.
+  - **Regla para el futuro:** cualquier video que se suba para un tile tiene que salir como WebM/VP9 (o VP8) antes de embeberlo — nunca MP4/H.264 directo a `data:` URI, sin importar que "funcione en mi Chrome" (Chrome de escritorio con Widevine/códecs propietarios sí lo reproduce; el motor usado para verificar este sitio, no). Verificar con `document.createElement('video').canPlayType(...)` antes de dar por bueno un formato nuevo.
+
+**Para replicar en otro tile:** reemplazar el `src` del `img` (o pasar a `<video>`) dentro de `.tile-cover-wrap` del tile correspondiente — mismo punto que "Para agregar imagen real a un tile" más arriba. Si es video, seguir el gotcha de arriba para el formato.
 
 ---
 
@@ -571,6 +614,26 @@ Se reemplazó el cover estático de `.tile-monchis-home` (mockup de la app, scre
 - **Procesado:** mismo tamaño (1600×1200 = 4:3, coincide exacto con el cover 800×600 del tile, no hizo falta recortar), comprimido a JPG calidad 82 → **~88KB**.
 - Referenciado como archivo externo (`<img src="monchis-tile.jpg">`), mismo patrón que `muv-teal.gif` — no embebido en base64 pese a pesar menos de 300KB.
 - **Excepción al protocolo:** el protocolo de IMÁGENES (ver esa sección) dice que <300KB debería ir inline en base64. Se dejó como archivo externo por consistencia con el tile de muv y porque simplifica iterar mientras estamos probando covers. Ver decisión "¿Creamos `portfolio-images.js`?" justo abajo.
+
+---
+
+### Cover de `.tile-smartpass` actualizado
+
+*Septiembre 2026 — ✅ a pedido*
+
+Se reemplazó el cover (screenshot del dashboard de acreditaciones, "¡Hola María!") por un screenshot de la pantalla de login ("Dónde empiezan las grandes experiencias").
+
+- **Original:** PNG 1872×1248.
+- **Procesado:** comprimido a WebP calidad 82 → **~74KB**, embebido inline en base64 (dentro del protocolo, no hace falta excepción). Mismo `alt` que ya tenía el tile.
+
+### Cover de `.tile-memorable` (case `drivers`) actualizado
+
+*Septiembre 2026 — ✅ a pedido*
+
+Se reemplazó el cover (mapa de la app, foco en la ruta) por un mockup nuevo de 3 teléfonos superpuestos sobre foto urbana nocturna, mismo headline ("Shift management for 1,200+ drivers.").
+
+- **Original:** PNG 1760×1328.
+- **Procesado:** comprimido a WebP calidad 82 → **~270KB**, embebido inline en base64 (dentro del protocolo, justo por debajo del límite de 300KB — si se vuelve a reemplazar este cover, vigilar que no lo pase).
 
 ---
 
@@ -855,6 +918,23 @@ Se migraron `smartpass` y `sukupay` de overlay dark (`<template id="tpl-*">` den
 2. Agregar la entrada en `CASE_PAGE_MAP` dentro de `index.html`
 3. Verificar que el tile en el gallery tenga el `data-case` correcto (ver bug conocido abajo)
 
+### ✅ Septiembre 2026 — Prototipo interactivo embebido (iframe) en `sukupay-case.html`
+
+Debajo del montage estático de "The North" proposal (sección "Result · Two Directions Explored"), se agregó el prototipo real y clickeable de esa Home, en vez de dejar solo la screenshot:
+
+```html
+<iframe src="sukupay-home-prototype.html" width="100%" height="1000" style="border:0" loading="lazy" title="..."></iframe>
+```
+
+`sukupay-home-prototype.html` es un "Bundled Page" — un export self-contained (CSS, fuentes en base64/blob, lógica de la animación) de la herramienta de prototipado, no un archivo escrito a mano. Corre solo (loop automático de ~20s: oculta el balance, colapsa el header al hacer scroll, invierte el tipo de cambio, abre una FAQ, muestra el sheet de USDC) y también responde a scroll/tap real.
+
+**Reglas para este patrón:**
+- El archivo del prototipo **tiene que estar en la misma carpeta** que el `-case.html` que lo embebe (mismo principio que la regla general de ARCHIVOS) — el `src` del iframe es relativo.
+- No editar el contenido del Bundled Page a mano: es código generado (`x-dc`, `DCLogic`, tokens `--bt-*`/`--bm-*` de Figma Variables) pensado para exportarse de nuevo desde la herramienta, no para tocarse línea por línea. Si hace falta un cambio de contenido/copy dentro del prototipo, se re-exporta.
+- `width="100%"` + altura fija en px (no `vh`) — el bundle centra un phone-shell de 390×844 + un panel de notas a su lado (`flex-wrap:wrap`), así que necesita una altura mínima generosa; `1000px` deja margen para el layout desktop (phone + notas lado a lado) y en mobile el panel de notas cae debajo del teléfono, por eso `.proto-embed-frame iframe{height:960px}` en el media query de 900px — confirmar visualmente si el bundle cambia de contenido.
+
+**Gotcha — fondo del bundle fijo, no sigue el dark mode del case:** el Bundled Page tiene su propio fondo hardcodeado (`#F1F0EC` / `#FAFAFA` dentro de su propio `<body>`), no lee las CSS vars de `sukupay-case.html`. Con el toggle dark activo, el iframe queda como un rectángulo claro sobre el resto de la página oscura — mismo tipo de "seam" que el facade de YouTube en `hugo-case.html` (ver `HUGO CASE STUDY`), pero acá no hay facade posible porque el prototipo necesita el iframe cargado desde el arranque para ser interactivo. Se envolvió en `.proto-embed-frame` (borde + radius + sombra) para que el corte se lea como una "ventana" intencional y no como un bug, pero **no está resuelto** — si se quiere que combine con dark mode, la herramienta de prototipado tendría que exportar una variante dark, o habría que inyectar CSS por JS dentro del iframe (mismo origen, así que es técnicamente posible, pero no se hizo en esta pasada).
+
 ### 🐛 BUG CONOCIDO Y CORREGIDO (Septiembre 2026) — texto invisible en dark mode dentro de los cases
 
 **Síntoma:** títulos, labels y porcentajes ilegibles (texto negro sobre fondo oscuro) al activar el toggle dark del dock — o directamente al entrar a un case si `localStorage.pe-theme` ya venía en `'dark'` desde otra página del portfolio.
@@ -1002,6 +1082,8 @@ Todos por encima de 4.5:1 sobre `--bg:#24242C` salvo donde el token ya pasaba (e
 | < 300KB        | Embeber inline como base64                                    |
 | 300KB–1MB      | Mover a `portfolio-images.js` con lazy load via `data-img-id` |
 | > 1MB en tiles | Placeholder SVG gris hasta tener versión optimizada           |
+
+**Excepción activa:** el `<video>` de `.tile-muv` pesa ~3.5MB embebido inline (ver "Covers de tiles animados" en PROJECTS VIEW) — no sigue esta tabla porque no hay placeholder de video implementado todavía y `portfolio-images.js` no está creado (ver decisión debajo). Es el único asset del sitio que rompe el protocolo a propósito.
 
 
 **Lazy load system:**
