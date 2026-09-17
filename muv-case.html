@@ -1324,6 +1324,23 @@ body.dark-mode{
   </button>
 </nav>
 <script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
+<script>
+// Fallback for iOS/mobile blocking native autoplay (Low Power Mode, Reduce Motion,
+// "Auto-Play Video Previews" off, etc). Tries play() on load; if blocked, retries
+// on the first user gesture anywhere on the page — a real tap always unlocks it.
+(function(){
+  function tryPlayAll(){
+    document.querySelectorAll('video[autoplay]').forEach(function(v){
+      var p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(function(){ /* still blocked, wait for gesture */ });
+    });
+  }
+  tryPlayAll();
+  ['touchstart','click'].forEach(function(evt){
+    document.addEventListener(evt, tryPlayAll, { once: true, passive: true });
+  });
+})();
+</script>
 
 </body>
 </html>
