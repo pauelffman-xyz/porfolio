@@ -3,1099 +3,1088 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>muv — Design Showcase · Paula Elffman</title>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>muv: an easier way to get a ride — Case study · Paula Elffman</title>
+<meta name="description" content="Case study: end-to-end redesign of muv's passenger app, a Paraguayan ride-hailing marketplace. Onboarding from 21 steps to 6, and a ride flow that shows what is happening at every state.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@500;600&display=swap" rel="stylesheet">
 <style>
-
+/* ════════════════════════════════════════════════════════════
+   muv case study · v2
+   Tokens keep the names used by the rest of the portfolio
+   (--bg, --paper, --ash, --line…) so the dock and dark mode work.
+   ════════════════════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#F5F4F0;
-  --bg2:#EDEAE4;
-  --bg3:#E4E1DA;
-  --paper:#1A1814;
-  --ash:rgba(26,24,20,.5);
-  --ash2:rgba(26,24,20,.15);
-  --orange:#FF6B2C;
-  --navy:#1A2F5A;
-  --green:#1aac79;
-  --line:rgba(26,24,20,.08);
-  --line2:rgba(26,24,20,.14);
+  --bg:#FFFFFF; --bg2:#F6F6F5; --bg3:#EDEDEB;
+  --paper:#141414;
+  --ash:rgba(20,20,20,.66);          /* 5.9:1 on --bg — safe for body text */
+  --ash2:rgba(20,20,20,.15);
+  --line:rgba(20,20,20,.08); --line2:rgba(20,20,20,.14);
+  --orange:#FF6200;                  /* fills, route lines, highlights — never small text */
+  --orange-ink:#B93E05;              /* orange for text: 5.1:1 on --bg */
+  --navy:#0B1445;                    /* primary actions: 17:1 with white */
+  --green-ink:#096B4B; --amber-ink:#8F5200;
   --ease:cubic-bezier(0.22,1,0.36,1);
-  /* aliases - Design System block below was authored with these names, keep them wired to the tokens above */
-  --ghost:var(--bg2);
-  --ghost-2:var(--bg3);
-  --accent:var(--orange);
-  --line-md:var(--line2);
-  --ash-2:var(--ash2);
+  --r:12px; --r-sm:8px;
+  --wrap:1200px;
+  --gutter:clamp(20px,4vw,64px);
+  --sec:clamp(64px,9vw,128px);
+  /* legacy aliases used by the shared dock block */
+  --panel-light:#FFFFFF;
+  --ghost:var(--bg2); --ghost-2:var(--bg3); --accent:var(--orange); --line-md:var(--line2); --ash-2:var(--ash2);
 }
-html{font-size:16px;}
+html{font-size:16px;scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
 body{
-  font-family:'Geist',sans-serif;
-  background:var(--bg);
-  color:var(--paper);
-  -webkit-font-smoothing:antialiased;
+  font-family:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);color:var(--paper);
+  line-height:1.65;-webkit-font-smoothing:antialiased;
 }
-#wipe-overlay{
-  position:fixed; inset:0; z-index:99999;
-  background:var(--bg);
-  pointer-events:none;
-  clip-path:circle(0% at 50% 50%);
-}
-#wipe-overlay.animate{ transition:clip-path .6s cubic-bezier(.65,0,.35,1); }
-#wipe-overlay.dark{ background:#24242C; }
+img,video{display:block;max-width:100%;height:auto;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--orange-ink);outline-offset:3px;border-radius:4px;}
 
-/* ─── SHARED ─── */
-.mono{font-family:'Space Grotesk',sans-serif;}
-.orange{color:var(--orange);}
-.green{color:var(--green);}
+#wipe-overlay{position:fixed;inset:0;z-index:99999;background:var(--bg);pointer-events:none;clip-path:circle(0% at 50% 50%);}
+#wipe-overlay.animate{transition:clip-path .6s cubic-bezier(.65,0,.35,1);}
+#wipe-overlay.dark{background:#24242C;}
 
-/* ─── SECTION WRAPPER ─── */
-.section{padding:5rem 4rem;}
-.section + .section{border-top:1px solid var(--line2);}
+/* ─── Layout ─── */
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gutter);}
+.sec{padding-block:var(--sec);scroll-margin-top:56px;}
+.sec.tint{background:var(--bg2);}
+.sec > .wrap > * + *{margin-top:clamp(40px,5vw,72px);}
 
-/* ─── EYEBROW ─── */
-.eyebrow{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--orange);margin-bottom:1rem;
-  display:flex;align-items:center;gap:.75rem;
-}
-.eyebrow::before{content:'';width:20px;height:1px;background:var(--orange);flex-shrink:0;}
+/* ─── Type ─── */
+.h1{font-size:clamp(2.75rem,7.2vw,6.25rem);font-weight:800;letter-spacing:-.045em;line-height:.98;}
+.h1 .mute{color:var(--ash);}
+.h1 .accent{color:#F05A00;}   /* brand orange nudged for 3:1 on cream (large text) */
+body.dark-mode .h1 .accent{color:#FF6200;}
+.h2{font-size:clamp(1.75rem,3.2vw,2.75rem);font-weight:800;letter-spacing:-.035em;line-height:1.05;max-width:20ch;}
+.h2.wide{max-width:24ch;}
+.h3{font-size:1.375rem;font-weight:700;letter-spacing:-.02em;line-height:1.25;}
+.lede{font-size:clamp(1.125rem,1.6vw,1.375rem);line-height:1.5;letter-spacing:-.01em;color:var(--paper);max-width:34ch;}
+.prose{max-width:62ch;color:var(--ash);font-size:1.0625rem;}
+.prose + .prose{margin-top:1.25em;}
+.prose strong,.prose em{color:var(--paper);}
+.prose strong{font-weight:600;}
+.kicker{font-size:.9375rem;font-weight:500;color:var(--ash);}
+.small{font-size:.875rem;line-height:1.55;color:var(--ash);}
+.label{font-size:.875rem;font-weight:600;color:var(--paper);}
+.es{font-style:normal;}
 
-/* ─── PHONES ─── */
-.phone-wrap{display:flex;flex-direction:column;align-items:center;}
-.phone-shell{
-  border-radius:16px;overflow:hidden;background:#fff;
-  box-shadow:0 0 0 1px rgba(26,24,20,.08), 0 16px 48px rgba(26,24,20,.14), 0 4px 12px rgba(26,24,20,.08);
-  position:relative;
-}
-.phone-shell img{display:block;width:100%;height:auto;}
-.phone-notch{
-  position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:72px;height:22px;background:#000;
-  border-radius:0 0 14px 14px;z-index:3;
-}
-.badge{
-  margin-top:1rem;position:relative;z-index:5;
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.3rem .875rem;border-radius:100px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
-  animation:badgeBreathe 2.6s var(--ease) infinite;
-}
-.badge-o{background:var(--orange);color:#fff;}
-.badge-g{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
-.badge-gr{background:rgba(38,216,151,.12);color:var(--green);border:1px solid rgba(38,216,151,.2);}
-@keyframes badgeBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
-@media (prefers-reduced-motion:reduce){ .badge{animation:none;} }
-
-.plabel{margin-top:1.5rem;text-align:center;max-width:190px;}
-.pl-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:.375rem;}
-.pl-t{font-size:.875rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.25rem;}
-.pl-d{font-size:.75rem;line-height:1.55;color:var(--ash);}
-
-/* skeleton pulse */
-.sk-row{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:.75rem;}
-.sk-dot{width:4px;height:4px;border-radius:50%;background:rgba(26,24,20,.2);animation:skp 1.4s ease-in-out infinite;}
-.sk-dot:nth-child(2){animation-delay:.2s;}
-.sk-dot:nth-child(3){animation-delay:.4s;}
-@keyframes skp{0%,100%{opacity:.2;}50%{opacity:1;}}
-
-/* wire frame */
-.wire-shell{
-  border-radius:8px;overflow:hidden;
-  border:1px solid rgba(242,239,232,.1);
-  background:rgba(242,239,232,.04);
-}
-.wire-shell img{display:block;width:100%;height:auto;}
-
-/* flow arrow */
-.arrow-col{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:.375rem;padding-top:5rem;
-}
-.arr-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);}
-.arr-line{width:1px;height:28px;background:linear-gradient(to bottom,var(--orange),rgba(26,24,20,0));position:relative;overflow:visible;}
-.arr-line::after{
-  content:'';position:absolute;left:50%;top:0;
-  width:3px;height:3px;border-radius:50%;background:var(--orange);
-  transform:translate(-50%,0);
-  animation:arrFlow 1.8s linear infinite;
-}
-@keyframes arrFlow{
-  0%{top:0;opacity:0;}
-  15%{opacity:1;}
-  85%{opacity:1;}
-  100%{top:100%;opacity:0;}
-}
-.arr-lbl{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--orange);writing-mode:vertical-rl;margin-top:.25rem;
-}
-@media (prefers-reduced-motion:reduce){ .arr-line::after{animation:none;} }
-
-/* reveal on scroll — flow/wireframe items cascade in */
-.flow-item,.wf-item,.phone-wrap{
-  opacity:0;transform:translateY(20px);
-  transition:opacity .7s var(--ease),transform .7s var(--ease);
-}
-.flow-item.in-view,.wf-item.in-view,.phone-wrap.in-view{
-  opacity:1;transform:translateY(0);
-}
-@media (prefers-reduced-motion:reduce){
-  .flow-item,.wf-item,.phone-wrap{opacity:1;transform:none;transition:none;}
-}
-
-/* ─── SECTION 00: COVER ─── */
-.cover{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:4rem;
-  align-items:end;
-  padding:5rem 4rem 4rem;
-}
-.cover-title{
-  font-size:clamp(5rem,11vw,12rem);
-  font-weight:800;letter-spacing:-.06em;line-height:.85;
-  color:var(--paper);
-}
-.cover-title .dim{color:rgba(26,24,20,.15);}
-.cover-meta{
-  display:flex;flex-direction:column;gap:1.25rem;
-  padding-bottom:.5rem;
-}
-.cm-row{}
-.cm-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.25rem;}
-.cm-val{font-size:.875rem;font-weight:500;color:var(--paper);}
-.cover-rule{height:1px;background:var(--line2);margin:4rem 0 0;}
-
-/* ─── SECTION 01: OVERVIEW ─── */
-.overview-grid{
-  display:grid;
-  grid-template-columns:1.3fr 1fr 1fr;
-  gap:3rem;
-  align-items:start;
-}
-.ov-left{}
-.ov-title{
-  font-size:clamp(2.5rem,4vw,4rem);
-  font-weight:800;letter-spacing:-.04em;line-height:1;
-  margin-bottom:1.5rem;
-}
-.ov-body{font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;}
-.ov-body strong{color:var(--paper);font-weight:500;}
-.stats-col{display:flex;flex-direction:column;gap:0;}
-.stat-item{
-  padding:1.25rem 0;
-  border-bottom:1px solid var(--line);
-  display:flex;align-items:baseline;gap:.875rem;
-}
-.stat-val{font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--paper);}
-.stat-lbl{font-size:.8125rem;color:var(--ash);line-height:1.4;}
-.accent-card{
-  background:var(--orange);
-  border-radius:8px;padding:2rem;
-}
-.ac-lbl{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.875rem;}
-.ac-val{font-size:3rem;font-weight:800;letter-spacing:-.05em;color:#fff;line-height:1;margin-bottom:.5rem;}
-.ac-desc{font-size:.8125rem;color:rgba(255,255,255,.8);line-height:1.6;}
-.ac-sub{
-  margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.2);
-  display:flex;gap:1.5rem;
-}
-.acsub-item .acsub-v{font-size:1.5rem;font-weight:800;letter-spacing:-.04em;color:#fff;}
-.acsub-item .acsub-l{font-size:.625rem;color:rgba(255,255,255,.55);}
-
-/* ─── SECTION 02: WIREFRAMES ─── */
-.wf-grid{
-  display:grid;
-  grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr;
-  gap:0;
-  align-items:start;
-  margin-top:3rem;
-}
-.wf-item{display:flex;flex-direction:column;align-items:center;}
-.wf-item .wire-shell{width:170px;}
-.wf-lbl{
-  margin-top:1.25rem;text-align:center;width:170px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);
-}
-.wf-lbl strong{display:block;font-size:.8125rem;font-family:'Geist',sans-serif;font-weight:700;letter-spacing:-.01em;color:var(--paper);margin-bottom:.25rem;text-transform:none;letter-spacing:normal;}
-
-/* Section divider label */
-.section-label{
-  display:flex;align-items:center;gap:1.5rem;
-  margin-bottom:3rem;
-}
-.sl-text{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.5875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2);
-  white-space:nowrap;
-}
-.sl-line{flex:1;height:1px;background:var(--line);}
-
-/* ─── SECTION 03: TRIP FLOW ─── */
-.flow-grid{
-  display:grid;
-  grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;
-  gap:0;
-  align-items:start;
-  margin-top:3rem;
-}
-.flow-item{display:flex;flex-direction:column;align-items:center;}
-.flow-item .phone-shell{width:180px;border-radius:16px;}
-
-/* ─── SECTION 04: DECISIONS ─── */
-.decisions-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--line);
-  border:1px solid var(--line);
-  border-radius:8px;
-  overflow:hidden;
-  margin-top:3rem;
-}
-.dec{background:var(--bg2);padding:2rem 1.75rem;}
-.dec-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.875rem;}
-.dec-t{font-size:1rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;}
-.dec-d{font-size:.8125rem;line-height:1.65;color:var(--ash);}
-
-/* ─── SECTION 05: INSIGHTS ─── */
-.insights-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1rem;
-  margin-top:3rem;
-}
-.ins{padding:1.75rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);}
-.ins-n{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.75rem;}
-.ins-t{font-size:.9375rem;font-weight:700;color:var(--paper);letter-spacing:-.02em;margin-bottom:.375rem;}
-.ins-d{font-size:.8125rem;line-height:1.6;color:var(--ash);}
-
-/* ─── NAVY CALLOUT ─── */
-.callout{
-  background:var(--navy);border-radius:16px;padding:2.5rem;
-}
-.co-lbl{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;}
-.co-t{font-size:1.375rem;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin-bottom:.875rem;color:#fff;}
-.co-d{font-size:.8125rem;line-height:1.7;color:rgba(255,255,255,.6);}
-.co-stats{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:2rem;}
-.cos-v{font-size:1.375rem;font-weight:800;letter-spacing:-.04em;color:var(--orange);}
-.cos-l{font-size:.625rem;color:rgba(255,255,255,.4);margin-top:.125rem;}
-
-/* ─── FOOTER ─── */
-.footer{
-  padding:2rem 4rem;
-  border-top:1px solid var(--line2);
-  display:flex;justify-content:space-between;align-items:center;
-}
-.footer-l,.footer-r{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);
-}
-
-
-/* Back nav */
+/* ─── Back nav (sticky) ─── */
 .back-nav{
-  position:sticky;
-  top:0;z-index:100;
-  background:rgba(245,244,240,0.92);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(26,24,20,.08);
-  padding:1rem 4rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.back-btn{
-  display:inline-flex;align-items:center;gap:.625rem;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
-  color:#FF6B2C;
-  background:none;border:none;cursor:pointer;
-  text-decoration:none;
-  transition:gap .2s;
-}
-.back-btn:hover{gap:1rem;}
-.back-btn span{font-size:.875rem;}
-.back-nav-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(26,24,20,.4);
-}
-.back-nav-right{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(26,24,20,.3);
-}
-
-/* Push Notifications 2-col layout */
-.ds-pn-layout {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:3rem;
-  align-items:start;
-}
-.ds-pn-left { padding-top:.5rem; }
-.ds-pn-items { display:flex;flex-direction:column;gap:1.5rem;margin-top:1.5rem; }
-.ds-pn-item { display:flex;gap:.875rem;align-items:flex-start; }
-.ds-pn-dot {
-  width:6px;height:6px;border-radius:50%;
-  background:var(--accent);flex-shrink:0;margin-top:.4rem;
-}
-.ds-pn-title {
-  font-family:'Geist',sans-serif;font-size:.875rem;
-  font-weight:700;color:var(--paper);margin-bottom:.25rem;
-}
-.ds-pn-desc {
-  font-family:'Muli',sans-serif;font-size:.8125rem;
-  line-height:1.65;color:var(--ash);font-weight:300;
-}
-.ds-pn-right {
-  display:flex;flex-direction:column;gap:.875rem;
-}
-.ds-pn-img-wrap {
-  background:var(--ghost);border:1px solid var(--line);border-radius:10px;overflow:hidden;
-}
-.ds-pn-img-area {
-  padding:1.25rem;background:var(--ghost-2);
-  display:flex;align-items:center;justify-content:center;
-}
-.ds-pn-img-area img {
-  max-width:50%;height:auto;display:block;border-radius:6px;
-}
-@media(max-width:768px){
-  .ds-pn-layout { grid-template-columns:1fr; }
-}
-
-</style>
-
-<style>
-/* ── DESIGN SYSTEM SECTION ── */
-.ds-intro { margin-bottom:3.5rem; }
-.ds-title {
-  font-family:'Geist',sans-serif;
-  font-size:clamp(2.5rem,4vw,4rem);
-  font-weight:800;letter-spacing:-.04em;color:var(--paper);
-  line-height:.95;margin-bottom:1rem;
-}
-.ds-title em { font-style:normal;color:var(--accent); }
-.ds-sub {
-  font-family:'Muli',sans-serif;font-size:1rem;
-  line-height:1.75;color:var(--ash);font-weight:300;max-width:680px;
-}
-
-.ds-group {
-  margin-bottom:4rem;
-  padding-bottom:4rem;
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid var(--line);
+  padding:.875rem var(--gutter);
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  font-size:.875rem;
 }
-.ds-group-label {
-  display:flex;align-items:center;gap:.875rem;
-  font-family:'Geist',sans-serif;font-size:1.125rem;font-weight:700;
-  color:var(--paper);letter-spacing:-.02em;
-  margin-bottom:.875rem;
-}
-.ds-group-num {
-  font-family:'Space Grotesk',sans-serif;font-size:.5625rem;
-  letter-spacing:.12em;color:var(--accent);
-  border:1px solid rgba(202,255,37,.3);border-radius:100px;
-  padding:.2rem .625rem;
-}
-.ds-group-desc {
-  font-family:'Muli',sans-serif;font-size:.9375rem;
-  line-height:1.7;color:var(--ash);font-weight:300;
-  max-width:720px;margin-bottom:2rem;
+.back-btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:600;color:var(--orange-ink);text-decoration:none;white-space:nowrap;transition:gap .2s var(--ease);min-height:44px;}
+.back-btn:hover{gap:.875rem;}
+.toc{display:flex;gap:1.75rem;list-style:none;}
+.toc a{color:var(--ash);text-decoration:none;font-weight:500;padding:.5rem 0;transition:color .2s;}
+.toc a:hover{color:var(--paper);}
+.back-nav-right{color:var(--ash);white-space:nowrap;}
+@media(max-width:960px){.toc{display:none;}}
+@media(max-width:640px){.back-nav-right{display:none;}}
+body.dark-mode .back-nav{background:rgba(36,36,44,.92);}
+
+/* ─── Hero ─── */
+.hero{padding-top:clamp(48px,7vw,96px);}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:end;}
+.hero .kicker{margin-bottom:1.5rem;}
+.meta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.5rem 2rem;margin-top:clamp(40px,5vw,72px);padding-top:1.5rem;border-top:1px solid var(--line2);}
+.meta dt{font-size:.8125rem;color:var(--ash);margin-bottom:.25rem;}
+.meta dd{font-size:.9375rem;font-weight:500;line-height:1.4;}
+.hero-video{margin-top:clamp(40px,5vw,72px);}
+.frame{border-radius:var(--r);overflow:hidden;background:var(--bg3);}
+.frame video,.frame img{width:100%;}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;align-items:start;}
+  .meta{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
-.ds-comp-grid { display:grid;gap:1.5rem; }
-.ds-2col { grid-template-columns:1fr 1fr; }
-.ds-3col { grid-template-columns:1fr 1fr 1fr; }
+/* ─── Two-column split ─── */
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,96px);align-items:start;}
+.split.rev{grid-template-columns:minmax(0,6fr) minmax(0,5fr);}
+@media(max-width:900px){.split,.split.rev{grid-template-columns:1fr;}}
 
-.ds-comp {
-  background:var(--ghost);border:1px solid var(--line);
-  border-radius:12px;overflow:hidden;
-  transition:border-color .3s;
+/* ─── Survey bars ─── */
+.evidence-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem 2rem;margin-bottom:1.5rem;}
+.bars{list-style:none;display:flex;flex-direction:column;gap:1.125rem;}
+.bars li{display:grid;grid-template-columns:minmax(0,1fr) 3.25rem;grid-template-areas:"l v" "t t";gap:.375rem 1rem;align-items:baseline;}
+.bar-label{grid-area:l;font-size:1rem;line-height:1.35;}
+.bar-val{grid-area:v;font-size:1.375rem;font-weight:800;letter-spacing:-.03em;text-align:right;font-variant-numeric:tabular-nums;}
+.bar-track{grid-area:t;height:8px;border-radius:4px;background:var(--bg3);overflow:hidden;}
+.bar-fill{display:block;height:100%;width:var(--v);background:var(--navy);border-radius:4px;transform-origin:left;}
+.js .bar-fill{transform:scaleX(0);transition:transform 1s var(--ease);}
+.js .bars.in .bar-fill{transform:scaleX(1);}
+.js .bars.in li:nth-child(2) .bar-fill{transition-delay:.08s}.js .bars.in li:nth-child(3) .bar-fill{transition-delay:.16s}
+.js .bars.in li:nth-child(4) .bar-fill{transition-delay:.24s}.js .bars.in li:nth-child(5) .bar-fill{transition-delay:.32s}
+.js .bars.in li:nth-child(6) .bar-fill{transition-delay:.4s}
+@media (prefers-reduced-motion:reduce){.js .bar-fill{transform:none;transition:none;}}
+
+/* ─── Quotes ─── */
+.quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);}
+.quote{border-top:2px solid var(--paper);padding-top:1.25rem;}
+.quote p{font-size:1.25rem;line-height:1.35;letter-spacing:-.015em;font-weight:500;}
+.quote .en{display:block;margin-top:.75rem;font-size:.9375rem;font-weight:400;letter-spacing:0;color:var(--ash);}
+.quote cite{display:block;margin-top:1rem;font-style:normal;font-size:.8125rem;color:var(--ash);}
+@media(max-width:900px){.quotes{grid-template-columns:1fr;}}
+
+/* ─── Two signals ─── */
+.signals{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;background:var(--bg);}
+.signal{padding:clamp(24px,3vw,40px);}
+.signal + .signal{border-left:1px solid var(--line2);}
+.signal .label{color:var(--ash);font-weight:500;margin-bottom:.75rem;}
+.signal p:not(.label){font-size:1.125rem;line-height:1.45;letter-spacing:-.01em;}
+.signal strong{font-weight:700;}
+@media(max-width:760px){.signals{grid-template-columns:1fr;}.signal + .signal{border-left:0;border-top:1px solid var(--line2);}}
+
+/* ─── Figures ─── */
+figure figcaption{margin-top:.875rem;font-size:.875rem;line-height:1.5;color:var(--ash);max-width:70ch;}
+.panel{background:#fff;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);}
+.panel img{width:100%;}
+.panel.scroll{overflow-x:auto;}
+.panel.scroll img{min-width:720px;}
+.narrow-fig{max-width:920px;margin-inline:auto;}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,40px);}
+@media(max-width:760px){.duo{grid-template-columns:1fr;}}
+
+/* ─── Goals + scope ─── */
+.goals{list-style:none;display:grid;gap:0;}
+.goals li{padding:1rem 0;border-top:1px solid var(--line2);font-size:1.0625rem;line-height:1.45;}
+.goals li:last-child{border-bottom:1px solid var(--line2);}
+.scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem 3rem;margin-top:1.5rem;}
+.scope h4{font-size:1rem;font-weight:600;margin-bottom:.25rem;}
+.scope p{font-size:.9375rem;color:var(--ash);line-height:1.5;}
+@media(max-width:600px){.scope{grid-template-columns:1fr;}}
+
+/* ─── State stepper (a real sequence) ─── */
+.states{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:st;}
+.states li{position:relative;padding:0 1.25rem 0 0;counter-increment:st;}
+.states li::before{
+  content:counter(st);display:grid;place-items:center;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--navy);color:#fff;font-size:.875rem;font-weight:700;
+  position:relative;z-index:1;margin-bottom:1rem;
 }
-.ds-comp:hover { border-color:var(--line-md); }
-.ds-comp-label {
-  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ash);padding:.875rem 1.25rem;
-  border-bottom:1px solid var(--line);
-}
-.ds-comp-img {
-  padding:1.25rem;background:var(--ghost-2);
-  display:flex;align-items:center;justify-content:center;
-}
-.ds-comp-img img {
-  max-width:min(50%, 340px);height:auto;display:block;border-radius:8px;
-}
-.ds-comp-img-wide img { max-width:min(60%, 420px); }
-.ds-comp-meta {
-  display:flex;flex-wrap:wrap;gap:.375rem;
-  padding:.875rem 1.25rem;
+.states li::after{content:'';position:absolute;top:15px;left:32px;right:0;height:2px;background:var(--line2);}
+.states li:last-child::after{display:none;}
+.states h3{font-size:1rem;font-weight:700;letter-spacing:-.01em;line-height:1.3;margin-bottom:.5rem;}
+.states p{font-size:.9375rem;line-height:1.5;color:var(--ash);}
+.states .say{display:block;margin-top:.5rem;color:var(--paper);font-weight:500;}
+@media(max-width:900px){
+  .states{grid-template-columns:1fr;gap:1.75rem;}
+  .states li{padding:0 0 0 3rem;}
+  .states li::before{position:absolute;left:0;top:0;margin:0;}
+  .states li::after{top:32px;bottom:-1.75rem;left:15px;right:auto;width:2px;height:auto;}
 }
 
-.ds-tag {
-  padding:.25rem .75rem;border-radius:100px;
-  border:1px solid rgba(26,24,20,.2);
-  font-family:'Space Grotesk',sans-serif;font-size:.45rem;
-  letter-spacing:.08em;text-transform:uppercase;color:rgba(26,24,20,.68);
-}
-.ds-tag-accent { border-color:rgba(202,255,37,.3);color:var(--accent); }
-.ds-tag-green { border-color:rgba(46,204,113,.3);color:#2ECC71; }
-.ds-tag-red { border-color:rgba(232,80,80,.3);color:#E85050; }
-.ds-tag-yellow { border-color:rgba(230,168,23,.35);color:#C98A0F; }
+/* ─── Phone frames ─── */
+.phone{border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--line2),0 16px 40px rgba(26,24,20,.12);}
+.phone img{width:100%;}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.5vw,40px);align-items:start;}
+.step h3{font-size:1rem;font-weight:700;margin-top:1.25rem;line-height:1.3;}
+.step .es-tag{display:inline-block;margin-top:1rem;font-size:.8125rem;font-weight:600;color:var(--ash);}
+.step p{margin-top:.375rem;font-size:.9375rem;line-height:1.5;color:var(--ash);}
+.step .es-tag + h3{margin-top:.25rem;}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.reveal.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+@media(max-width:900px){.flow{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:40px;}}
+@media(max-width:480px){.flow{grid-template-columns:1fr;max-width:300px;margin-inline:auto;}}
 
-/* DS Principles */
-.ds-principles {
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
-  background:var(--line);border:1px solid var(--line);
-  border-radius:8px;overflow:hidden;margin-top:3rem;
-}
-.ds-principle { background:var(--ghost);padding:2rem; }
-.dsp-num {
-  font-family:'Space Grotesk',sans-serif;font-size:.5rem;
-  letter-spacing:.12em;color:var(--accent);margin-bottom:.875rem;
-}
-.dsp-title {
-  font-family:'Geist',sans-serif;font-size:1rem;font-weight:700;
-  color:var(--paper);letter-spacing:-.02em;margin-bottom:.5rem;
-}
-.dsp-desc {
-  font-family:'Muli',sans-serif;font-size:.8125rem;
-  line-height:1.65;color:var(--ash);font-weight:300;
+.wf-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,2vw,24px);}
+.wf-strip .wf{background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;}
+@media(max-width:600px){.wf-strip{grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+/* ─── Decisions ─── */
+.decision{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,96px);align-items:center;padding-block:clamp(40px,5vw,72px);border-top:1px solid var(--line2);}
+.decisions .decision:last-child{border-bottom:1px solid var(--line2);}
+.decision h3{margin-bottom:1rem;}
+.decision .prose{color:var(--ash);}
+.decision .stack > * + *{margin-top:1rem;}
+.decision .media{background:var(--panel-light);border-radius:var(--r);padding:clamp(20px,3vw,40px);display:grid;place-items:center;}
+.decision .media img{height:auto;max-width:100%;border-radius:var(--r-sm);box-shadow:0 12px 32px rgba(26,24,20,.14);}
+.decision:nth-child(even) .stack{order:2;}
+@media(max-width:900px){.decision{grid-template-columns:1fr;}.decision:nth-child(even) .stack{order:0;}}
+
+/* ─── Test table ─── */
+.tbl{width:100%;border-collapse:collapse;font-size:1rem;}
+.tbl caption{text-align:left;font-size:.875rem;color:var(--ash);padding-bottom:1rem;}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:1.25rem 1.5rem 1.25rem 0;border-top:1px solid var(--line2);line-height:1.5;}
+.tbl thead th{border-top:0;padding-top:0;font-size:.875rem;font-weight:600;color:var(--ash);}
+.tbl tbody th{font-weight:700;width:20%;}
+.tbl tbody tr:last-child > *{border-bottom:1px solid var(--line2);}
+.ok::before,.warn::before{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;margin-right:.625rem;font-size:.75rem;font-weight:800;color:#fff;vertical-align:1px;}
+.ok::before{content:'✓';background:var(--green-ink);}
+.warn::before{content:'!';background:var(--amber-ink);}
+.tbl p + p{margin-top:.5rem;}
+@media(max-width:760px){
+  .tbl thead{position:absolute;left:-9999px;}
+  .tbl,.tbl tbody,.tbl tr,.tbl th,.tbl td{display:block;width:100%!important;}
+  .tbl tr{border-top:1px solid var(--line2);padding:1.25rem 0;}
+  .tbl th,.tbl td{border:0!important;padding:.25rem 0;}
+  .tbl td::before{content:attr(data-h);display:block;font-size:.8125rem;font-weight:600;color:var(--ash);margin:.75rem 0 .25rem;}
 }
 
-@media(max-width:768px){
-  .ds-2col { grid-template-columns:1fr; }
-  .ds-3col { grid-template-columns:1fr; }
-  .ds-principles { grid-template-columns:1fr; }
-}
-</style>
+/* ─── Prototype ─── */
+.lottie-frame{aspect-ratio:800/600;background:var(--bg2);border-radius:var(--r);overflow:hidden;box-shadow:0 20px 56px rgba(26,24,20,.12);}
 
-<style>
-/* ═══════════════════════════════════════════
-   MOBILE PASS — muv-case.html · max-width:768px
-   Regla: padding horizontal de contenedores = 20px.
-   Todos los grids multi-columna colapsan a 1 columna
-   desde ese padding hacia adentro.
-═══════════════════════════════════════════ */
-@media(max-width:768px){
+/* ─── Results ─── */
+.impact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,64px);}
+.impact div{border-top:2px solid var(--paper);padding-top:1.25rem;}
+.impact .num{font-size:clamp(2.75rem,6vw,5rem);font-weight:800;letter-spacing:-.05em;line-height:1;}
+.impact .cap{margin-top:.75rem;font-size:1rem;color:var(--ash);max-width:32ch;}
+@media(max-width:600px){.impact{grid-template-columns:1fr;}}
+.baseline{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem clamp(24px,4vw,64px);}
+.baseline dt{font-size:2rem;font-weight:800;letter-spacing:-.04em;line-height:1;}
+.baseline dd{margin-top:.5rem;font-size:.9375rem;color:var(--ash);max-width:34ch;}
+@media(max-width:600px){.baseline{grid-template-columns:1fr;}}
+.learn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);}
+.learn > div{border-top:1px solid var(--line2);padding-top:1.25rem;}
+.learn h4{font-size:1.125rem;font-weight:700;letter-spacing:-.015em;line-height:1.3;margin-bottom:.5rem;}
+.learn p{font-size:.9375rem;color:var(--ash);line-height:1.55;}
+@media(max-width:900px){.learn{grid-template-columns:1fr;}}
+.callout{background:var(--navy);color:#fff;border-radius:var(--r);padding:clamp(32px,5vw,72px);}
+.callout p.big{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;max-width:22ch;}
+.callout p.sub{margin-top:1.25rem;max-width:52ch;color:rgba(255,255,255,.78);font-size:1rem;}
+.next{list-style:none;display:grid;gap:0;max-width:70ch;}
+.next li{padding:1rem 0;border-top:1px solid var(--line2);font-size:1.0625rem;line-height:1.5;}
+.next li:last-child{border-bottom:1px solid var(--line2);}
+.next strong{font-weight:600;}
 
-  /* ── Contenedores / padding base ── */
-  .section{ padding:3rem 20px; }
-  .cover{
-    grid-template-columns:1fr;
-    align-items:start;
-    gap:2rem;
-    padding:2.5rem 20px 2rem;
-  }
-  .back-nav{ padding:1rem 20px; }
-  .footer{
-    padding:1.5rem 20px;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:.5rem;
-  }
-  .cs-showcase{ padding:2rem 20px !important; }
+/* ─── Component library (collapsed by default) ─── */
+details.lib{border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);}
+details.lib summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.5rem 0;min-height:44px;}
+details.lib summary::-webkit-details-marker{display:none;}
+details.lib summary .h3{max-width:none;}
+details.lib summary .sub{display:block;margin-top:.25rem;font-size:.9375rem;font-weight:400;color:var(--ash);letter-spacing:0;}
+details.lib summary .ico{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;font-size:1.25rem;line-height:1;transition:transform .3s var(--ease);}
+details.lib[open] summary .ico{transform:rotate(45deg);}
+.lib-body{padding:1rem 0 clamp(40px,5vw,72px);display:flex;flex-direction:column;gap:clamp(40px,5vw,64px);}
+.principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);}
+.principles h3{font-size:1rem;font-weight:700;margin-bottom:.375rem;}
+.principles p{font-size:.9375rem;color:var(--ash);line-height:1.55;}
+.comp-group h3{font-size:1.125rem;font-weight:700;letter-spacing:-.015em;margin-bottom:.375rem;}
+.comp-group > p{font-size:.9375rem;color:var(--ash);max-width:62ch;margin-bottom:1.5rem;}
+.comp-grid{display:grid;gap:clamp(16px,2vw,24px);}
+.comp-grid.c2{grid-template-columns:repeat(2,minmax(0,1fr));}
+.comp-grid.c3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.comp{background:var(--bg2);border-radius:var(--r);padding:1.25rem;display:flex;flex-direction:column;gap:.875rem;}
+.comp .thumb{display:grid;place-items:center;background:var(--bg3);border-radius:var(--r-sm);padding:1rem;min-height:120px;}
+.comp .thumb img{width:100%;height:auto;border-radius:6px;}
+.comp .thumb.narrow img{max-width:300px;}
+.comp .cap{font-size:.875rem;line-height:1.45;color:var(--ash);}
+.comp .cap strong{display:block;color:var(--paper);font-weight:600;margin-bottom:.125rem;}
+@media(max-width:900px){.principles,.comp-grid.c2,.comp-grid.c3{grid-template-columns:1fr;}}
 
-  /* ── Grids nombrados ── */
-  .overview-grid{ grid-template-columns:1fr; gap:2rem; }
-  .wf-grid, .flow-grid{ grid-template-columns:1fr; gap:2.5rem; }
-  .decisions-grid{ grid-template-columns:1fr; }
-  .insights-grid{ grid-template-columns:1fr; }
+/* ─── Footer ─── */
+.footer{padding:2rem var(--gutter) 7rem;border-top:1px solid var(--line2);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.875rem;color:var(--ash);}
 
-  /* Conector entre items apilados (wf-grid / flow-grid):
-     ya es una marca vertical (punto-línea-punto), no una flecha —
-     no hace falta rotarlo, solo achicar el padding que asumía
-     estar centrado junto a columnas altas, y des-rotar el label. */
-  .arrow-col{ padding:.75rem 0; }
-  .arr-lbl{ writing-mode:horizontal-tb; margin-top:.25rem; }
+/* ─── Dark mode adjustments for navy elements ─── */
+body.dark-mode .bar-fill{background:var(--paper);}
+body.dark-mode .states li::before{background:var(--paper);color:#0B1445;}
+body.dark-mode .ok::before,body.dark-mode .warn::before{color:#0B1445;}
+body.dark-mode .callout{border:1px solid rgba(244,244,246,.14);}
+body.dark-mode .panel,body.dark-mode .wf-strip .wf{border-color:transparent;}
 
-  /* ── Grids inline promovidos a clase ── */
-  .cs-grid2{ grid-template-columns:1fr !important; gap:2rem !important; }
-  .cs-grid2-tight{ grid-template-columns:1fr !important; }
-}
+/* ═════════ MOTION / MICROINTERACTIONS ═════════ */
+:root{--gentle:cubic-bezier(.34,1.3,.64,1);--press:cubic-bezier(.2,0,0,1);}
+.motion-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:clamp(32px,6vw,96px);align-items:start;}
+@media(max-width:900px){.motion-hero{grid-template-columns:1fr;}.motion-hero .stage-col{order:-1;max-width:340px;margin-inline:auto;width:100%;}}
+.mspec{display:grid;gap:0;margin-top:1.5rem;}
+.mspec > div{padding:1rem 0;border-top:1px solid var(--line2);}
+.mspec > div:last-child{border-bottom:1px solid var(--line2);}
+.mspec dt{font-weight:700;font-size:1rem;margin-bottom:.25rem;}
+.mspec dd{font-size:.9375rem;line-height:1.55;color:var(--ash);}
+.mspec dd b{color:var(--paper);font-weight:600;}
+.mctl{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1rem;margin-top:1.5rem;}
+.mbtn{font:inherit;font-size:.875rem;font-weight:600;min-height:44px;padding:0 1.125rem;border-radius:100px;border:1px solid var(--line2);background:transparent;color:var(--paper);cursor:pointer;transition:background .2s var(--press),border-color .2s var(--press);}
+.mbtn:hover{background:var(--bg3);}
+.mbtn[aria-pressed="true"]{background:var(--paper);color:var(--bg);border-color:var(--paper);}
+.mlink{font-size:.875rem;font-weight:600;color:var(--orange-ink);text-underline-offset:3px;}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,64px);align-items:start;}
+@media(max-width:900px){.pair{grid-template-columns:1fr;}}
+.mdemo h3{margin-bottom:.5rem;}
+.mdemo .small{max-width:52ch;margin-bottom:1.25rem;}
+.mdemo .mctl{margin-top:1rem;}
+
+/* device + scaled stage */
+.dev{position:relative;width:100%;border-radius:32px;overflow:hidden;background:#f1f1ef;box-shadow:0 0 0 1px var(--line2),0 24px 56px rgba(26,24,20,.16);}
+.dev.plain{background:#EFEFEE;border-radius:var(--r);}
+.stage{position:absolute;left:0;top:0;transform-origin:0 0;font-family:'Inter','Geist',system-ui,sans-serif;color:#1b1b1b;}
+.stage *{box-sizing:border-box;}
+.dev.is-paused .stage *,.dev.is-paused .stage *::after{animation-play-state:paused!important;}
+
+/* searching-driver stage (393×852 design px) */
+.stage .world{position:absolute;left:0;top:0;width:393px;height:852px;transform-origin:0 0;}
+.stage .map{position:absolute;max-width:none;display:block;}
+.stage .anchor{position:absolute;left:0;top:0;will-change:transform;}
+.stage .ripple{width:351px;height:351px;margin:-175.5px 0 0 -175.5px;pointer-events:none;}
+.stage .ripple i{position:absolute;left:50%;top:50%;border-radius:50%;translate:-50% -50%;transition:width .3s ease-out,height .3s ease-out,opacity .3s ease-out,background-color .3s ease-out;}
+.ripple .e24{width:143px;height:143px;background:rgba(255,98,0,.06);}
+.ripple .e25{width:97px;height:97px;opacity:0;background:rgba(255,98,0,.12);}
+.ripple .e26{width:269px;height:269px;opacity:0;background:rgba(255,98,0,.12);}
+.ripple[data-s="2"] .e24{width:171px;height:171px;background:rgba(255,98,0,.12);}
+.ripple[data-s="2"] .e25{opacity:1;}
+.ripple[data-s="3"] .e24{width:331px;height:331px;background:rgba(136,136,136,.06);}
+.ripple[data-s="3"] .e25{opacity:1;width:143px;height:143px;}
+.ripple[data-s="3"] .e26{opacity:1;}
+.stage .pin{width:27px;height:27px;margin:-13.5px 0 0 -13.5px;}
+.stage .pin i{position:absolute;left:50%;top:50%;border-radius:50%;translate:-50% -50%;}
+.pin.o i:nth-child(1){width:27px;height:27px;background:rgba(255,98,0,.3);}
+.pin.o i:nth-child(2){width:13px;height:13px;background:#fff;}
+.pin.o i:nth-child(3){width:7px;height:7px;background:#ff6200;}
+.pin.d i:nth-child(1){width:28px;height:28px;background:rgba(118,118,118,.12);}
+.pin.d i:nth-child(2){width:16px;height:16px;background:#ff6200;}
+.pin.d i:nth-child(3){width:8px;height:8px;background:#ff6200;box-shadow:0 0 0 1px #ff6200;}
+.stage .dot{width:50px;height:50px;margin:-25px 0 0 -25px;}
+.dot i{position:absolute;left:50%;top:50%;border-radius:50%;translate:-50% -50%;}
+.dot .halo{width:30px;height:30px;background:rgba(66,133,244,.16);}
+.dot .ring{width:28px;height:28px;border:1px solid #4285f4;background:rgba(66,133,244,.14);animation:ping 1.85s infinite;}
+.dot .core{width:16px;height:16px;background:#4285f4;border:1px solid #f5f9fd;box-shadow:0 1px 2px rgba(0,0,0,.28);}
+@keyframes ping{0%,16%{transform:scale(.5714);opacity:0;animation-timing-function:cubic-bezier(.2,.7,.2,1);}84%{transform:scale(1);opacity:1;animation-timing-function:ease-in;}100%{transform:scale(.5714);opacity:0;}}
+.stage .pill{display:flex;align-items:center;gap:6px;height:26px;padding:0 11px 0 9px;border-radius:13px;color:#fff;font:500 10px/1 'Inter','Geist',sans-serif;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.14);}
+.pill svg{width:12px;height:12px;flex:none;}
+.pill.o{background:#ff6200;margin:-13px 0 0 20px;}
+.pill.d{background:#3b3b3b;translate:-100% 0;margin:20px 0 0 14px;}
+.stage .status{position:absolute;left:0;top:0;width:393px;height:59px;}
+.status .isl{position:absolute;left:50%;top:11px;width:124px;height:36px;border-radius:20px;background:#000;translate:-50% 0;}
+.status .tm{position:absolute;left:52px;top:17px;font:600 17px/1 'Inter','Geist',sans-serif;color:#000;}
+.stage .back{position:absolute;left:16px;top:70px;width:28px;height:28px;}
+.sheet{position:absolute;left:0;top:558px;width:393px;height:294px;background:#fdfdfd;border-radius:24px 24px 0 0;box-shadow:0 -6px 30px rgba(39,43,41,.14);overflow:hidden;}
+.sheet .grab{position:absolute;left:50%;top:20px;width:32px;height:4px;border-radius:100px;background:#c7c7c7;translate:-50% 0;}
+.sheet .msg{position:absolute;left:0;right:0;top:32px;height:20px;text-align:center;font:500 14px/20px 'Inter','Geist',sans-serif;color:#2b2b2b;}
+.sheet .ind{position:absolute;left:129px;top:281px;width:135px;height:5px;border-radius:100px;background:#000;}
+/* skeleton shimmer: bar #e0e0e0, highlight 151px wide sweeps 1s ease-out every 2s (Start→End 1s, hold .8s, reset .2s) */
+.sk{position:absolute;background:#e0e0e0;overflow:hidden;}
+.sk::after{content:'';position:absolute;top:-30px;bottom:-30px;left:0;width:151px;background:linear-gradient(90deg,#e0e0e0 0%,#ebebeb 25%,#f1f1f1 65%,#e0e0e0 100%);transform:translateX(-159px);animation:shim 2s infinite;}
+@keyframes shim{0%,40%{transform:translateX(-159px);animation-timing-function:ease-out;}90%,100%{transform:translateX(calc(var(--w) + 9px));}}
+@media (prefers-reduced-motion:reduce){.dot .ring,.sk::after{animation:none;}}
+
+/* categories: skeleton → content (after 2s, Gentle spring 1.02s) */
+.cat{position:absolute;left:0;right:0;bottom:0;height:392px;background:#fdfdfd;border-radius:24px 24px 0 0;box-shadow:0 -6px 30px rgba(39,43,41,.12);}
+.cat .grab{position:absolute;left:50%;top:14px;width:32px;height:4px;border-radius:100px;background:#c7c7c7;translate:-50% 0;}
+.cat .skel{transition:opacity .3s ease-out;}
+.cat.on .skel{opacity:0;}
+.cat .real .row,.cat .real .cta{opacity:0;transform:translateY(14px);transition:opacity .4s ease-out,transform 1.02s var(--gentle);}
+.cat.on .real .row,.cat.on .real .cta{opacity:1;transform:none;}
+.cat.on .real .row:nth-child(2){transition-delay:.06s,.06s;}
+.cat.on .real .cta{transition-delay:.12s,.12s;}
+.row{position:absolute;left:16px;width:361px;height:76px;border-radius:14px;border:1px solid #dcdcd8;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;}
+.row.sel{border:2px solid #0b1445;}
+.row > svg{width:52px;height:26px;flex:none;color:#9a9aa8;}
+.row .t svg{width:11px;height:11px;flex:none;color:#8a8a94;}
+.row .p{white-space:nowrap;}
+.row .n{font-weight:600;font-size:15px;line-height:1.2;}
+.row .t{display:flex;align-items:center;gap:4px;font-size:12px;color:#6d6d75;margin-top:3px;}
+.row .p{margin-left:auto;text-align:right;font-weight:600;font-size:15px;}
+.row .p small{display:block;font-weight:400;font-size:10px;color:#6d6d75;margin-top:2px;}
+.row .tag{position:absolute;right:14px;top:-9px;background:#0b1445;color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;}
+.cta{position:absolute;left:16px;width:361px;height:52px;border-radius:14px;background:#0b1445;color:#fff;font:600 15px/52px 'Inter','Geist',sans-serif;text-align:center;}
+
+/* rating (interactive) */
+.rate{position:absolute;left:12px;right:12px;top:16px;background:#fff;border-radius:22px;padding:18px 18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.08);}
+.rate .top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#6d6d75;margin-bottom:14px;}
+.rate .top b{font-size:15px;color:#1b1b1b;font-weight:600;}
+.rate .q{font-size:20px;font-weight:600;letter-spacing:-.01em;text-align:center;}
+.stars{display:flex;justify-content:center;gap:6px;margin:14px 0 6px;}
+.star{width:48px;height:48px;border:0;background:none;display:grid;place-items:center;cursor:pointer;border-radius:12px;}
+.star svg{width:32px;height:32px;fill:none;stroke:#0b1445;stroke-width:1.6;stroke-linejoin:round;transition:fill .2s var(--press),stroke .2s var(--press);}
+.star.on svg{fill:#ff6200;stroke:#ff6200;}
+.rlabel{text-align:center;font-size:15px;font-weight:500;min-height:22px;margin-bottom:10px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:118px;align-content:flex-start;}
+.chip{font:inherit;font-size:12.5px;line-height:1;padding:9px 12px;border-radius:100px;border:1px solid #d8d8d6;background:#fff;color:#1b1b1b;cursor:pointer;transition:background .2s var(--press),color .2s var(--press),border-color .2s var(--press);}
+.chip[aria-pressed="true"]{background:#0b1445;border-color:#0b1445;color:#fff;}
+.rfield{margin-top:14px;border:1px solid #d8d8d6;border-radius:12px;padding:12px 14px;font-size:13px;color:#6d6d75;}
+.rsend{margin-top:14px;width:100%;border:0;border-radius:14px;height:50px;background:#0b1445;color:#fff;font:600 15px/1 'Inter','Geist',sans-serif;cursor:pointer;transition:transform .2s var(--press),background .2s var(--press);}
+.rsend:active{transform:scale(.98);background:#1a2668;}
+.star:focus-visible,.chip:focus-visible,.rsend:focus-visible{outline:2px solid #ff6200;outline-offset:2px;}
+
+@media(min-width:761px){.tbl.motion tbody th{width:46%;}}
+@media(max-width:600px){.tbl.motion td::before{margin-top:.5rem;}}
+
+
+/* ─── Growth pairs + levers ─── */
+.pairs{display:grid;gap:0;}
+.pairs > div{display:grid;grid-template-columns:minmax(6rem,10rem) minmax(0,1fr);gap:1rem 2rem;align-items:center;padding:1.5rem 0;border-top:1px solid var(--line2);}
+.pairs > div:last-child{border-bottom:1px solid var(--line2);}
+.pairs dt{font-size:1rem;font-weight:600;}
+.pairs dd{display:grid;grid-template-columns:minmax(9rem,15rem) auto minmax(0,1fr);gap:1.5rem;align-items:center;}
+.pairs b{display:block;font-size:clamp(1.75rem,3.6vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;white-space:nowrap;}
+.pairs small{display:block;margin-top:.375rem;font-size:.875rem;color:var(--ash);}
+.pairs .from b{color:var(--ash);}
+.pairs .arr{font-size:1.5rem;color:var(--ash);}
+@media(max-width:640px){.pairs > div{grid-template-columns:1fr;gap:.5rem;}}
+.levers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,64px);margin-top:2rem;}
+.levers h4{font-size:1rem;font-weight:700;margin-bottom:.5rem;}
+.levers ul{list-style:none;}
+.levers li{padding:.625rem 0;border-top:1px solid var(--line2);font-size:.9375rem;line-height:1.45;color:var(--ash);}
+.levers li:last-child{border-bottom:1px solid var(--line2);}
+@media(max-width:700px){.levers{grid-template-columns:1fr;}}
+.flag{display:inline-block;vertical-align:-1px;margin-right:.5rem;border-radius:2px;box-shadow:0 0 0 1px rgba(26,24,20,.16);}
+.row .was{text-decoration:line-through;font-size:11px;}
+.panel.scroll img{min-width:900px;}
+.wf-item figcaption{margin-top:.625rem;font-size:.875rem;font-weight:600;color:var(--paper);}
+@media(max-width:640px){.pairs dd{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:.75rem;}.pairs b{font-size:1.5rem;}}
+.hero-video video{aspect-ratio:16/9;object-fit:cover;}
+body.dark-mode{--panel-light:#2C2C36;}
+.decision .media img.bare{width:100%;max-width:560px;height:auto;box-shadow:none;border-radius:0;}
+.step .mock{width:100%;height:auto;filter:drop-shadow(0 16px 26px rgba(26,24,20,.16));}
+.step .es-tag{margin-top:1.25rem;}
+.ph{display:grid;place-items:center;text-align:center;width:100%;background:var(--bg3);border:1.5px dashed var(--line2);border-radius:var(--r);color:var(--ash);font-size:.875rem;line-height:1.5;padding:1.5rem;}
+.ph b{display:block;margin-top:.25rem;font-weight:600;color:var(--paper);max-width:26ch;}
+.decision .media{border:1px solid var(--line);}
+body.dark-mode .decision .media{border-color:transparent;}
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.add('js');</script>
 <div id="wipe-overlay"></div>
 
-<nav class="back-nav">
-  <a class="back-btn" id="back-to-portfolio" href="index.html">
-    <span>←</span> Back to portfolio
-  </a>
-  <div class="back-nav-title">muv · Case Study</div>
+<nav class="back-nav" aria-label="Case study">
+  <a class="back-btn" id="back-to-portfolio" href="index.html"><span aria-hidden="true">←</span> Back to portfolio</a>
+  <ul class="toc">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#motion">Motion</a></li>
+    <li><a href="#decisions">Decisions</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#results">Results</a></li>
+  </ul>
   <div class="back-nav-right">Paula Elffman · Sr Product Designer</div>
 </nav>
 
+<main>
 
+<!-- ═════════ HERO ═════════ -->
+<header class="sec hero" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="kicker">Case study · Passenger app · Ride-hailing in Paraguay</p>
+        <h1 class="h1"><span class="mute">muv:</span><br><span class="accent">an easier way to get a ride</span></h1>
+      </div>
+      <p class="lede">I designed muv's passenger app end to end, from survey and funnel analysis to a launched app. Onboarding went from 21 steps to 6, and the ride flow now says what is happening at every state.</p>
+    </div>
 
-<!-- ══════════════════════════════════════════
-     COVER
-══════════════════════════════════════════ -->
-<div class="cover">
-  <div>
-    <div class="eyebrow" style="margin-bottom:2rem;">Passenger App · Ride-Hailing · Itti · 2025–2026</div>
-    <div class="cover-title">
-      muv<br><span class="dim">. The new experience</span>
+    <dl class="meta">
+      <div><dt>Role</dt><dd>Sr Product Designer: research, UX, UI, design system, dev QA</dd></div>
+      <div><dt>Team</dt><dd>Passengers: Nathalia (PM), engineering, data</dd></div>
+      <div><dt>Company</dt><dd><svg class="flag" viewBox="0 0 24 16" width="18" height="12" role="img" aria-label="Paraguay"><rect width="24" height="5.34" fill="#D52B1E"/><rect y="5.33" width="24" height="5.34" fill="#fff"/><rect y="10.66" width="24" height="5.34" fill="#0038A8"/><circle cx="12" cy="8" r="2.2" fill="none" stroke="#5a7d2a" stroke-width=".7"/></svg>muv</dd></div>
+      <div><dt>Timeline</dt><dd>One quarter: research, design, test</dd></div>
+      <div><dt>Launch</dt><dd>May 2026, iOS and Android</dd></div>
+    </dl>
+
+    <div class="hero-video frame" style="background:#efe5cd">
+      <video src="muv-assets/muv-cover.mp4" poster="muv-assets/muv-cover-poster.jpg" width="960" height="540" autoplay muted loop playsinline preload="auto" aria-label="Animated cover: two phones showing the new muv passenger app, the home with an active trip and the category list"></video>
     </div>
   </div>
-  <div class="cover-meta">
-    <div class="cm-row"><div class="cm-label">Company</div><div class="cm-val">🇵🇾 muv . <a href="https://www.itti.digital/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Itti digital</a></div></div>
-    <div class="cm-row"><div class="cm-label">Role</div><div class="cm-val">Sr Product Designer (end-to-end)</div></div>
-    <div class="cm-row"><div class="cm-label">PM</div><div class="cm-val">Nathalia</div></div>
-    <div class="cm-row"><div class="cm-label">Time</div><div class="cm-val">1 Quarter · Research · Design · Test</div></div>
-    <div class="cm-row"><div class="cm-label">Scope</div><div class="cm-val">Discovery → Delivery</div></div>
-    <div class="cm-row"><div class="cm-label">Launch</div><div class="cm-val">April 2026</div></div>
-  </div>
-</div>
-<div style="height:1px;background:var(--line);"></div>
+</header>
 
-<!-- ══════════════════════════════════════════
-     SHOWCASE OVERVIEW — Hero visual
-══════════════════════════════════════════ -->
-<div class="cs-showcase" style="position:relative;padding:3.5rem 4rem;background:var(--bg2);">
-  <div style="max-width:1100px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(26,24,20,.14);">
-    <video src="muv.mp4" autoplay muted loop playsinline style="width:100%;height:auto;display:block;"></video>
-  </div>
-</div>
-<div style="height:1px;background:var(--line);"></div>
+<!-- ═════════ PROBLEM ═════════ -->
+<section class="sec" id="problem" aria-labelledby="problem-h">
+  <div class="wrap">
 
-<!-- ══════════════════════════════════════════
-     SECTION 01 — OVERVIEW & METRICS
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">Overview & Impact</div>
-  <div class="overview-grid">
-    <div class="ov-left">
-      <div class="ov-title">Real-time marketplace.<br><span class="orange">Redesigned.</span></div>
-      <p class="ov-body">MUV operates a ride-hailing platform where passengers and drivers interact through a real-time system with multiple states and edge cases.<br><br>The existing experience showed <strong>friction in key moments</strong> — onboarding, ride request and status feedback. This generated confusion, slower time to first ride and higher cognitive load.<br><br>One quarter. End-to-end design. From discovery to production.</p>
-    </div>
-    <div class="stats-col">
-      <div class="stat-item"><div class="stat-val">2.2M<span style="font-size:1.25rem">+</span></div><div class="stat-lbl">Trips Q4 · Baseline<br>30K in 2024</div></div>
-      <div class="stat-item"><div class="stat-val">6K<span style="font-size:1.25rem">+</span></div><div class="stat-lbl">Active drivers · Baseline<br>1K in 2024</div></div>
-      <div class="stat-item"><div class="stat-val">39K</div><div class="stat-lbl">Passengers Q4 · Baseline<br>2K in 2024</div></div>
-      <div class="stat-item"><div class="stat-val">60%</div><div class="stat-lbl">Completion rate</div></div>
-    </div>
-    <div class="accent-card">
-      <div class="ac-lbl">Onboarding optimization</div>
-      <div class="ac-val">21→6</div>
-      <div class="ac-desc">Steps reduced · Completion rate from 25% to 36%</div>
-      <div class="ac-sub">
-        <div class="acsub-item"><div class="acsub-v">+13pp</div><div class="acsub-l">Conversion</div></div>
-        <div class="acsub-item"><div class="acsub-v">+49%</div><div class="acsub-l">New users</div></div>
-        <div class="acsub-item"><div class="acsub-v">40.1M</div><div class="acsub-l">GMV Q4 (Gs.)</div></div>
+    <div class="split rev">
+      <h2 class="h2 wide" id="problem-h">People liked muv once they were in the car. Getting there was the problem.</h2>
+      <div>
+        <p class="prose">muv is a Paraguayan ride-hailing marketplace. Riders place it between Uber, the safe and established option, and Bolt, the cheap one: muv is the good service, with a fair price for the quality, good drivers and a car that is easy to spot.</p>
+        <p class="prose">The business was growing fast on the legacy app, from 1,000 to 6,000+ drivers and from 2,000 to 39,000 passengers since 2024. But in a June 2025 survey, overall satisfaction came out at <strong>5.99 out of 10</strong>: neutral, with nothing that builds loyalty.</p>
       </div>
     </div>
-  </div>
-</div>
+    <!-- drivers 1K→6K+ and passengers 2K→39K come from the "metrics now" slide (Q4 2025 vs 2024) -->
 
-<!-- ══════════════════════════════════════════
-     SECTION 02 — WIREFRAMES
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">Process · Wireframes</div>
-  <div class="section-label">
-    <div class="sl-text">Low-fidelity validation</div>
-    <div class="sl-line"></div>
-    <div class="sl-text">Logic before pixels</div>
-  </div>
-  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+    <div class="split rev">
+      <div>
+        <div class="evidence-head">
+          <h3 class="h3">Where the survey said it hurt</h3>
+          <p class="small">% of respondents</p>
+        </div>
+        <ul class="bars" id="bars">
+          <li><span class="bar-label">Say waiting-time estimates aren't accurate</span><span class="bar-val">67%</span><span class="bar-track"><span class="bar-fill" style="--v:67%"></span></span></li>
+          <li><span class="bar-label">Say the cars shown as available aren't accurate</span><span class="bar-val">60%</span><span class="bar-track"><span class="bar-fill" style="--v:60%"></span></span></li>
+          <li><span class="bar-label">Disagree that booking a car is fast</span><span class="bar-val">50%</span><span class="bar-track"><span class="bar-fill" style="--v:50%"></span></span></li>
+          <li><span class="bar-label">Disagree that the car's location is reliable</span><span class="bar-val">46%</span><span class="bar-track"><span class="bar-fill" style="--v:46%"></span></span></li>
+          <li><span class="bar-label">Find searching and booking a car difficult</span><span class="bar-val">39%</span><span class="bar-track"><span class="bar-fill" style="--v:39%"></span></span></li>
+          <li><span class="bar-label">Find the map and the route hard to see</span><span class="bar-val">31%</span><span class="bar-track"><span class="bar-fill" style="--v:31%"></span></span></li>
+        </ul>
+        <p class="small" style="margin-top:1.5rem;max-width:56ch">Survey, June 2025, 120–148 answers per question. The sample was mostly customers of B2B brands, so it leans towards corporate users.</p>
+        <!-- TODO(Paula): n is derived from the pie-chart percentages (e.g. 8/148 = 5.41%). Confirm real n per question. -->
+      </div>
+      <div class="stack">
+        <p class="prose">Most of this was technical and about driver availability, not about the interface. Design couldn't make an ETA accurate, but it could stop leaving people guessing.</p>
+        <p class="prose">That became the brief: make every state of a ride explicit, predictable and trustworthy.</p>
+      </div>
+    </div>
+
+    <div class="quotes">
+      <blockquote class="quote">
+        <p lang="es">"La app te dice 1 minuto y en verdad es 10 o más."</p>
+        <span class="en">The app says 1 minute and it's really 10 or more.</span>
+        <cite>Survey respondent, June 2025</cite>
+      </blockquote>
+      <blockquote class="quote">
+        <p lang="es">"Buenas tarifas pero nadie te acepta nunca."</p>
+        <span class="en">Good fares, but nobody ever accepts your ride.</span>
+        <cite>Survey respondent, June 2025</cite>
+      </blockquote>
+      <blockquote class="quote">
+        <p lang="es">"En Asunción muy pocos conductores aceptan los viajes. En Encarnación siempre tengo buen servicio."</p>
+        <span class="en">In Asunción very few drivers accept trips. In Encarnación I always get good service.</span>
+        <cite>Survey respondent, June 2025</cite>
+      </blockquote>
+    </div>
+
     <div>
-      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">Wireframes validated<br>the <span class="orange">thinking.</span></div>
-      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">Before moving into visual design, I focused on validating hierarchy, information priority and state transitions through low-fidelity wireframes. This step helped identify edge cases early and <strong style="color:var(--paper);font-weight:500">reduced rework during UI implementation.</strong></p>
+      <h3 class="h3" style="margin-bottom:1.25rem;max-width:none">Two sources, two problems</h3>
+      <div class="signals">
+        <div class="signal">
+          <p class="label">The survey</p>
+          <p>Registering and logging in were rated easy. The trouble was <strong>using the app</strong>: finding, booking and following a car.</p>
+        </div>
+        <div class="signal">
+          <p class="label">The funnel</p>
+          <p>Onboarding had <strong>21 steps</strong>, and only <strong>25%</strong> of the people who started it finished it.</p>
+        </div>
+      </div>
+      <p class="small" style="margin-top:1rem;max-width:70ch">The survey only reached people who had already made it in, so it couldn't see the drop-off. The funnel could. Onboarding had to bring more people in, and the ride flow had to keep them.</p>
     </div>
-    <div style="padding:2rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;">
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:1.25rem;">Key wireframe insights</div>
-      <div style="display:flex;flex-direction:column;gap:.75rem;">
-        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Map-first home — clear winner over photo-based</span></div>
-        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Bottom sheet for trip details — better than full screen</span></div>
-        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--line);"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Recomendado tag reduces decision friction</span></div>
-        <div style="display:flex;align-items:center;gap:.875rem;padding:.875rem 0;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div><span style="font-size:.875rem;color:var(--paper);">Review with preset tags → richer feedback, less effort</span></div>
+
+    <div class="duo">
+      <figure>
+        <div class="panel"><img src="muv-assets/muv-legacy-v1.jpg" width="994" height="706" loading="lazy" decoding="async" alt="Legacy muv app: destination entry with stacked Desde and Hasta fields over a map, and a driver card with photo, rating, time, price and distance"></div>
+        <figcaption>Legacy app: a full orange header, stacked "Desde / Hasta" fields over the map, and a driver card with time, price and distance.</figcaption>
+      </figure>
+      <figure>
+        <div class="panel"><img src="muv-assets/muv-legacy-store.jpg" width="1072" height="926" loading="lazy" decoding="async" alt="Legacy muv app: destination screen with shortcuts, and category list with Estándar, Premium and XL and a multi-stop route"></div>
+        <figcaption>Legacy app: destination shortcuts, a multi-stop route, and the category list (Estándar, Premium, XL) ending in a light-on-gradient "Continuar" button.</figcaption>
+      </figure>
+    </div>
+
+    <div class="split">
+      <div>
+        <h3 class="h3" style="margin-bottom:1.25rem">What we set out to do</h3>
+        <ul class="goals">
+          <li>Get to a first successful ride faster.</li>
+          <li>Make ride states explicit and predictable, with real-time feedback people can trust.</li>
+          <li>Keep the UI aligned with the backend states, so the screen says what is actually happening.</li>
+          <li>Show promotions across the interface.</li>
+          <li>Build a reusable system for future features.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="h3" style="margin-bottom:1.25rem">What I redesigned</h3>
+        <div class="scope" style="margin-top:0">
+          <div><h4>Onboarding</h4><p>Includes the Unid integration and the value proposition, with a basic profile setup.</p></div>
+          <div><h4>Home and navigation</h4><p>A hybrid navigation model.</p></div>
+          <div><h4>Trip and send</h4><p>Requesting a ride, and the new service for sending and receiving packages.</p></div>
+          <div><h4>Reviews</h4><p>A new section to gather feedback and improve the product.</p></div>
+        </div>
+        <p class="small" style="margin-top:1.5rem">Secondary flows: account, favorites, payment methods, my trips and promotions.</p>
       </div>
     </div>
-  </div>
 
-  <!-- 4 wireframes -->
-  <div class="wf-grid">
-    <div class="wf-item">
-      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 801 1791'%3E%3Crect width='801' height='1791' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_001" alt="Home wireframe"></div>
-      <div class="wf-lbl"><strong>Home · Map-first</strong>Map with location, search bar, services, promotions</div>
-    </div>
-    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
-    <div class="wf-item">
-      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 779 1911'%3E%3Crect width='779' height='1911' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_002" alt="Trip wireframe"></div>
-      <div class="wf-lbl"><strong>Trip · Category selection</strong>Route on map + category list + payment</div>
-    </div>
-    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
-    <div class="wf-item">
-      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 782 1512'%3E%3Crect width='782' height='1512' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_003" alt="Categorias wireframe"></div>
-      <div class="wf-lbl"><strong>Driver · In-trip state</strong>Driver info, route, payment, cancel</div>
-    </div>
-    <div class="arrow-col"><div class="arr-dot"></div><div class="arr-line"></div><div class="arr-dot"></div></div>
-    <div class="wf-item">
-      <div class="wire-shell"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 769 1929'%3E%3Crect width='769' height='1929' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_004" alt="Review wireframe"></div>
-      <div class="wf-lbl"><strong>Review system</strong>Rating + preset tags + free text comment</div>
-    </div>
   </div>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     SECTION 03 — TRIP REQUEST FLOW (Final UI)
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">Core Flow 01 · Trip Request</div>
-  <div class="section-label">
-    <div class="sl-text">From intent to confirmation</div>
-    <div class="sl-line"></div>
-    <div class="sl-text">Final UI · 4 states</div>
-  </div>
-  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem;">
+<!-- ═════════ PROCESS ═════════ -->
+<section class="sec tint" id="process" aria-labelledby="process-h">
+  <div class="wrap">
+
+    <div class="split">
+      <h2 class="h2 wide" id="process-h">Designing the ride as a set of states</h2>
+      <p class="prose">A ride is a real-time system, so what the passenger sees has to match what the backend is doing. Before opening Figma I mapped the whole journey as five states, and wrote what the passenger should read in each one.</p>
+    </div>
+
+    <ol class="states">
+      <li>
+        <h3>Request initiated</h3>
+        <p>Route on the map. A skeleton loader shows while availability is calculated.</p>
+      </li>
+      <li>
+        <h3>Matching in progress</h3>
+        <p>A five-minute free-cancellation countdown runs while the driver decides.</p>
+        <span class="say" lang="es">"Esperando confirmación del conductor…"<br>"Ampliando radio de búsqueda"</span>
+      </li>
+      <li>
+        <h3>Driver assigned</h3>
+        <span class="say" lang="es">"Driver confirmado ✨ · Juan está en camino · ACG 546TY"</span>
+      </li>
+      <li>
+        <h3>Ride in progress</h3>
+        <span class="say" lang="es">"Juan empezó tu viaje · 10 min para llegar"</span>
+      </li>
+      <li>
+        <h3>Ride completed or cancelled</h3>
+        <p>Review with preset comments and trip characteristics.</p>
+      </li>
+    </ol>
+    <!-- TODO(Paula): confirm what the UI shows on cancellation, if you want it named here -->
+
+    <figure>
+      <div class="panel scroll" style="padding:clamp(8px,2vw,24px)"><img src="muv-assets/muv-full-flow.webp" width="2012" height="926" loading="lazy" decoding="async" alt="The whole passenger app across its states: saved-card prompt, trip summary and review, matching with the search route, the home with the driver-confirmed banner and services, the category list with the Recomendado option, and the driver card with the five-minute free wait"></div>
+      <figcaption>The whole passenger app, from home and categories to matching, driver assigned and review.</figcaption>
+    </figure>
+
+    <div class="split">
+      <div>
+        <h3 class="h3" style="margin-bottom:1rem">Home: photo or map?</h3>
+        <p class="prose">I put two low-fidelity homes in front of users: a photo header, and a live map. The map won.</p>
+        <p class="prose">It wasn't about looks. People think about a ride spatially: where am I, where is the car. So the map became the home, and the services sit in a sheet over it.</p>
+      </div>
+      <figure>
+        <div class="panel"><img src="muv-assets/muv-homes-ab.jpg" width="1400" height="1310" loading="lazy" decoding="async" alt="Two low-fidelity home screens side by side: a photo header (Photo) and a map header (Map), with the map option marked as the winner"></div>
+        <figcaption>Photo header vs map header. The map option is the one we kept.</figcaption>
+      </figure>
+    </div>
+
     <div>
-      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.25rem;">Intent to trip<br>in <span class="orange">3 taps.</span></div>
-      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;">The entire trip request flow was designed to eliminate decision friction. Origin → destination → category → confirm. Every state communicates clearly. No surprises at checkout.</p>
+      <h3 class="h3" style="margin-bottom:1.25rem">Low-fidelity, four key screens</h3>
+      <div class="wf-strip">
+        <figure class="wf-item"><div class="wf"><img src="muv-assets/muv-wf-home.jpg" width="720" height="1610" loading="lazy" decoding="async" alt="Low-fidelity home: search field, Viaje and Envío services, a promotions carousel, a coupon entry and a four-item tab bar"></div><figcaption>Home</figcaption></figure>
+        <figure class="wf-item"><div class="wf"><img src="muv-assets/muv-wf-categories.jpg" width="720" height="1392" loading="lazy" decoding="async" alt="Low-fidelity trip screen: route with Origen and Destino, three category cards with the first marked Recomendado, card and coupon options, and a Confirmar viaje button"></div><figcaption>Categories</figcaption></figure>
+        <figure class="wf-item"><div class="wf"><img src="muv-assets/muv-wf-trip.jpg" width="720" height="1766" loading="lazy" decoding="async" alt="Low-fidelity in-trip state: route on the map, driver card with a message button, trip summary from Origen to Destino, payment method and total, and a Cancelar viaje button"></div><figcaption>In trip</figcaption></figure>
+        <figure class="wf-item"><div class="wf"><img src="muv-assets/muv-wf-review.jpg" width="720" height="1806" loading="lazy" decoding="async" alt="Low-fidelity review screen: five rating dots with Excelente selected, reason chips, a comment field and an Enviar button"></div><figcaption>Review</figcaption></figure>
+      </div>
+      <p class="small" style="margin-top:1rem">Home, trip category selection, in-trip driver state and review. Validating hierarchy and state transitions here caught edge cases before visual design.</p>
     </div>
-    <div class="cs-grid2-tight" style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
-      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--line);border-radius:8px;">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;">State 01</div>
-        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Origen & Destino</div>
-        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Autocomplete + km distance</div>
-      </div>
-      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid var(--line);border-radius:8px;">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;">State 02</div>
-        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Skeleton loading</div>
-        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Route on map · calculating</div>
-      </div>
-      <div style="padding:1.25rem 1.5rem;background:var(--bg3);border:1px solid rgba(38,216,151,.15);border-radius:8px;">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem;">State 03</div>
-        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Categorías listas</div>
-        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Económico · Muv · Comfort</div>
-      </div>
-      <div style="padding:1.25rem 1.5rem;background:rgba(255,107,44,.08);border:1px solid rgba(255,107,44,.2);border-radius:8px;">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.5rem;">State 04</div>
-        <div style="font-size:.875rem;font-weight:600;color:var(--paper);">Listo para confirmar</div>
-        <div style="font-size:.75rem;color:var(--ash);margin-top:.25rem;">Recomendado · payment · CTA</div>
-      </div>
-    </div>
+
   </div>
+</section>
 
-  <!-- 4 final UI phones -->
-  <div class="flow-grid">
-    <div class="flow-item">
-      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_005" alt="Origen"></div>
-      <div class="badge badge-o">Ingresando destino</div>
-      <div class="plabel">
-        <div class="pl-n">01</div>
-        <div class="pl-t">Origen & Destino</div>
-        <div class="pl-d">Mi casa → Av. Aviadores del Chaco. Autocomplete con distancia en km.</div>
+<!-- ═════════ SOLUTION ═════════ -->
+<section class="sec" id="solution" aria-labelledby="solution-h">
+  <div class="wrap">
+
+    <div class="split">
+      <h2 class="h2 wide" id="solution-h">From destination to confirmation in four screens</h2>
+      <p class="prose">Destination, categories, searching, confirmed. Every screen tells the passenger what the app is doing, so nothing feels stuck.</p>
+    </div>
+
+    <div class="flow" id="flow">
+      <div class="step reveal">
+        <img class="mock" src="muv-assets/muv-app-destination.webp" width="640" height="1256" loading="lazy" decoding="async" alt="Destination screen: origin Mi casa and destination fields, recent places, favorites, the ueno bank savings banner and a Confirmar viaje button">
+        <span class="es-tag" lang="es">Ingresá tu destino</span>
+        <h3>Destination</h3>
+        <p>Origin and destination, with recents and favorites one tap away. The ueno rebate is already visible.</p>
+      </div>
+      <div class="step reveal">
+        <img class="mock" src="muv-assets/muv-app-categories.webp" width="640" height="1256" loading="lazy" decoding="async" alt="Category screen: route on the map, Económico marked Recomendado, Muv and Comfort with time, seats and price, the ueno rebate line, card and coupon, and a Confirmar viaje button">
+        <span class="es-tag" lang="es">Confirmar viaje</span>
+        <h3>Categories</h3>
+        <p>Económico, Muv and Comfort with time, seats and price. "Recomendado" is preselected, and the rebate sits above the payment method.</p>
+      </div>
+      <div class="step reveal">
+        <img class="mock" src="muv-assets/muv-app-searching.webp" width="640" height="1231" loading="lazy" decoding="async" alt="Searching screen: concentric orange ripples around the pickup pin, the message Estamos esperando confirmación del conductor, a progress bar, a tip card and Cancelar el viaje">
+        <span class="es-tag" lang="es">Esperando confirmación</span>
+        <h3>Searching</h3>
+        <p>Ripples spread around the pickup while the driver decides. A card fills the wait, and cancelling stays one tap away.</p>
+      </div>
+      <div class="step reveal">
+        <img class="mock" src="muv-assets/muv-app-confirmed.webp" width="640" height="1230" loading="lazy" decoding="async" alt="Confirmed screen: estimated arrival Llegarás en 5 minutos aprox., payment method and total, the trip from origin to destination, and the driver card with car, plate and a message button">
+        <span class="es-tag" lang="es">Llegarás en 5 minutos</span>
+        <h3>Driver confirmed</h3>
+        <p>The ETA leads, then payment and the trip. The driver card shows who is coming, in which car, with the plate and one button to message.</p>
       </div>
     </div>
-    <div class="arrow-col">
-      <div class="arr-dot"></div>
-      <div class="arr-line"></div>
-      <div class="arr-dot"></div>
-      <div class="arr-lbl">Confirma</div>
-    </div>
-    <div class="flow-item">
-      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_006" alt="Skeleton"></div>
-      <div class="badge badge-g">Calculando...</div>
-      <div class="plabel">
-        <div class="pl-n">02</div>
-        <div class="pl-t">Ruta en mapa</div>
-        <div class="pl-d">Ruta visualizada. Skeleton loader mientras el backend calcula disponibilidad.</div>
-        <div class="sk-row"><div class="sk-dot"></div><div class="sk-dot"></div><div class="sk-dot"></div></div>
-      </div>
-    </div>
-    <div class="arrow-col">
-      <div class="arr-dot"></div>
-      <div class="arr-line"></div>
-      <div class="arr-dot"></div>
-      <div class="arr-lbl">Carga</div>
-    </div>
-    <div class="flow-item">
-      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_007" alt="Categorias"></div>
-      <div class="badge badge-gr">Categorías listas</div>
-      <div class="plabel">
-        <div class="pl-n">03</div>
-        <div class="pl-t">Categorías disponibles</div>
-        <div class="pl-d">Económico, Muv, Comfort. Tiempo · plazas · precio · Ueno rebate visible.</div>
-      </div>
-    </div>
-    <div class="arrow-col">
-      <div class="arr-dot"></div>
-      <div class="arr-line"></div>
-      <div class="arr-dot"></div>
-      <div class="arr-lbl">Selecciona</div>
-    </div>
-    <div class="flow-item">
-      <div class="phone-shell"><div class="phone-notch"></div><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1704'%3E%3Crect width='786' height='1704' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_008" alt="Recomendado"></div>
-      <div class="badge badge-o">Listo para confirmar</div>
-      <div class="plabel">
-        <div class="pl-n">04</div>
-        <div class="pl-t">Categoría seleccionada</div>
-        <div class="pl-d">"Recomendado" preseleccionado. Método de pago + cupón + CTA destacado.</div>
-      </div>
-    </div>
+
+    <figure class="narrow-fig">
+      <!-- TODO(Paula): replace with a current render of trip options + Envío screens (old image removed: it showed outdated prices and copy) -->
+      <div class="ph" style="aspect-ratio:1200/700" role="img" aria-label="Placeholder: current trip options and send or receive screens"><span>Placeholder<br><b>Trip options and Envío screens</b></span></div>
+      <figcaption>Trip options (passengers, accessibility, pets) and the new send and receive service.</figcaption>
+    </figure>
+
   </div>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     SECTION 04 — FINAL UI HIGHLIGHT
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">Final UI · Driver Confirmed State</div>
-  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
-    <div>
-      <div style="font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:1.5rem;">Every state.<br><span class="orange">Explicitly</span><br>communicated.</div>
-      <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;margin-bottom:2rem;">To reduce uncertainty, the interface always communicates the current ride state — even during waiting periods.</p>
-      <div style="display:flex;flex-direction:column;gap:.625rem;">
-        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--orange);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Esperando confirmación del conductor..."</div>
-        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--orange);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Ampliando radio de búsqueda"</div>
-        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--green);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Driver confirmado ✨ · Juan está en camino · ACG 546TY"</div>
-        <div style="padding:.875rem 1.25rem;background:var(--bg2);border-left:2px solid var(--green);border-radius:0 6px 6px 0;font-size:.875rem;color:var(--paper);">"Juan empezó tu viaje · 10 min para llegar"</div>
+<!-- ═════════ MOTION ═════════ -->
+<section class="sec tint" id="motion" aria-labelledby="motion-h">
+  <div class="wrap">
+
+    <div class="split">
+      <h2 class="h2 wide" id="motion-h">Motion that explains the wait</h2>
+      <div>
+        <p class="prose">Waiting is the hardest moment in a ride app, so motion here has one job: answer the question before the passenger asks it. Is it working? Where am I? What happens next?</p>
+        <p class="prose">These are recreated in code from the prototype's real timings, so you can watch them without opening Figma. The map is stylized; the timings are not.</p>
       </div>
     </div>
-    <div style="display:flex;justify-content:center;">
-      <div class="phone-wrap">
-        <div class="phone-shell" style="width:240px;border-radius:16px;">
-          <div class="phone-notch"></div>
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 786 1710'%3E%3Crect width='786' height='1710' fill='%232C2C36'/%3E%3C/svg%3E" data-img-id="muv_case_009" alt="Driver confirmed">
+
+    <div class="motion-hero">
+      <div>
+        <h3 class="h3">Searching for a driver</h3>
+        <p class="prose" style="margin-top:.75rem">Four things move at once, and each has a different job.</p>
+        <dl class="mspec">
+          <div><dt>Map camera</dt><dd>Overview, origin, destination, origin. It holds <b>2.5 s, 2.5 s, 2 s, 2 s</b>, then moves on a <b>Gentle spring (1.02 s)</b>. It tells the passenger the app knows both ends of the trip.</dd></div>
+          <div><dt>Ripple at pickup</dt><dd>Three states loop every <b>1.8 s</b>, each change <b>0.3 s ease-out</b>. It says we are searching around you.</dd></div>
+          <div><dt>Location ping</dt><dd>A ring grows over <b>1.25 s</b> on a slow spring, then snaps back in <b>0.3 s</b>. It says this is you, and it's live.</dd></div>
+          <div><dt>Skeleton shimmer</dt><dd>A highlight sweeps in <b>1 s (ease-out)</b> every <b>2 s</b>. It says content is coming, and the sheet won't jump when it arrives.</dd></div>
+        </dl>
+        <div class="mctl" data-for="hero">
+          <button class="mbtn" type="button" data-ctl="pause" aria-pressed="false">Pause</button>
+          <button class="mbtn" type="button" data-ctl="replay">Replay</button>
+          <a class="mlink" href="https://www.figma.com/proto/io8XEuCz4DprO7lK40L17a/muv-app?node-id=1-38654&t=hsuCgtYJiZIko83g-1&scaling=min-zoom&content-scaling=fixed&page-id=1%3A8829" target="_blank" rel="noopener">Open the original prototype in Figma</a>
         </div>
-        <div class="badge badge-gr">Driver confirmado ✨</div>
+        <!-- TODO(Paula): the Figma link needs "anyone with the link can view" to work for visitors -->
       </div>
-    </div>
-  </div>
-
-  <div style="margin-top:3.5rem;max-width:60%;margin-left:auto;margin-right:auto;border-radius:16px;overflow:hidden;background:#0A0A10;box-shadow:0 16px 48px rgba(26,24,20,.16);">
-    <img src="muv-search.gif" alt="Searching for driver — live state animation" style="width:100%;height:auto;display:block;">
-  </div>
-  <div style="margin-top:1rem;font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);text-align:center;">Live state · Searching for driver — "Ampliando radio de búsqueda"</div>
-</div>
-
-
-<!-- ══════════════════════════════════════════
-     SECTION 05 — KEY DECISIONS
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">Key Design Decisions</div>
-  <div class="decisions-grid">
-    <div class="dec">
-      <div class="dec-n">Decision 01</div>
-      <div class="dec-t">Explicit ride state feedback</div>
-      <div class="dec-d">The interface always communicates the current backend state — even during waiting. Eliminates anxiety through information.</div>
-    </div>
-    <div class="dec">
-      <div class="dec-n">Decision 02</div>
-      <div class="dec-t">Color system 60/30/10</div>
-      <div class="dec-d">60% neutral · 30% primary orange · 10% secondary navy. The previous system lacked balance — rebuilt for harmony.</div>
-    </div>
-    <div class="dec">
-      <div class="dec-n">Decision 03</div>
-      <div class="dec-t">Component-driven layout</div>
-      <div class="dec-d">Every screen built from reusable components. Typography, icons, tokens, motion, photography — all part of the system.</div>
-    </div>
-    <div class="dec">
-      <div class="dec-n">Decision 04</div>
-      <div class="dec-t">Skeleton loading state</div>
-      <div class="dec-d">Communicates that something is happening — reduces perceived wait time and eliminates confusion during availability calculation.</div>
-    </div>
-    <div class="dec">
-      <div class="dec-n">Decision 05</div>
-      <div class="dec-t">"Recomendado" preselection</div>
-      <div class="dec-d">Preselecting the Económico option reduces decisional friction. User can confirm in one tap. Business steers toward preferred category.</div>
-    </div>
-    <div class="dec">
-      <div class="dec-n">Decision 06</div>
-      <div class="dec-t">Ueno Bank rebate always visible</div>
-      <div class="dec-d">40% con crédito · 20% con débito — visible on the category screen. Ecosystem integration as competitive advantage.</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     SECTION 06 — INSIGHTS
-══════════════════════════════════════════ -->
-
-<!-- ══════════════════════════════════════════
-     SECTION — DESIGN SYSTEM
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">Design System · Components</div>
-  <div class="ds-intro">
-    <h2 class="ds-title">Built to scale.<br><em>Documented to ship.</em></h2>
-    <p class="ds-sub">Every component was designed with clear states, real content and system logic. The design system ensures consistency across the passenger app — from the first trip request to the post-ride review.</p>
-  </div>
-
-  <!-- FLOW OVERVIEW -->
-  <div class="ds-flow-img" style="margin-top:3rem;width:72%;margin-left:auto;margin-right:auto;">
-    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2012 926'%3E%3C/svg%3E" data-img-id="muv_case_flow" alt="Passenger app flow overview" style="display:block;width:100%;height:auto;">
-  </div>
-
-  <!-- CONDUCTOR CARDS -->
-  <div class="ds-group">
-    <div class="ds-group-label">
-      <span class="ds-group-num">01</span>
-      Driver Card · States
-    </div>
-    <p class="ds-group-desc">The driver card communicates all key information during the matching and in-trip states. Two visual variants adapt based on the ride phase — waiting for driver confirmation (with free-cancellation countdown) and in-transit (with live ETA).</p>
-    <div class="ds-comp-grid ds-2col">
-      <div class="ds-comp">
-        <div class="ds-comp-label">Driver card · Waiting (5-min free cancellation)</div>
-        <div class="ds-comp-img">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 404 690'%3E%3Crect width='404' height='690' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_010" alt="Driver card - waiting for confirmation">
-        </div>
-        <div class="ds-comp-meta">
-          <span class="ds-tag">Countdown · 5 min free</span>
-          <span class="ds-tag">Driver photo + rating</span>
-          <span class="ds-tag">Message CTA</span>
-          <span class="ds-tag">Trip & payment summary</span>
-        </div>
-      </div>
-      <div class="ds-comp">
-        <div class="ds-comp-label">Driver card · Trip in progress (ETA)</div>
-        <div class="ds-comp-img">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 590'%3E%3Crect width='360' height='590' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_011" alt="Driver card - trip in progress">
-        </div>
-        <div class="ds-comp-meta">
-          <span class="ds-tag">ETA highlight</span>
-          <span class="ds-tag">Payment summary</span>
-          <span class="ds-tag">Route detail</span>
-          <span class="ds-tag">Message + cancel CTA</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CATEGORY CARDS -->
-  <div class="ds-group">
-    <div class="ds-group-label">
-      <span class="ds-group-num">02</span>
-      Category Card · States
-    </div>
-    <p class="ds-group-desc">The category card is the core decision unit of the trip request flow. Two states — selected (Recomendado, navy highlight) and unselected (with promotional discount badge) — guide the user toward the optimal choice while showing price, ETA, seats and perks at a glance.</p>
-    <div class="ds-comp-grid ds-2col" style="align-items:start;">
-      <div style="display:flex;flex-direction:column;gap:1.5rem;">
-        <div class="ds-comp">
-          <div class="ds-comp-label">Category card · Selected (Recomendado)</div>
-          <div class="ds-comp-img ds-comp-img-wide">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 731 194'%3E%3Crect width='731' height='194' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_012" alt="Category card selected">
-          </div>
-          <div class="ds-comp-meta">
-            <span class="ds-tag ds-tag-accent">Recomendado badge</span>
-            <span class="ds-tag">Navy border highlight</span>
-            <span class="ds-tag">Price emphasis</span>
-            <span class="ds-tag">ETA + seats</span>
-          </div>
-        </div>
-        <div class="ds-comp">
-          <div class="ds-comp-label">Category card · Unselected (with promo)</div>
-          <div class="ds-comp-img ds-comp-img-wide">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 740 186'%3E%3Crect width='740' height='186' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_013" alt="Category card unselected">
-          </div>
-          <div class="ds-comp-meta">
-            <span class="ds-tag">Discount badge</span>
-            <span class="ds-tag">Strikethrough original price</span>
-            <span class="ds-tag">Feature note</span>
-            <span class="ds-tag">Neutral border</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Full category list -->
-      <div class="ds-comp">
-        <div class="ds-comp-label">Category listing · All options</div>
-        <div class="ds-comp-img">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 580'%3E%3Crect width='780' height='580' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_014" alt="Category listing" style="max-width:min(85%, 560px);">
-        </div>
-        <div class="ds-comp-meta">
-          <span class="ds-tag">Económico · Muv · Comfort</span>
-          <span class="ds-tag">Price per category</span>
-          <span class="ds-tag">ETA + seats</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- PUSH NOTIFICATIONS / ALERTS -->
-  <div class="ds-group">
-    <div class="ds-group-label">
-      <span class="ds-group-num">03</span>
-      Push Notifications · Real-time States
-    </div>
-    <div class="ds-pn-layout">
-      <!-- LEFT: text -->
-      <div class="ds-pn-left">
-        <p class="ds-group-desc">Push notifications communicate ride state changes in real time — even when the app is backgrounded. Each state has a distinct message and visual hierarchy that reduces user anxiety during waiting periods.</p>
-        <div class="ds-pn-items">
-          <div class="ds-pn-item">
-            <div class="ds-pn-dot"></div>
-            <div>
-              <div class="ds-pn-title">Searching</div>
-              <div class="ds-pn-desc">"Esperando confirmación del conductor... Ampliando radio de búsqueda" — animated progress bar communicates active search.</div>
-            </div>
-          </div>
-          <div class="ds-pn-item">
-            <div class="ds-pn-dot"></div>
-            <div>
-              <div class="ds-pn-title">In transit</div>
-              <div class="ds-pn-desc">"10 min para llegar a la parada · Juan empezó tu viaje" — car icon moves along progress bar with real ETA.</div>
-            </div>
-          </div>
-          <div class="ds-pn-item">
-            <div class="ds-pn-dot"></div>
-            <div>
-              <div class="ds-pn-title">Permission request</div>
-              <div class="ds-pn-desc">"¿Querés recibir alertas del viaje en tiempo real?" — surfaces at the right moment to maximize opt-in rate.</div>
+      <div class="stage-col">
+        <div class="dev" data-stage="hero" data-w="393" data-h="852" role="img" aria-label="Animated recreation of the searching-for-a-driver screen: the map zooms between pickup and destination, a ripple pulses around the pickup pin, and skeleton placeholders shimmer in the bottom sheet">
+          <div class="stage">
+            <div class="world" id="mh-world"><svg class="map" viewBox="-100 -150 700 1150" width="700" height="1150" style="left:-100px;top:-150px" aria-hidden="true"><rect x="-100" y="-150" width="700" height="1150" fill="#f1f1ef"/><rect x="105" y="150" width="135" height="150" fill="#f5efdf"/><rect x="-60" y="20" width="110" height="140" fill="#eeece7"/><rect x="300" y="230" width="220" height="160" fill="#eeece7"/><rect x="150" y="470" width="260" height="170" fill="#eeece7"/><rect x="-90" y="560" width="240" height="220" fill="#ecebe6"/><rect x="330" y="600" width="240" height="240" fill="#eeece7"/><g transform="rotate(-11 250 400)" stroke="#fff" stroke-linecap="round" fill="none"><line x1="-400" y1="-320" x2="1000" y2="-320" stroke-width="7"/><line x1="-400" y1="-274" x2="1000" y2="-274" stroke-width="3.6"/><line x1="-400" y1="-228" x2="1000" y2="-228" stroke-width="3.6"/><line x1="-400" y1="-182" x2="1000" y2="-182" stroke-width="3.6"/><line x1="-400" y1="-136" x2="1000" y2="-136" stroke-width="7"/><line x1="-400" y1="-90" x2="1000" y2="-90" stroke-width="3.6"/><line x1="-400" y1="-44" x2="1000" y2="-44" stroke-width="3.6"/><line x1="-400" y1="2" x2="1000" y2="2" stroke-width="3.6"/><line x1="-400" y1="48" x2="1000" y2="48" stroke-width="7"/><line x1="-400" y1="94" x2="1000" y2="94" stroke-width="3.6"/><line x1="-400" y1="140" x2="1000" y2="140" stroke-width="3.6"/><line x1="-400" y1="186" x2="1000" y2="186" stroke-width="3.6"/><line x1="-400" y1="232" x2="1000" y2="232" stroke-width="7"/><line x1="-400" y1="278" x2="1000" y2="278" stroke-width="3.6"/><line x1="-400" y1="324" x2="1000" y2="324" stroke-width="3.6"/><line x1="-400" y1="370" x2="1000" y2="370" stroke-width="3.6"/><line x1="-400" y1="416" x2="1000" y2="416" stroke-width="7"/><line x1="-400" y1="462" x2="1000" y2="462" stroke-width="3.6"/><line x1="-400" y1="508" x2="1000" y2="508" stroke-width="3.6"/><line x1="-400" y1="554" x2="1000" y2="554" stroke-width="3.6"/><line x1="-400" y1="600" x2="1000" y2="600" stroke-width="7"/><line x1="-400" y1="646" x2="1000" y2="646" stroke-width="3.6"/><line x1="-400" y1="692" x2="1000" y2="692" stroke-width="3.6"/><line x1="-400" y1="738" x2="1000" y2="738" stroke-width="3.6"/><line x1="-400" y1="784" x2="1000" y2="784" stroke-width="7"/><line x1="-400" y1="830" x2="1000" y2="830" stroke-width="3.6"/><line x1="-400" y1="876" x2="1000" y2="876" stroke-width="3.6"/><line x1="-400" y1="922" x2="1000" y2="922" stroke-width="3.6"/><line x1="-400" y1="968" x2="1000" y2="968" stroke-width="7"/><line x1="-400" y1="1014" x2="1000" y2="1014" stroke-width="3.6"/><line x1="-400" y1="1060" x2="1000" y2="1060" stroke-width="3.6"/><line x1="-400" y1="1106" x2="1000" y2="1106" stroke-width="3.6"/><line x1="-400" y1="1152" x2="1000" y2="1152" stroke-width="7"/><line x1="-400" y1="1198" x2="1000" y2="1198" stroke-width="3.6"/><line x1="-400" y1="1244" x2="1000" y2="1244" stroke-width="3.6"/><line x1="-400" y1="1290" x2="1000" y2="1290" stroke-width="3.6"/><line x1="-400" y1="-400" x2="-400" y2="1400" stroke-width="3.6"/><line x1="-346" y1="-400" x2="-346" y2="1400" stroke-width="7"/><line x1="-292" y1="-400" x2="-292" y2="1400" stroke-width="3.6"/><line x1="-238" y1="-400" x2="-238" y2="1400" stroke-width="3.6"/><line x1="-184" y1="-400" x2="-184" y2="1400" stroke-width="3.6"/><line x1="-130" y1="-400" x2="-130" y2="1400" stroke-width="7"/><line x1="-76" y1="-400" x2="-76" y2="1400" stroke-width="3.6"/><line x1="-22" y1="-400" x2="-22" y2="1400" stroke-width="3.6"/><line x1="32" y1="-400" x2="32" y2="1400" stroke-width="3.6"/><line x1="86" y1="-400" x2="86" y2="1400" stroke-width="7"/><line x1="140" y1="-400" x2="140" y2="1400" stroke-width="3.6"/><line x1="194" y1="-400" x2="194" y2="1400" stroke-width="3.6"/><line x1="248" y1="-400" x2="248" y2="1400" stroke-width="3.6"/><line x1="302" y1="-400" x2="302" y2="1400" stroke-width="7"/><line x1="356" y1="-400" x2="356" y2="1400" stroke-width="3.6"/><line x1="410" y1="-400" x2="410" y2="1400" stroke-width="3.6"/><line x1="464" y1="-400" x2="464" y2="1400" stroke-width="3.6"/><line x1="518" y1="-400" x2="518" y2="1400" stroke-width="7"/><line x1="572" y1="-400" x2="572" y2="1400" stroke-width="3.6"/><line x1="626" y1="-400" x2="626" y2="1400" stroke-width="3.6"/><line x1="680" y1="-400" x2="680" y2="1400" stroke-width="3.6"/><line x1="734" y1="-400" x2="734" y2="1400" stroke-width="7"/><line x1="788" y1="-400" x2="788" y2="1400" stroke-width="3.6"/><line x1="842" y1="-400" x2="842" y2="1400" stroke-width="3.6"/><line x1="896" y1="-400" x2="896" y2="1400" stroke-width="3.6"/><line x1="950" y1="-400" x2="950" y2="1400" stroke-width="7"/></g><path d="M-100 250 L 600 560" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M-100 700 L 600 380" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M300 -150 L 470 230" stroke="#f8e7ae" stroke-width="10" fill="none" stroke-linecap="round"/><polygon points="270,112 385,112 392,190 275,192" fill="#dfeadb"/><polygon points="62,392 142,390 146,446 64,448" fill="#dfeadb"/><polygon points="190,690 320,690 322,760 192,762" fill="#dfeadb"/><polygon points="-70,300 20,292 24,352 -66,358" fill="#dfeadb"/><circle cx="180" cy="180" r="9" fill="#e4e3de"/><text x="118" y="196" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(0 118 196)">Palacio de Justicia</text><text x="283" y="158" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(0 283 158)">Parque Carlos</text><text x="283" y="169" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(0 283 169)">Antonio López</text><text x="66" y="424" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(0 66 424)">Estadio ueno</text><text x="66" y="435" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(0 66 435)">Defensores del Chaco</text><text x="232" y="470" font-family="Inter,Geist,sans-serif" font-size="9" font-weight="500" fill="#8f8f8a" transform="rotate(-62 232 470)">Av. Colón</text><text x="320" y="352" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(-14 320 352)">Lisboa</text><text x="305" y="318" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(-14 305 318)">Londres</text><text x="30" y="232" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(-11 30 232)">Alfarez Silva</text><text x="150" y="590" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(-11 150 590)">Eusebio Lillo Robles</text><text x="210" y="262" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(-11 210 262)">Teniente Héctor Vera</text><text x="390" y="455" font-family="Inter,Geist,sans-serif" font-size="8.5" font-weight="500" fill="#8f8f8a" transform="rotate(-60 390 455)">Berlín</text><defs><linearGradient id="rg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="114.5" y2="142.5"><stop offset="0" stop-color="#ff6200"/><stop offset=".63" stop-color="#ffa166"/><stop offset=".99" stop-color="#ffc099"/></linearGradient></defs><g transform="translate(99 104)" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"><path d="M 0 0 L 13 71 L 54 63.5 L 95.5 56 L 126 197.5 L 43 214.5 L 5.5 222.5 L 13 262 L 172 235.5 L 179 241.5 L 158 269 L 197 294" stroke="#f8d1b9" vector-effect="non-scaling-stroke"/><path d="M 0 0 L 13 71 L 54 63.5 L 95.5 56 L 114.5 142.5" stroke="url(#rg)" vector-effect="non-scaling-stroke"/></g></svg></div>
+            <div class="anchor ripple" id="mh-ripple" data-s="1"><i class="e24"></i><i class="e25"></i><i class="e26"></i></div>
+            <div class="anchor pin d" id="mh-pin-d"><i></i><i></i><i></i></div>
+            <div class="anchor pin o" id="mh-pin-o"><i></i><i></i><i></i></div>
+            <div class="anchor dot" id="mh-dot"><i class="halo"></i><i class="ring"></i><i class="core"></i></div>
+            <div class="anchor" id="mh-pill-o"><div class="pill o"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.2"><circle cx="6" cy="6" r="3.4"/><circle cx="6" cy="6" r=".9" fill="#fff"/><path d="M6 .8v1.6M6 9.6v1.6M.8 6h1.6M9.6 6h1.6"/></svg>Paseo de la Galería • 5 min</div></div>
+            <div class="anchor" id="mh-pill-d"><div class="pill d"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.2"><path d="M6 11s3.6-3.2 3.6-5.8a3.6 3.6 0 1 0-7.2 0C2.4 7.8 6 11 6 11z"/><circle cx="6" cy="5.2" r="1.2"/></svg>Destino • 15:10 h</div></div>
+            <div class="status"><i class="isl"></i><span class="tm">9:41</span></div>
+            <svg class="back" viewBox="0 0 28 28" fill="none" stroke="#1b1b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 14H6M13 7l-7 7 7 7"/></svg>
+            <div class="sheet">
+              <i class="grab"></i>
+              <div class="msg">Estamos esperando confirmación del conductor...</div>
+              <i class="sk" style="left:16px;top:62px;width:361px;height:12px;border-radius:100px;--w:361px"></i>
+              <i class="sk" style="left:16px;top:101px;width:342px;height:88px;border-radius:16px;--w:342px"></i>
+              <i class="sk" style="left:372px;top:101px;width:342px;height:88px;border-radius:16px;--w:342px"></i>
+              <i class="sk" style="left:16px;top:216px;width:361px;height:48px;border-radius:8px;--w:361px"></i>
+              <i class="ind"></i>
             </div>
           </div>
         </div>
       </div>
-      <!-- RIGHT: 3 images stacked -->
-      <div class="ds-pn-right">
-        <div class="ds-pn-img-wrap">
-          <div class="ds-comp-label">State · Searching</div>
-          <div class="ds-pn-img-area"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 334 156'%3E%3Crect width='334' height='156' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_015" alt="Loading state"></div>
+    </div>
+
+    <div class="pair">
+      <div class="mdemo">
+        <h3 class="h3">Skeleton to categories</h3>
+        <p class="small">The sheet holds its shape while availability loads. After <b>2 s</b> the real categories rise in on a <b>Gentle spring (1.02 s)</b>, and the skeleton fades out.</p>
+        <div class="dev plain" data-stage="cat" data-w="393" data-h="420" role="img" aria-label="Animated recreation: grey placeholder rows in a bottom sheet are replaced by the Económico, Muv and Comfort category cards and a Confirmar viaje button">
+          <div class="stage">
+            <div class="cat" id="cat">
+              <i class="grab"></i>
+              <div class="skel">
+                <i class="sk" style="left:16px;top:40px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                <i class="sk" style="left:16px;top:124px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                <i class="sk" style="left:16px;top:208px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                <i class="sk" style="left:16px;top:304px;width:361px;height:52px;border-radius:14px;--w:361px"></i>
+              </div>
+              <div class="real">
+                <div class="row sel" style="top:40px"><span class="tag">Recomendado</span><svg viewBox="0 0 52 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3H5z" fill="currentColor" opacity=".18"/><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3"/><circle cx="14" cy="19" r="3.5" fill="#fdfdfd"/><circle cx="38" cy="19" r="3.5" fill="#fdfdfd"/></svg><div><div class="n">Económico</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 32,000<small class="was">Gs. 38,000</small></div></div>
+                <div class="row" style="top:124px"><svg viewBox="0 0 52 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3H5z" fill="currentColor" opacity=".18"/><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3"/><circle cx="14" cy="19" r="3.5" fill="#fdfdfd"/><circle cx="38" cy="19" r="3.5" fill="#fdfdfd"/></svg><div><div class="n">Muv</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 36,000<small class="was">Gs. 38,000</small></div></div>
+                <div class="row" style="top:208px"><svg viewBox="0 0 52 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3H5z" fill="currentColor" opacity=".18"/><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3"/><circle cx="14" cy="19" r="3.5" fill="#fdfdfd"/><circle cx="38" cy="19" r="3.5" fill="#fdfdfd"/></svg><div><div class="n">Comfort</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 45,000</div></div>
+                <div class="cta" style="top:304px">Confirmar viaje</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="ds-pn-img-wrap">
-          <div class="ds-comp-label">State · In transit</div>
-          <div class="ds-pn-img-area"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 334 152'%3E%3Crect width='334' height='152' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_016" alt="En camino state"></div>
-        </div>
-        <div class="ds-pn-img-wrap">
-          <div class="ds-comp-label">Alert · Permission request</div>
-          <div class="ds-pn-img-area"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 334 149'%3E%3Crect width='334' height='149' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_017" alt="Permission alert"></div>
-        </div>
+        <div class="mctl" data-for="cat"><button class="mbtn" type="button" data-ctl="pause" aria-pressed="false">Pause</button><button class="mbtn" type="button" data-ctl="replay">Replay</button></div>
       </div>
+
+      <div class="mdemo">
+        <h3 class="h3">Rating that adapts</h3>
+        <p class="small">Try it. The tags change with the score, chips answer a tap in <b>0.2 s</b>, and on submit the card leaves after a <b>0.2 s</b> pause on a <b>1.28 s</b> Gentle spring.</p>
+        <div class="dev plain" data-stage="rate" data-w="360" data-h="540">
+          <div class="stage">
+            <div class="rate" id="rate">
+              <div class="top"><b>Calificación</b><span>Cerrar</span></div>
+              <div class="q">¿Cómo estuvo tu viaje?</div>
+              <div class="stars" role="radiogroup" aria-label="Calificación del viaje">
+                <button class="star" type="button" role="radio" aria-checked="false" aria-label="1 estrella"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8 6.6 19.7l1-6.1L3.2 9.3l6.1-.9z"/></svg></button>
+                <button class="star" type="button" role="radio" aria-checked="false" aria-label="2 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8 6.6 19.7l1-6.1L3.2 9.3l6.1-.9z"/></svg></button>
+                <button class="star" type="button" role="radio" aria-checked="false" aria-label="3 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8 6.6 19.7l1-6.1L3.2 9.3l6.1-.9z"/></svg></button>
+                <button class="star" type="button" role="radio" aria-checked="false" aria-label="4 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8 6.6 19.7l1-6.1L3.2 9.3l6.1-.9z"/></svg></button>
+                <button class="star" type="button" role="radio" aria-checked="false" aria-label="5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.8 6.6 19.7l1-6.1L3.2 9.3l6.1-.9z"/></svg></button>
+              </div>
+              <div class="rlabel" id="rlabel" aria-live="polite">Sin calificar</div>
+              <div class="chips" id="chips"></div>
+              <div class="rfield">¿Querés dejar un comentario?</div>
+              <button class="rsend" type="button" id="rsend">Finalizar</button>
+            </div>
+          </div>
+        </div>
+        <div class="mctl" data-for="rate"><button class="mbtn" type="button" data-ctl="replay">Replay the demo</button></div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="h3" style="margin-bottom:.5rem">The motion system behind it</h3>
+      <p class="small" style="max-width:62ch;margin-bottom:1.25rem">Two rules keep it calm: touch feedback is fast and sharp, and state changes are soft and spring-based. Values read straight from the prototype.</p>
+      <table class="tbl motion">
+        <caption>Motion tokens used across the passenger prototype</caption>
+        <thead><tr><th scope="col">Where</th><th scope="col">Duration</th><th scope="col">Easing</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Buttons, inputs, icons: hover and press</th><td data-h="Duration">0.2 s</td><td data-h="Easing">cubic-bezier(0.2, 0, 0, 1)</td></tr>
+          <tr><th scope="row">Sheets and modals sliding in</th><td data-h="Duration">0.3 s</td><td data-h="Easing">Ease-out</td></tr>
+          <tr><th scope="row">Splash and dissolves</th><td data-h="Duration">0.3 s</td><td data-h="Easing">Ease-in-out</td></tr>
+          <tr><th scope="row">Tabs</th><td data-h="Duration">0.6 s</td><td data-h="Easing">Ease-out</td></tr>
+          <tr><th scope="row">Ripple states</th><td data-h="Duration">0.3 s</td><td data-h="Easing">Ease-out</td></tr>
+          <tr><th scope="row">Skeleton shimmer</th><td data-h="Duration">1 s, every 2 s</td><td data-h="Easing">Ease-out</td></tr>
+          <tr><th scope="row">Location ping</th><td data-h="Duration">1.25 s</td><td data-h="Easing">Slow spring</td></tr>
+          <tr><th scope="row">Screen and state changes: camera, skeleton to content</th><td data-h="Duration">1.02 s</td><td data-h="Easing">Gentle spring</td></tr>
+          <tr><th scope="row">Rating submit</th><td data-h="Duration">1.28 s, after 0.2 s</td><td data-h="Easing">Gentle spring</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═════════ DECISIONS ═════════ -->
+<section class="sec tint" id="decisions" aria-labelledby="decisions-h">
+  <div class="wrap">
+    <h2 class="h2 wide" id="decisions-h">Four decisions that shaped the product</h2>
+
+    <div class="decisions">
+      <article class="decision">
+        <div class="stack">
+          <h3 class="h3">Map first, one search field</h3>
+          <p class="prose">The home is a live map with a single "¿A dónde querés ir?" field. The two services, Viaje and Envío, sit in a sheet over it, and the sheet changes with what is happening: an active trip, a pending rating, or recent destinations. It came straight from the test: people think about a ride spatially.</p>
+        </div>
+        <div class="media"><img class="bare" src="muv-assets/muv-shipped-homes.webp" width="1200" height="1040" loading="lazy" decoding="async" alt="Three shipped home screens in different states: an active trip with the driver-confirmed banner, a pending rating prompt with Calificar viaje, and recent destinations, all with the search field, the Viaje and Envío services and the ueno bank promotion over a live map"></div>
+      </article>
+
+      <article class="decision">
+        <div class="stack">
+          <h3 class="h3">Always say what's happening</h3>
+          <p class="prose">60% of respondents didn't trust the cars the app showed, and accuracy wasn't something design could fix. So every wait has a name and an end: a skeleton while availability is calculated, "Esperando confirmación", "Ampliando radio de búsqueda", and a five-minute free-cancellation countdown while the driver decides.</p>
+        </div>
+        <div class="media" style="background:#0A0A10"><img src="muv-search.gif" width="800" height="600" style="width:min(100%,420px);box-shadow:none" loading="lazy" decoding="async" alt="Animation of the searching state: the app widens the search radius while it looks for a driver"></div>
+      </article>
+
+      <article class="decision">
+        <div class="stack">
+          <h3 class="h3">Recommend one category, show the reward where the decision happens</h3>
+          <p class="prose">Preselecting "Recomendado" (Económico) lets a passenger confirm in one tap, and steers demand towards the category the business wants to grow. The other categories stay in the same list.</p>
+          <p class="prose">Credit cards were the first payment method in the survey, so the ueno bank rebate (40% back with a credit card, 20% with debit) shows on the destination screen and again above the payment method, instead of on a separate promo screen.</p>
+        </div>
+        <!-- TODO(Paula): old marketing image removed; add the current categories/ueno visual -->
+        <div class="media"><div class="ph" style="width:min(100%,420px);aspect-ratio:1000/1220" role="img" aria-label="Placeholder: current categories screen with the ueno rebate"><span>Placeholder<br><b>current categories screen with the ueno rebate</b></span></div></div>
+      </article>
+
+      <article class="decision">
+        <div class="stack">
+          <h3 class="h3">Navy for action, orange for the brand</h3>
+          <p class="prose">White text on the brand orange reaches only 3:1 contrast. On navy it clears 17:1. So primary buttons are navy, and orange carries route lines, tags and highlights.</p>
+        </div>
+        <!-- TODO(Paula): old marketing image removed; add the current review screen -->
+        <div class="media"><div class="ph" style="width:min(100%,520px);aspect-ratio:1000/949" role="img" aria-label="Placeholder: current review screen with the navy Finalizar button"><span>Placeholder<br><b>current review screen with the navy Finalizar button</b></span></div></div>
+      </article>
+    </div>
+    <!-- TODO(Paula): decision 4 rationale (contrast) is inferred from the shipped UI; the old page said "60/30/10 neutral/orange/navy". Confirm or reword. -->
+  </div>
+</section>
+
+<!-- ═════════ TESTING ═════════ -->
+<section class="sec" id="testing" aria-labelledby="testing-h">
+  <div class="wrap">
+    <div class="split">
+      <h2 class="h2 wide" id="testing-h">What testing told us</h2>
+      <p class="prose">I tested the prototype on two tasks: requesting a trip, and taking a trip with stops and rating it.</p>
+      <!-- TODO(Paula): add method + number of participants here (not in the deck) -->
+    </div>
+
+    <table class="tbl">
+      <caption>Results by task</caption>
+      <thead><tr><th scope="col">Task</th><th scope="col">What worked</th><th scope="col">What needs work</th></tr></thead>
+      <tbody>
+        <tr>
+          <th scope="row">Request a trip</th>
+          <td data-h="What worked"><p class="ok">The search-bar request flow and the confirmation step.</p><p class="ok">The search animation and placing the pin by hand on the map.</p></td>
+          <td data-h="What needs work"><p class="warn">Search should prioritise results near the user (Asunción), so trips don't resolve to addresses in other cities.</p></td>
+        </tr>
+        <tr>
+          <th scope="row">Trip with stops</th>
+          <td data-h="What worked"><p class="ok">The search animation.</p></td>
+          <td data-h="What needs work"><p class="warn">People found the feature, but the logic confused them: where the stop goes, and an icon-only entry point. They preferred text over an icon alone.</p></td>
+        </tr>
+        <tr>
+          <th scope="row">Rating</th>
+          <td data-h="What worked"><p class="ok">Preset comments, emojis and three trip characteristics. The characteristics helped people give a better rating.</p><p class="ok">Ratings skew to 5 stars when the ride is fast and uninterrupted, and bad ones show up only after extreme experiences.</p></td>
+          <td data-h="What needs work"><p class="warn">Continuing without writing a comment needs a clearer path.</p></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═════════ PROTOTYPE ═════════ -->
+<section class="sec tint" id="prototype" aria-labelledby="prototype-h">
+  <div class="wrap">
+    <div class="split">
+      <h2 class="h2 wide" id="prototype-h">See it move</h2>
+      <p class="prose">The full passenger journey, screen by screen: from opening the app to rating the ride.</p>
+    </div>
+    <!-- TODO(Paula): add "Open the Figma prototype" link if it can be public -->
+    <div class="lottie-frame" style="max-width:880px;margin-inline:auto">
+      <div id="muv-experience-lottie" role="img" aria-label="muv passenger app, full experience animated screen by screen" style="width:100%;height:100%"></div>
     </div>
   </div>
+</section>
 
-    <!-- TOAST / FEEDBACK -->
-  <div class="ds-group">
-    <div class="ds-group-label">
-      <span class="ds-group-num">04</span>
-      Toast Alerts · Feedback System
-    </div>
-    <p class="ds-group-desc">Toast alerts provide instant feedback for payment and system events. Three semantic variants — error (red), warning (yellow) and success (green) — follow a consistent structure: icon + message + optional inline action.</p>
-    <div class="ds-comp-grid ds-3col">
-      <div class="ds-comp">
-        <div class="ds-comp-label">Toast · Error</div>
-        <div class="ds-comp-img ds-comp-img-wide">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 722 106'%3E%3Crect width='722' height='106' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_019" alt="Error toast">
-        </div>
-        <div class="ds-comp-meta">
-          <span class="ds-tag ds-tag-red">Red · Error</span>
-          <span class="ds-tag">Payment failed</span>
-          <span class="ds-tag">Inline "Modificar" action</span>
-        </div>
-      </div>
-      <div class="ds-comp">
-        <div class="ds-comp-label">Toast · Warning</div>
-        <div class="ds-comp-img ds-comp-img-wide">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 722 116'%3E%3Crect width='722' height='116' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_020" alt="Warning toast">
-        </div>
-        <div class="ds-comp-meta">
-          <span class="ds-tag ds-tag-yellow">Yellow · Warning</span>
-          <span class="ds-tag">Outstanding debt notice</span>
-          <span class="ds-tag">Inline "Mostrar deuda" action</span>
-        </div>
-      </div>
-      <div class="ds-comp">
-        <div class="ds-comp-label">Toast · Success</div>
-        <div class="ds-comp-img ds-comp-img-wide">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 722 138'%3E%3Crect width='722' height='138' fill='%23E4E1DA'/%3E%3C/svg%3E" data-img-id="muv_case_018" alt="Success toast">
-        </div>
-        <div class="ds-comp-meta">
-          <span class="ds-tag ds-tag-green">Green · Success</span>
-          <span class="ds-tag">Checkmark icon</span>
-          <span class="ds-tag">Dismissible (X)</span>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- ═════════ RESULTS ═════════ -->
+<section class="sec" id="results" aria-labelledby="results-h">
+  <div class="wrap">
 
-  <!-- DS PRINCIPLES -->
-  <div class="ds-principles">
-    <div class="ds-principle">
-      <div class="dsp-num">01</div>
-      <div class="dsp-title">State-driven</div>
-      <p class="dsp-desc">Every component maps directly to a backend state. No ambiguity between UI and system logic.</p>
-    </div>
-    <div class="ds-principle">
-      <div class="dsp-num">02</div>
-      <div class="dsp-title">Information hierarchy</div>
-      <p class="dsp-desc">Critical info (driver, ETA, plate) is always prominent. Secondary data (payment, route) is contextual.</p>
-    </div>
-    <div class="ds-principle">
-      <div class="dsp-num">03</div>
-      <div class="dsp-title">Reusable by design</div>
-      <p class="dsp-desc">Every component supports multiple states via props — not separate components. Scalable from day one.</p>
-    </div>
-  </div>
-</div>
+    <h2 class="h2 wide" id="results-h">What changed</h2>
 
-<div class="section">
-  <div class="eyebrow">Learnings</div>
-  <div class="cs-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
-    <div class="insights-grid" style="grid-template-columns:1fr;">
-      <div class="ins">
-        <div class="ins-n">Learning 01</div>
-        <div class="ins-t">State management IS the design</div>
-        <div class="ins-d">Mapping every possible state before opening Figma saved weeks of rework and produced a more coherent experience end-to-end.</div>
+    <div class="impact">
+      <div><p class="num">21 → 6</p><p class="cap">Steps in onboarding.</p></div>
+      <div><p class="num">25% → 36%</p><p class="cap">Of people who started onboarding finished it: +11 percentage points.</p></div>
+    </div>
+    <!-- TODO(Paula): "reduce time to first successful ride" was a goal but has no result yet. Add the post-launch numbers for first-trip (59%) and 4th-trip retention (52%) if you have them. -->
+
+    <div>
+      <h3 class="h3" style="margin-bottom:.75rem">The business after launch</h3>
+      <p class="prose" style="margin-bottom:2rem">The new passenger app launched in May 2026 and the numbers moved. But it didn't move them alone: the app is one of five levers.</p>
+      <dl class="pairs">
+        <div><dt>Passengers</dt><dd><span class="from"><b>39K</b><small>Q4 2025</small></span><span class="arr" aria-hidden="true">→</span><span class="to"><b>81K</b><small>2026</small></span></dd></div>
+        <div><dt>Trips</dt><dd><span class="from"><b>2.2M+</b><small>Q4 2025</small></span><span class="arr" aria-hidden="true">→</span><span class="to"><b>5.1M+</b><small>2026</small></span></dd></div>
+        <div><dt>GMV</dt><dd><span class="from"><b>Gs 40.1B</b><small>Q4 2025</small></span><span class="arr" aria-hidden="true">→</span><span class="to"><b>Gs 94.6B</b><small>2026</small></span></dd></div>
+      </dl>
+      <!-- TODO(Paula): state the exact period behind "2026" (e.g. Jan–Aug, or Q3). Q4 2025 is one quarter, so the pairs are only comparable if the periods match. GMV given as 40.100M / 94.642M (millions of guaraníes) = 40.1B / 94.6B. -->
+      <div class="levers">
+        <div>
+          <h4>Product and design</h4>
+          <ul>
+            <li>New passenger app, with UNID: one login across the ecosystem</li>
+            <li>Ueno Bank integrated as a payment method</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Business and supply</h4>
+          <ul>
+            <li>Positive commission across Paraguay</li>
+            <li>Driver app stabilization</li>
+            <li>Automatic dynamic pricing</li>
+          </ul>
+        </div>
       </div>
-      <div class="ins">
-        <div class="ins-n">Learning 02</div>
-        <div class="ins-t">Test direction, not detail</div>
-        <div class="ins-d">The map vs photo test wasn't about visual preference — it was about mental model. Users think spatially about transportation.</div>
-      </div>
-      <div class="ins">
-        <div class="ins-n">Learning 03</div>
-        <div class="ins-t">Visual QA in Dev Mode = collaboration</div>
-        <div class="ins-d">Annotating design vs implementation in Figma Dev Mode turned QA from confrontation into collaboration. Measurable quality improvement.</div>
+      <p class="small" style="margin-top:1.5rem;max-width:62ch">Design shaped the first two levers: onboarding and login, and how payment and rewards show up in the flow. The other three are business and supply work, and I'm not claiming them.</p>
+    </div>
+
+    <div>
+      <h3 class="h3" style="margin-bottom:1rem">The funnel baseline still to re-measure</h3>
+      <p class="small" style="margin-bottom:1.5rem;max-width:62ch">Q4 2025, on the legacy app. These two are the funnel numbers the new app should beat.</p>
+      <dl class="baseline">
+        <div><dt>59%</dt><dd>Of registered passengers take a first trip.</dd></div>
+        <div><dt>52%</dt><dd>Of those who take a first trip are still riding by their fourth.</dd></div>
+      </dl>
+    </div>
+
+    <div>
+      <h3 class="h3" style="margin-bottom:1.5rem">What I learned</h3>
+      <div class="learn">
+        <div>
+          <h4>State management is the design</h4>
+          <p>Mapping every state before opening Figma saved weeks of rework and made the experience coherent from end to end.</p>
+        </div>
+        <div>
+          <h4>Test the direction, not the detail</h4>
+          <p>The map vs photo test wasn't about visual preference. It was about mental model, and that settled the whole home.</p>
+        </div>
+        <div>
+          <h4>Visual QA in Dev Mode is collaboration</h4>
+          <p>Annotating design against implementation in Figma Dev Mode turned QA from a confrontation into a shared task.</p>
+        </div>
       </div>
     </div>
+
     <div class="callout">
-      <div class="co-lbl">The core principle</div>
-      <div class="co-t">"Simplicity is the hardest design decision."</div>
-      <div class="co-d">Every stakeholder wanted to add. Every user wanted less. Holding the line — and proving it with data — is a design skill as important as any visual craft. The numbers proved it right.</div>
-      <div class="co-stats">
-        <div><div class="cos-v">2.2M+</div><div class="cos-l">Trips Q4</div></div>
-        <div><div class="cos-v">59%</div><div class="cos-l">First trip</div></div>
-        <div><div class="cos-v">52%</div><div class="cos-l">4th trip retained</div></div>
-      </div>
+      <p class="big">Every stakeholder wanted to add. Every user wanted less.</p>
+      <p class="sub">Holding that line, and backing it with data, is a design skill as important as any visual craft.</p>
     </div>
+
+    <div>
+      <h3 class="h3" style="margin-bottom:1.25rem">If I had more time</h3>
+      <ul class="next">
+        <li><strong>Measure the change.</strong> Re-run the survey after launch, with a sample that isn't mostly B2B-brand customers.</li>
+        <li><strong>Research the supply side.</strong> Riders' biggest complaint was drivers not accepting trips, so a driver survey is the next study.</li>
+        <li><strong>Close what testing flagged.</strong> Replace icon-only entry points with icon plus label, and clarify how stops work.</li>
+      </ul>
+    </div>
+
   </div>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     SECTION — THE EXPERIENCE (closing showcase)
-══════════════════════════════════════════ -->
-<div class="section" style="text-align:center;">
-  <div class="eyebrow" style="justify-content:center;">The Experience</div>
-  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.15;max-width:640px;margin:0 auto 1rem;">Every screen, one coherent trip.</div>
-  <p style="font-size:.9375rem;line-height:1.75;color:var(--ash);font-weight:300;max-width:520px;margin:0 auto 2.5rem;">From opening the app to rating the ride — every state was designed to feel like part of the same story.</p>
-  <div style="max-width:60%;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(26,24,20,.14);">
-    <div id="muv-experience-lottie" role="img" aria-label="muv — full passenger experience, screen by screen" style="width:100%;aspect-ratio:800/600;background:var(--bg2);"></div>
+<!-- ═════════ COMPONENT LIBRARY (collapsed) ═════════ -->
+<section class="sec tint" aria-labelledby="lib-h" style="padding-block:clamp(40px,6vw,80px)">
+  <div class="wrap">
+    <details class="lib">
+      <summary>
+        <span><span class="h3" id="lib-h">Component library</span><span class="sub">Driver card, category card, ride-state alerts and toasts</span></span>
+        <span class="ico" aria-hidden="true">+</span>
+      </summary>
+      <div class="lib-body">
+
+        <div class="principles">
+          <div><h3>State-driven</h3><p>Every component maps to a backend state, so there is no ambiguity between the UI and the system.</p></div>
+          <div><h3>Information hierarchy</h3><p>Driver, ETA and plate are always prominent. Payment and route are contextual.</p></div>
+          <div><h3>Reusable by design</h3><p>States are props on one component, not separate components.</p></div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Driver card</h3>
+          <p>Two variants that follow the ride phase. While waiting: a free-cancellation countdown. In transit: a live ETA.</p>
+          <div class="comp-grid c2">
+            <figure class="comp"><div class="thumb narrow"><img data-img-id="muv_case_010" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 500'%3E%3Crect width='600' height='500' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Driver card while waiting for confirmation"></div><figcaption class="cap"><strong>Waiting</strong>Countdown, driver photo and rating, message, trip and payment summary.</figcaption></figure>
+            <figure class="comp"><div class="thumb narrow"><img data-img-id="muv_case_011" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 500'%3E%3Crect width='600' height='500' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Driver card during the trip, with ETA"></div><figcaption class="cap"><strong>In transit</strong>Highlighted ETA, payment summary, route detail, message and cancel.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Category card</h3>
+          <p>The core decision unit of the request flow. Selected ("Recomendado", navy highlight) and unselected (with a promo badge), showing price, ETA and seats at a glance.</p>
+          <div class="comp-grid c3">
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_012" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Category card, selected"></div><figcaption class="cap"><strong>Selected</strong>Recomendado badge, navy border, price emphasis.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_013" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Category card, unselected, with promo"></div><figcaption class="cap"><strong>Unselected</strong>Discount badge, struck-through original price.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_014" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 500'%3E%3Crect width='600' height='500' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Category listing with all options"></div><figcaption class="cap"><strong>Listing</strong>Económico, Muv and Comfort in one list.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Ride-state alerts</h3>
+          <p>Real-time messages for every state change, including when the app is in the background.</p>
+          <div class="comp-grid c3">
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_015" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Searching state with an animated progress bar"></div><figcaption class="cap"><strong>Searching</strong>Animated progress bar shows the search is active.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_016" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="In-transit state with a car moving along a progress bar"></div><figcaption class="cap"><strong>In transit</strong>A car moves along the bar, with a real ETA.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_017" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Permission request asking to allow real-time trip alerts"></div><figcaption class="cap"><strong>Permission</strong>"¿Querés recibir alertas del viaje en tiempo real?" appears at the moment it is useful.</figcaption></figure>
+          </div>
+        </div>
+        <!-- TODO(Paula): the old page called these "Push notifications". Confirm whether they are OS notifications, in-app banners or Live Activities and rename if needed. -->
+
+        <div class="comp-group">
+          <h3>Toasts</h3>
+          <p>Instant feedback for payment and system events. Three semantic variants, one structure: icon, message and an optional inline action.</p>
+          <div class="comp-grid c3">
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_019" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'%3E%3Crect width='600' height='200' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Error toast: payment failed"></div><figcaption class="cap"><strong>Error</strong>Payment failed, with an inline "Modificar" action.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_020" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'%3E%3Crect width='600' height='200' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Warning toast: outstanding debt"></div><figcaption class="cap"><strong>Warning</strong>Outstanding debt, with an inline "Mostrar deuda" action.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img data-img-id="muv_case_018" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200'%3E%3Crect width='600' height='200' fill='%23E4E1DA'/%3E%3C/svg%3E" loading="lazy" alt="Success toast with a checkmark"></div><figcaption class="cap"><strong>Success</strong>Checkmark, dismissible.</figcaption></figure>
+          </div>
+        </div>
+
+      </div>
+    </details>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
-<div class="footer">
-  <div class="footer-l">muv · Passenger App · Full Design Showcase · 2025–2026</div>
-  <div class="footer-r">Sr Product Designer · Paula Elffman</div>
-</div>
+</main>
 
-
+<footer class="footer">
+  <span>muv · Passenger app · 2025–2026</span>
+  <span>Paula Elffman · Sr Product Designer</span>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.13.0/lottie.min.js"></script>
 <script>
-/* WIPE TRANSITION */
+var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* WIPE TRANSITION (shared with the rest of the portfolio) */
 (function(){
   var overlay=document.getElementById('wipe-overlay');
   function coverFrom(x,y,dark,cb){
@@ -1104,9 +1093,7 @@ body{
     overlay.classList.remove('animate');
     void overlay.offsetWidth;
     overlay.classList.add('animate');
-    requestAnimationFrame(function(){
-      overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)';
-    });
+    requestAnimationFrame(function(){ overlay.style.clipPath='circle(150% at '+x+'px '+y+'px)'; });
     setTimeout(cb,600);
   }
   function revealFrom(x,y){
@@ -1114,11 +1101,7 @@ body{
     overlay.classList.remove('animate');
     void overlay.offsetWidth;
     overlay.classList.add('animate');
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)';
-      });
-    });
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ overlay.style.clipPath='circle(0% at '+x+'px '+y+'px)'; }); });
   }
   var entry=sessionStorage.getItem('wipeEntry');
   if(entry){
@@ -1136,103 +1119,260 @@ body{
   }
 })();
 
-/* FLOW REVEAL ANIMATION - staggered cascade for flow-item / wf-item / phone-wrap */
+/* ONE ORCHESTRATED MOMENT: the survey bars draw once, the four request screens cascade in once */
 (function(){
-  var groups = document.querySelectorAll('.flow-grid, .wf-grid');
-  groups.forEach(function(grid){
-    var items = grid.querySelectorAll('.flow-item, .wf-item');
-    items.forEach(function(el, i){
-      el.style.transitionDelay = (i * 110) + 'ms';
+  var bars=document.getElementById('bars');
+  var steps=document.querySelectorAll('.step.reveal');
+  steps.forEach(function(el,i){ el.style.transitionDelay=(i*110)+'ms'; });
+  if(!('IntersectionObserver' in window)){
+    if(bars) bars.classList.add('in');
+    steps.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
     });
-  });
-  var solo = document.querySelectorAll('.phone-wrap');
-  solo.forEach(function(el){ el.style.transitionDelay = '0ms'; });
-
-  var targets = document.querySelectorAll('.flow-item, .wf-item, .phone-wrap');
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
-      }
-    });
-  }, {threshold:.2, rootMargin:'0px 0px -60px 0px'});
-  targets.forEach(function(el){ io.observe(el); });
+  },{threshold:.25,rootMargin:'0px 0px -40px 0px'});
+  if(bars) io.observe(bars);
+  steps.forEach(function(el){ io.observe(el); });
 })();
 
-/* EXPERIENCE LOTTIE - lazy init, high-fidelity replacement for the old GIF */
+/* Respect reduced motion for the hero video: no autoplay, show controls */
 (function(){
-  var el = document.getElementById('muv-experience-lottie');
-  if(!el || typeof lottie === 'undefined') return;
-  var started = false;
+  if(!REDUCED) return;
+  document.querySelectorAll('video[autoplay]').forEach(function(v){
+    v.removeAttribute('autoplay'); v.pause(); v.controls=true;
+  });
+})();
+
+/* EXPERIENCE LOTTIE: lazy init */
+(function(){
+  var el=document.getElementById('muv-experience-lottie');
+  if(!el || typeof lottie==='undefined') return;
+  var started=false;
   function start(){
-    if(started) return;
-    started = true;
+    if(started) return; started=true;
     function render(){
-      lottie.loadAnimation({
-        container: el,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: window.MUV_EXPERIENCE_DATA
-      });
+      lottie.loadAnimation({container:el,renderer:'svg',loop:!REDUCED,autoplay:!REDUCED,animationData:window.MUV_EXPERIENCE_DATA});
     }
-    if(window.MUV_EXPERIENCE_DATA){
-      render();
-    } else {
-      var s = document.createElement('script');
-      s.src = 'muv-experience-data.js';
-      s.onload = render;
+    if(window.MUV_EXPERIENCE_DATA){ render(); }
+    else{
+      var s=document.createElement('script');
+      s.src='muv-experience-data.js'; s.onload=render;
       document.head.appendChild(s);
     }
   }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        start();
-        io.disconnect();
-      }
-    });
-  }, {rootMargin:'400px 0px'});
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ start(); io.disconnect(); } });
+  },{rootMargin:'400px 0px'});
   io.observe(el);
 })();
 
-/* LAZY LOAD IMAGES */
+/* LAZY LOAD of the existing screen images (muv-case-images.js keyed by data-img-id) */
 (function(){
-  var IMG_STORE = window.MUV_CASE_IMAGES;
+  var IMG_STORE=window.MUV_CASE_IMAGES;
   function applyImages(){
     if(!window.MUV_CASE_IMAGES) return;
-    IMG_STORE = window.MUV_CASE_IMAGES;
+    IMG_STORE=window.MUV_CASE_IMAGES;
     document.querySelectorAll('[data-img-id]').forEach(function(el){
       if(el.__loaded) return;
-      var id = el.getAttribute('data-img-id');
-      var src = IMG_STORE[id];
+      var id=el.getAttribute('data-img-id');
+      var src=IMG_STORE[id];
       if(!src) return;
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){
-            el.src = src;
-            el.__loaded = true;
-            io.disconnect();
-          }
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting){ el.src=src; el.__loaded=true; io.disconnect(); }
         });
-      }, {rootMargin:'400px 0px'});
+      },{rootMargin:'400px 0px'});
       io.observe(el);
     });
   }
-  if(window.MUV_CASE_IMAGES){
-    applyImages();
-  } else {
-    var s = document.createElement('script');
-    s.src = 'muv-case-images.js';
-    s.onload = applyImages;
+  if(window.MUV_CASE_IMAGES){ applyImages(); }
+  else{
+    var s=document.createElement('script');
+    s.src='muv-case-images.js'; s.onload=applyImages;
     document.head.appendChild(s);
   }
 })();
 </script>
 
+<script>
+/* ═════════ MICROINTERACTIONS · recreated from the Figma prototype's reactions ═════════ */
+(function(){
+  var STOP={};
+  function spring(k,c,T,n){
+    var w=Math.sqrt(k),z=c/(2*w),pts=[];
+    for(var i=0;i<=n;i++){
+      var t=T*i/n,x;
+      if(z<1){var wd=w*Math.sqrt(1-z*z);x=1-Math.exp(-z*w*t)*(Math.cos(wd*t)+(z*w/wd)*Math.sin(wd*t));}
+      else{var s=Math.sqrt(z*z-1),r1=w*(z-s),r2=w*(z+s);x=1-(r2*Math.exp(-r1*t)-r1*Math.exp(-r2*t))/(r2-r1);}
+      pts.push(x.toFixed(4));
+    }
+    pts[n]='1';return 'linear('+pts.join(',')+')';
+  }
+  var OK=window.CSS&&CSS.supports&&CSS.supports('animation-timing-function','linear(0,1)');
+  var GENTLE=OK?spring(100,15,1.02,40):'cubic-bezier(.34,1.3,.64,1)';   // Figma "Gentle": stiffness 100, damping 15
+  var GENTLE_128=OK?spring(100,15,1.28,48):'cubic-bezier(.34,1.3,.64,1)';
+  document.documentElement.style.setProperty('--gentle',GENTLE);
 
+  function tick(ms){return new Promise(function(r){setTimeout(r,ms);});}
 
+  /* Runner: plays only while visible, respects Pause, and starts paused under reduced motion */
+  function Runner(dev,body){
+    var self=this;
+    this.dev=dev;this.tok=0;this.user=!!window.REDUCED;this.vis=false;this.anims=[];
+    this.active=function(){return self.vis&&!self.user&&!document.hidden;};
+    this.sleep=function(ms,tok){
+      return (async function(){
+        var t=0;
+        while(t<ms){
+          if(tok!==self.tok)throw STOP;
+          if(!self.active()){await tick(100);continue;}
+          var d=Math.min(50,ms-t);await tick(d);t+=d;
+        }
+        if(tok!==self.tok)throw STOP;
+      })();
+    };
+    this.track=function(a){self.anims.push(a);return a;};
+    this.sync=function(){
+      var act=self.active();
+      self.anims=self.anims.filter(function(a){return a.playState==='running'||a.playState==='paused';});
+      self.anims.forEach(function(a){try{act?a.play():a.pause();}catch(e){}});
+      dev.classList.toggle('is-paused',!act);
+    };
+    this.start=function(){var tok=++self.tok;self.sync();body(self,tok).catch(function(e){if(e!==STOP)console.error(e);});};
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){self.vis=e.isIntersecting;self.sync();});},{threshold:.25});
+    io.observe(dev);
+    document.addEventListener('visibilitychange',self.sync);
+    var ctl=document.querySelector('.mctl[data-for="'+dev.getAttribute('data-stage')+'"]');
+    if(ctl){
+      var pb=ctl.querySelector('[data-ctl="pause"]'),rb=ctl.querySelector('[data-ctl="replay"]');
+      function label(){if(pb){pb.textContent=self.user?'Play':'Pause';pb.setAttribute('aria-pressed',self.user?'true':'false');}}
+      if(pb)pb.addEventListener('click',function(){self.user=!self.user;label();if(!self.user&&!self.tok){self.start();}else{self.sync();}});
+      if(rb)rb.addEventListener('click',function(){self.user=false;label();self.start();});
+      label();
+    }
+    dev.classList.toggle('is-paused',true);
+  }
+
+  /* scale each 393-px-wide stage to the width of its frame */
+  function fit(){
+    document.querySelectorAll('.dev[data-w]').forEach(function(d){
+      var s=d.clientWidth/parseFloat(d.getAttribute('data-w'));
+      d.style.height=(parseFloat(d.getAttribute('data-h'))*s)+'px';
+      var st=d.querySelector('.stage');st.style.width=d.getAttribute('data-w')+'px';st.style.height=d.getAttribute('data-h')+'px';
+      st.style.transform='scale('+s+')';
+    });
+  }
+  fit();
+  if('ResizeObserver' in window){var ro=new ResizeObserver(fit);document.querySelectorAll('.dev[data-w]').forEach(function(d){ro.observe(d);});}
+  else window.addEventListener('resize',fit);
+
+  /* ── 1 · SEARCHING FOR A DRIVER ── */
+  (function(){
+    var dev=document.querySelector('[data-stage="hero"]');if(!dev)return;
+    var $=function(i){return document.getElementById(i);};
+    var world=$('mh-world'),ripple=$('mh-ripple');
+    var P={o:[98.5,102.5],d:[300.5,397.5],u:[70,116]};                 // pickup, drop-off, "you" in map coordinates
+    var A=[['o',$('mh-ripple')],['o',$('mh-pin-o')],['d',$('mh-pin-d')],['u',$('mh-dot')],['o',$('mh-pill-o')],['d',$('mh-pill-d')]];
+    // camera views and how long each one holds (prototype: 2.5s, 2.5s, 2s, 2s)
+    var V=[{s:1,x:0,y:0,h:2500},{s:2,x:-1,y:75,h:2500},{s:2,x:-401,y:-495,h:2000},{s:2,x:-1,y:75,h:2000},{s:1.25,x:-53,y:-22,h:2500}];
+    function T(v){return 'translate('+v.x+'px,'+v.y+'px) scale('+v.s+')';}
+    function at(k,v){return 'translate('+(P[k][0]*v.s+v.x)+'px,'+(P[k][1]*v.s+v.y)+'px)';}
+    function place(v){world.style.transform=T(v);A.forEach(function(a){a[1].style.transform=at(a[0],v);});}
+    function move(r,a,b){
+      function go(el,from,to){
+        var an=el.animate([{transform:from},{transform:to}],{duration:1020,easing:GENTLE,fill:'both'});
+        an.onfinish=function(){el.style.transform=to;an.cancel();};
+        r.track(an);
+      }
+      go(world,T(a),T(b));
+      A.forEach(function(x){go(x[1],at(x[0],a),at(x[0],b));});
+    }
+    var r=new Runner(dev,async function(r,tok){
+      place(V[0]);ripple.setAttribute('data-s','1');
+      // ripple: state 1 (0.2s) → 2 (0.8s) → 3 (0.8s), each change 0.3s ease-out (CSS transition)
+      (async function(){var S=[[1,200],[2,800],[3,800]];while(true){for(var i=0;i<3;i++){ripple.setAttribute('data-s',S[i][0]);await r.sleep(S[i][1],tok);}}})().catch(function(){});
+      while(true){
+        for(var i=0;i<V.length;i++){
+          await r.sleep(V[i].h,tok);
+          move(r,V[i],V[(i+1)%V.length]);
+          await r.sleep(1020,tok);
+        }
+      }
+    });
+    place(V[0]);
+    if(!window.REDUCED)r.start();else r.sync();
+  })();
+
+  /* ── 2 · SKELETON → CATEGORIES ── */
+  (function(){
+    var dev=document.querySelector('[data-stage="cat"]');if(!dev)return;
+    var cat=document.getElementById('cat');
+    var r=new Runner(dev,async function(r,tok){
+      cat.classList.remove('on');
+      while(true){
+        await r.sleep(2000,tok);cat.classList.add('on');            // prototype: after 2s
+        await r.sleep(1020+3200,tok);cat.classList.remove('on');
+        await r.sleep(700,tok);
+      }
+    });
+    if(!window.REDUCED)r.start();
+  })();
+
+  /* ── 3 · RATING (interactive) ── */
+  (function(){
+    var dev=document.querySelector('[data-stage="rate"]');if(!dev)return;
+    var card=document.getElementById('rate'),chips=document.getElementById('chips'),lab=document.getElementById('rlabel'),send=document.getElementById('rsend');
+    var stars=[].slice.call(card.querySelectorAll('.star'));
+    var LABELS=['Pésimo','Regular','Bueno 😊','Muy bueno','Excelente 🥰'];
+    var NEG=['No finalizó el viaje a tiempo','Mala actitud','Comportamiento inapropiado','Tomó una ruta incorrecta','Imprudente','El conductor no coincide con la foto'];
+    var MID=['Maneja rápido','Auto sucio','Habló por teléfono en el viaje','Tomó una ruta diferente','Imprudente','El conductor no coincide con la foto'];
+    var POS=['Manejo excelente','Auto impecable','Amigable','Excelente servicio','Conductor atento','Tomó la ruta indicada','El conductor coincide con la foto'];
+    var EASE='cubic-bezier(.2,0,0,1)',cur=0;
+    function fade(el){el.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:200,easing:EASE});}
+    function setRating(n,silent){
+      cur=n;
+      stars.forEach(function(s,i){var on=i<n;s.classList.toggle('on',on);s.setAttribute('aria-checked',i===n-1?'true':'false');});
+      if(!silent&&n){var s=stars[n-1];s.animate([{transform:'scale(1)'},{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:200,easing:EASE});}
+      lab.textContent=n?LABELS[n-1]:'Sin calificar';fade(lab);
+      var set=n<=2?NEG:(n<=4?MID:POS);
+      chips.innerHTML='';
+      if(n){set.forEach(function(t){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t;b.setAttribute('aria-pressed','false');b.addEventListener('click',function(){userTouch();b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');});chips.appendChild(b);});fade(chips);}
+    }
+    function chip(i,on){var c=chips.children[i];if(c)c.setAttribute('aria-pressed',on?'true':'false');}
+    function submit(r){
+      var an=card.animate([{transform:'none',opacity:1},{transform:'translateY(115%)',opacity:1}],{duration:1280,delay:200,easing:GENTLE_128,fill:'forwards'});
+      if(r)r.track(an);
+      return an.finished.then(function(){
+        return tick(700);
+      }).then(function(){an.cancel();setRating(0,true);card.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:400,easing:EASE});});
+    }
+    var auto=null;
+    function userTouch(){if(auto){auto.tok++;}}
+    stars.forEach(function(s,i){
+      s.addEventListener('click',function(){userTouch();setRating(i+1);});
+      s.addEventListener('keydown',function(e){
+        if(e.key==='ArrowRight'||e.key==='ArrowUp'){e.preventDefault();var n=Math.min(5,(cur||0)+1);setRating(n);stars[n-1].focus();}
+        if(e.key==='ArrowLeft'||e.key==='ArrowDown'){e.preventDefault();var m=Math.max(1,(cur||1)-1);setRating(m);stars[m-1].focus();}
+      });
+    });
+    send.addEventListener('click',function(){userTouch();submit(null);});
+    setRating(0,true);
+    // one gentle auto-demo so the interaction is discoverable; any touch from the visitor stops it
+    auto=new Runner(dev,async function(r,tok){
+      setRating(0,true);
+      await r.sleep(900,tok);setRating(2);
+      await r.sleep(1500,tok);setRating(5);
+      await r.sleep(1200,tok);chip(0,true);await r.sleep(350,tok);chip(2,true);
+      await r.sleep(1200,tok);await submit(r);
+      await r.sleep(1500,tok);
+    });
+    if(!window.REDUCED)auto.start();
+  })();
+})();
+</script>
 <!-- Portfolio Navigation Dock -->
 <style>
 #portfolio-dock{
@@ -1306,7 +1446,7 @@ body.dark-mode{
   --bg:#24242C; --bg2:#1E1E26; --bg3:#2C2C36;
   --ghost:#2C2C36; --ghost-2:#32323E;
   --paper:#F4F4F6; --paper-2:#DDDDE6;
-  --ash:#7A7A90; --ash-2:#56566A;
+  --ash:#A9A9BC; --ash-2:#7A7A90; --orange-ink:#FF9A6B; --green-ink:#5FD3A5; --amber-ink:#F2B450;
   --ash2:rgba(244,244,246,0.15);
   --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
   --line2:rgba(244,244,246,0.14);
