@@ -369,14 +369,16 @@ body.dark-mode .panel,body.dark-mode .wf-strip .wf{border-color:transparent;}
 @media (prefers-reduced-motion:reduce){.dot .ring,.sk::after{animation:none;}}
 
 /* categories: skeleton → content (after 2s, Gentle spring 1.02s) */
-.cat{position:absolute;left:0;right:0;bottom:0;height:392px;background:#fdfdfd;border-radius:24px 24px 0 0;box-shadow:0 -6px 30px rgba(39,43,41,.12);}
+.cat{position:absolute;left:0;right:0;bottom:0;height:412px;background:#fdfdfd;border-radius:24px 24px 0 0;box-shadow:0 -6px 30px rgba(39,43,41,.12);}
 .cat .grab{position:absolute;left:50%;top:14px;width:32px;height:4px;border-radius:100px;background:#c7c7c7;translate:-50% 0;}
 .cat .skel{transition:opacity .3s ease-out;}
 .cat.on .skel{opacity:0;}
-.cat .real .row,.cat .real .cta{opacity:0;transform:translateY(14px);transition:opacity .4s ease-out,transform 1.02s var(--gentle);}
-.cat.on .real .row,.cat.on .real .cta{opacity:1;transform:none;}
+.cat .real .row,.cat .cta{opacity:0;transform:translateY(14px);transition:opacity .4s ease-out,transform 1.02s var(--gentle);}
+.cat.on .real .row,.cat.on .cta{opacity:1;transform:none;}
 .cat.on .real .row:nth-child(2){transition-delay:.06s,.06s;}
-.cat.on .real .cta{transition-delay:.12s,.12s;}
+.cat.on .real .row:nth-child(3){transition-delay:.12s,.12s;}
+.cat.on .real .row:nth-child(4){transition-delay:.18s,.18s;}
+.cat.on .cta{transition-delay:.24s,.24s;}
 .row{position:absolute;left:16px;width:361px;height:76px;border-radius:14px;border:1px solid #dcdcd8;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;}
 .row.sel{border:2px solid #0b1445;}
 .row > svg{width:52px;height:26px;flex:none;color:#9a9aa8;}
@@ -442,6 +444,12 @@ body.dark-mode{--panel-light:#2C2C36;}
 .ph b{display:block;margin-top:.25rem;font-weight:600;color:var(--paper);max-width:26ch;}
 .decision .media{border:1px solid var(--line);}
 body.dark-mode .decision .media{border-color:transparent;}
+.cat .list{position:absolute;left:0;right:0;top:0;height:322px;overflow:hidden;}
+.cat .list::after{content:'';position:absolute;left:0;right:0;bottom:0;height:36px;background:linear-gradient(rgba(253,253,253,0),#fdfdfd);pointer-events:none;}
+.row .carbox{flex:none;width:88px;display:grid;place-items:center;}
+.row .carbox img{display:block;height:auto;max-width:none;}
+.pair .dev.plain{width:90%;}
+@media(max-width:900px){.pair .dev.plain{width:100%;}}
 </style>
 </head>
 <body>
@@ -764,22 +772,25 @@ body.dark-mode .decision .media{border-color:transparent;}
       <div class="mdemo">
         <h3 class="h3">Skeleton to categories</h3>
         <p class="small">The sheet holds its shape while availability loads. After <b>2 s</b> the real categories rise in on a <b>Gentle spring (1.02 s)</b>, and the skeleton fades out.</p>
-        <div class="dev plain" data-stage="cat" data-w="393" data-h="420" role="img" aria-label="Animated recreation: grey placeholder rows in a bottom sheet are replaced by the Económico, Muv and Comfort category cards and a Confirmar viaje button">
+        <div class="dev plain" data-stage="cat" data-w="393" data-h="440" role="img" aria-label="Animated recreation: grey placeholder rows in a bottom sheet are replaced by the Económico, Muv, Comfort and Moto category cards, with their car illustrations, and a Confirmar viaje button">
           <div class="stage">
             <div class="cat" id="cat">
               <i class="grab"></i>
-              <div class="skel">
-                <i class="sk" style="left:16px;top:40px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
-                <i class="sk" style="left:16px;top:124px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
-                <i class="sk" style="left:16px;top:208px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
-                <i class="sk" style="left:16px;top:304px;width:361px;height:52px;border-radius:14px;--w:361px"></i>
+              <div class="list">
+                <div class="skel">
+                  <i class="sk" style="left:16px;top:40px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                  <i class="sk" style="left:16px;top:124px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                  <i class="sk" style="left:16px;top:208px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                  <i class="sk" style="left:16px;top:292px;width:361px;height:76px;border-radius:14px;--w:361px"></i>
+                </div>
+                <div class="real">
+                  <div class="row sel" style="top:40px"><span class="tag">Recomendado</span><span class="carbox"><img src="muv-assets/car-economy.png" width="86" height="55" alt=""></span><div><div class="n">Económico</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 32,000<small class="was">Gs. 38,000</small></div></div>
+                  <div class="row" style="top:124px"><span class="carbox"><img src="muv-assets/car-muv.png" width="61" height="39" alt=""></span><div><div class="n">Muv</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 36,000<small class="was">Gs. 38,000</small></div></div>
+                  <div class="row" style="top:208px"><span class="carbox"><img src="muv-assets/car-comfort.png" width="61" height="39" alt=""></span><div><div class="n">Comfort</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 45,000</div></div>
+                  <div class="row" style="top:292px"><span class="carbox"><img src="muv-assets/car-moto.png" width="61" height="39" alt=""></span><div><div class="n">Moto</div></div></div>
+                </div>
               </div>
-              <div class="real">
-                <div class="row sel" style="top:40px"><span class="tag">Recomendado</span><svg viewBox="0 0 52 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3H5z" fill="currentColor" opacity=".18"/><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3"/><circle cx="14" cy="19" r="3.5" fill="#fdfdfd"/><circle cx="38" cy="19" r="3.5" fill="#fdfdfd"/></svg><div><div class="n">Económico</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 32,000<small class="was">Gs. 38,000</small></div></div>
-                <div class="row" style="top:124px"><svg viewBox="0 0 52 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3H5z" fill="currentColor" opacity=".18"/><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3"/><circle cx="14" cy="19" r="3.5" fill="#fdfdfd"/><circle cx="38" cy="19" r="3.5" fill="#fdfdfd"/></svg><div><div class="n">Muv</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 36,000<small class="was">Gs. 38,000</small></div></div>
-                <div class="row" style="top:208px"><svg viewBox="0 0 52 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3H5z" fill="currentColor" opacity=".18"/><path d="M5 19v-5l4-7h24l6 7h6a2 2 0 0 1 2 2v3"/><circle cx="14" cy="19" r="3.5" fill="#fdfdfd"/><circle cx="38" cy="19" r="3.5" fill="#fdfdfd"/></svg><div><div class="n">Comfort</div><div class="t"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1"/></svg> 5 min &nbsp;<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="4" r="2"/><path d="M2.2 10.2c.4-2 1.9-3 3.8-3s3.4 1 3.8 3"/></svg> 4</div></div><div class="p">Gs. 45,000</div></div>
-                <div class="cta" style="top:304px">Confirmar viaje</div>
-              </div>
+              <div class="cta" style="top:336px">Confirmar viaje</div>
             </div>
           </div>
         </div>
@@ -789,7 +800,7 @@ body.dark-mode .decision .media{border-color:transparent;}
       <div class="mdemo">
         <h3 class="h3">Rating that adapts</h3>
         <p class="small">Try it. The tags change with the score, chips answer a tap in <b>0.2 s</b>, and on submit the card leaves after a <b>0.2 s</b> pause on a <b>1.28 s</b> Gentle spring.</p>
-        <div class="dev plain" data-stage="rate" data-w="360" data-h="540">
+        <div class="dev plain" data-stage="rate" data-w="360" data-h="590">
           <div class="stage">
             <div class="rate" id="rate">
               <div class="top"><b>Calificación</b><span>Cerrar</span></div>
