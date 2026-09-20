@@ -458,6 +458,7 @@ body.dark-mode .decision .media{border-color:transparent;}
 .decision .media.details img{width:100%;height:auto;border-radius:var(--r-sm);box-shadow:0 0 0 1px var(--line2),0 10px 28px rgba(20,20,20,.10);background:#fff;}
 .decision .media.details figcaption{margin-top:.625rem;font-size:.8125rem;color:var(--ash);text-align:center;}
 img.envio{width:100%;height:auto;}
+img.legacy{width:100%;height:auto;}
 </style>
 </head>
 <body>
@@ -574,16 +575,10 @@ img.envio{width:100%;height:auto;}
       <p class="small" style="margin-top:1rem;max-width:70ch">The survey only reached people who had already made it in, so it couldn't see the drop-off. The funnel could. Onboarding had to bring more people in, and the ride flow had to keep them.</p>
     </div>
 
-    <div class="duo">
-      <figure>
-        <div class="panel"><img src="muv-assets/muv-legacy-v1.jpg" width="994" height="706" loading="lazy" decoding="async" alt="Legacy muv app: destination entry with stacked Desde and Hasta fields over a map, and a driver card with photo, rating, time, price and distance"></div>
-        <figcaption>Legacy app: a full orange header, stacked "Desde / Hasta" fields over the map, and a driver card with time, price and distance.</figcaption>
-      </figure>
-      <figure>
-        <div class="panel"><img src="muv-assets/muv-legacy-store.jpg" width="1072" height="926" loading="lazy" decoding="async" alt="Legacy muv app: destination screen with shortcuts, and category list with Estándar, Premium and XL and a multi-stop route"></div>
-        <figcaption>Legacy app: destination shortcuts, a multi-stop route, and the category list (Estándar, Premium, XL) ending in a light-on-gradient "Continuar" button.</figcaption>
-      </figure>
-    </div>
+    <figure class="narrow-fig">
+      <img class="legacy" src="muv-assets/muv-legacy-app.webp" width="1600" height="1096" loading="lazy" decoding="async" alt="The legacy muv app in three screens: a chooser asking whether to send or receive a package, a trip in progress with a numbered multi-stop route, an arrival banner and the driver card with call and message buttons, and a home asking where to go with a route search field and recent addresses">
+      <figcaption>The legacy app: a home built around a route search field and recent addresses, a send or receive chooser, and a trip view with numbered stops, the driver card and the payment method.</figcaption>
+    </figure>
 
     <div class="split">
       <div>
@@ -601,7 +596,7 @@ img.envio{width:100%;height:auto;}
         <div class="scope" style="margin-top:0">
           <div><h4>Onboarding</h4><p>Includes the Unid integration and the value proposition, with a basic profile setup.</p></div>
           <div><h4>Home and navigation</h4><p>A hybrid navigation model.</p></div>
-          <div><h4>Trip and send</h4><p>Requesting a ride, and the new service for sending and receiving packages.</p></div>
+          <div><h4>Trip and send</h4><p>Requesting a ride, and sending or receiving packages.</p></div>
           <div><h4>Reviews</h4><p>A new section to gather feedback and improve the product.</p></div>
         </div>
         <p class="small" style="margin-top:1.5rem">Secondary flows: account, favorites, payment methods, my trips and promotions.</p>
