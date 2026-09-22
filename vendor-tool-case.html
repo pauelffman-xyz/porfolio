@@ -102,6 +102,7 @@ body.dark-mode .back-nav{background:rgba(36,36,44,.92);}
 .meta dt{font-size:.8125rem;color:var(--ash);margin-bottom:.25rem;}
 .meta dd{font-size:.9375rem;font-weight:500;line-height:1.4;}
 .hero-visual{margin-top:clamp(40px,5vw,72px);max-width:960px;margin-inline:auto;}
+.hero-visual--float{max-width:1160px;}
 .frame{border-radius:var(--r);overflow:hidden;background:var(--bg2);box-shadow:0 20px 56px rgba(20,20,20,.12);}
 .lottie-box{position:relative;aspect-ratio:1600/1200;}
 .lottie-box > img.fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:var(--bg2);}
@@ -215,6 +216,10 @@ details.lib[open] summary .ico{transform:rotate(45deg);}
 .comp .cap{font-size:.875rem;line-height:1.45;color:var(--ash);}
 .comp .cap strong{display:block;color:var(--paper);font-weight:600;margin-bottom:.125rem;}
 @media(max-width:900px){.comp-grid{grid-template-columns:1fr;}}
+.stack-comp{display:flex;flex-direction:column;gap:1rem;}
+.comp--wide .thumb{min-height:0;}
+.thumb--pad{padding:1.5rem;}
+.thumb--pad img{width:100%;height:auto;}
 
 /* ─── Reveal (one gentle moment: the three photo tips) ─── */
 .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
@@ -270,8 +275,8 @@ body.dark-mode{--panel-light:#2C2C36;}
       <div><dt>Launch</dt><dd>May 2025</dd></div>
     </dl>
 
-    <div class="hero-visual">
-      <div class="frame"><img src="vendor-tool-assets/vt-franchise-dashboard.webp" width="1600" height="1040" alt="Vendor Tool franchise view: branch status, product completion and seven-day metrics for a franchise called El Rincon Py"></div>
+    <div class="hero-visual hero-visual--float">
+      <img src="vendor-tool-assets/vt-hero-composite.webp" width="1872" height="835" alt="Three Vendor Tool screens: a photo waiting in review while the product stays live with its previous photo, the product editor for Hamburguesa Bacon XXX with its live preview, and the product-categories list" style="width:100%;height:auto;display:block;">
     </div>
   </div>
 </header>
@@ -372,13 +377,14 @@ body.dark-mode{--panel-light:#2C2C36;}
 
     <div class="split rev">
       <h2 class="h2 wide" id="solution-h">One dashboard for products, orders, status and team.</h2>
-      <p class="prose">Vendor Tool starts on a home that answers the first question a vendor has in the morning: what is open, what is active, and how did the last seven days go.</p>
+      <p class="prose">Vendor Tool covers the day-to-day of running a menu: products, photos, categories and promos, all edited and reviewed from the same place.</p>
     </div>
 
-    <figure class="narrow-fig" style="max-width:1080px">
-      <div class="panel scroll"><img src="vendor-tool-assets/vt-franchise-dashboard.webp" width="1600" height="1040" loading="lazy" decoding="async" alt="Vendor Tool franchise view for a franchise called El Rincon Py: 33% of branches shown with 5 of 15 closed, 95% of products active with 100 of 110, and last-seven-days metrics for sales, orders, cancellation rate and average preparation time. Two banners sit below: photo tips and a Ueno Bank account offer."></div>
-      <figcaption>The franchise view. Branches closed (5 of 15 in this sample), products active (100 of 110), and the last seven days: sales, orders, cancellation rate and average preparation time. Two banners sit under the metrics: photo tips, and a Ueno Bank account offer. Sample data.</figcaption>
+    <figure class="narrow-fig" style="max-width:1160px">
+      <img src="vendor-tool-assets/vt-toolkit-grid.webp" width="1680" height="905" loading="lazy" decoding="async" alt="Six Vendor Tool screens: the product editor with a live preview, a photo sent to review with old vs new side by side, the product categories list, the new-category dialog, the Promos product list, and the photo-tips guide" style="width:100%;height:auto;border-radius:var(--r);">
+      <figcaption>Menu, photos and categories, all edited from the same place.</figcaption>
     </figure>
+    <!-- TODO(Paula): swapped this spot's figure for your new 6-screen toolkit collage, per your note, and rewrote the paragraph above it to match (it used to describe the franchise dashboard specifically — "what's open this morning" — which no longer sits here). One thing this drops: the franchise-view screenshot with its 33%/95%/metrics breakdown and its caption isn't shown as its own figure anywhere now — it still exists as the Prototype section's fallback thumbnail, but unnarrated. If you want that detail back in the case, tell me where (e.g. right after the "principles" row below, or inside the franchise-view bullet in "principles") and I'll add it back rather than leave it orphaned. -->
 
     <div class="principles">
       <div><h3>Franchise-wide view</h3><p>Real-time operating status across every branch, from a single screen.</p></div>
@@ -635,7 +641,7 @@ body.dark-mode{--panel-light:#2C2C36;}
   <div class="wrap">
     <details class="lib">
       <summary>
-        <span><span class="h3" id="lib-h">Component library</span><span class="sub">Order status pills and the order timeline</span></span>
+        <span><span class="h3" id="lib-h">Component library</span><span class="sub">Status, cards, headers and navigation, pulled from across the tool</span></span>
         <span class="ico" aria-hidden="true">+</span>
       </summary>
       <div class="lib-body">
@@ -651,7 +657,34 @@ body.dark-mode{--panel-light:#2C2C36;}
           <p>Used across the queue, the history and the order detail.</p>
           <div class="comp-grid">
             <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-status-pills.webp" width="735" height="300" loading="lazy" decoding="async" alt="Order table rows with status pills: Cancelada in red, Entregada in green, Rechazada in grey"></div><figcaption class="cap"><strong>Order status pills</strong>Cancelada, Entregada and Rechazada, in the order table.</figcaption></figure>
-            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-order-timeline.webp" width="1243" height="116" loading="lazy" decoding="async" alt="Five-step order timeline with time stamps: Pendiente, Confirmada, Preparando, Delivery, Entregada"></div><figcaption class="cap"><strong>Order timeline</strong>The same five states on every order detail, each with a time stamp.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-comp-timeline.webp" width="2208" height="188" loading="lazy" decoding="async" alt="Five-step order timeline with time stamps: Pendiente, Confirmada, Preparando, Delivery, Entregada"></div><figcaption class="cap"><strong>Order timeline</strong>The same five states on every order detail, each with a time stamp.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Order card</h3>
+          <p>The same card at rest, and under time pressure. Past a threshold, "Cancelar orden" disappears — once time is critical, the only choices left are act or print, not walk away.</p>
+          <div class="stack-comp">
+            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-order-card.webp" width="2288" height="552" loading="lazy" decoding="async" alt="Order card at rest: Doña Angela Pinedo, Delivery tag, Imprimir, Cancelar orden and Accion buttons, order total Gs. 110.000, 7 minutes elapsed"></div><figcaption class="cap"><strong>At rest</strong>Imprimir, Cancelar orden and Accion are all on the table.</figcaption></figure>
+            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-order-card-urgent.webp" width="2288" height="584" loading="lazy" decoding="async" alt="The same order card in an urgent, red-tinted state: the elapsed time is now red, and Cancelar orden is gone, leaving only Imprimir and Accion"></div><figcaption class="cap"><strong>Under time pressure</strong>The card tints red, the elapsed time turns red, and Cancelar orden is gone.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Page header pattern</h3>
+          <p>Every second-level screen in Vendor Tool shares this header: breadcrumb, back arrow, title, and a slot for either actions or filters.</p>
+          <div class="stack-comp">
+            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-header-actions.webp" width="1742" height="300" loading="lazy" decoding="async" alt="Page header with breadcrumb, back arrow, title, subtitle, a franchise selector, dark-mode and mute icons, two secondary Operation buttons and one primary red button"></div><figcaption class="cap"><strong>With actions</strong>Two secondary actions plus one primary, for screens like the product editor.</figcaption></figure>
+            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-header-filters.webp" width="1712" height="284" loading="lazy" decoding="async" alt="The same header pattern with a Filtros row instead of actions: Franquicia, Estado, Periodo, Medio de pago, Transaccion"></div><figcaption class="cap"><strong>With filters</strong>The same slot, filled with Franquicia, Estado, Periodo and more — used on Órdenes and Roles.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Small pieces</h3>
+          <p>A stat card and the queue's tab navigation, with counts that update live.</p>
+          <div class="comp-grid">
+            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-comp-total-card.webp" width="528" height="208" loading="lazy" decoding="async" alt="A small stat card reading Gs. 807.976, labelled TOTAL"></div><figcaption class="cap"><strong>Stat card</strong>The same card shows a total, a count, or a time — just the label changes.</figcaption></figure>
+            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-comp-tabs.webp" width="2208" height="92" loading="lazy" decoding="async" alt="Tab navigation: Pendientes 10, Preparando 99, Delivery/Pick up 99, Historial 100, with a red underline on the active tab"></div><figcaption class="cap"><strong>Queue tabs</strong>Pendientes, Preparando, Delivery/Pick up and Historial, each with a live count.</figcaption></figure>
           </div>
         </div>
 
