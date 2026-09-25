@@ -1228,6 +1228,19 @@ Prompt base (en inglés):
 
 ---
 
+### Escena de `monchis-case.html` — "A day with Monchis" (Septiembre 2026)
+
+*✅ Dibujada · ✅ Integrada en `monchis-case.html`*
+
+- **Dónde va:** en "Wireframes · Exploration", entre la intro ("Structure first, pixels much later.") y el label "The exploration · Time-of-day box". O sea, antes de los wireframes, que siguen siendo la evidencia. Se sumó Caveat al `<link>` de Google Fonts y el CSS `.sketch` al primer `<style>`.
+- **Qué cuenta:** dos focos a la vez. Para la persona, *hacemos tu día mejor*: el antojo correcto aparece sin buscar. Para Monchis, *estar presentes en el día a día*: cada momento es una oportunidad de conversión.
+- **Estructura:** la misma persona en 4 viñetas (mañana 8:40 con café, mediodía 12:30 con la laptop, tarde 17:10 con una porción de torta, noche 21:00 con la luna en la ventana). Arriba, un arco de sol que avanza del amanecer a la luna. Debajo de cada viñeta, la caja contextual (borde punteado rojo = voz de la app) con los textos reales del case: "¿Qué te tienta esta mañana?", "¿No almorzaste aún?", "Merienda con algo dulce", "Cena sin vueltas", y sus rails.
+- **Rótulos:** gris "YOU: THE RIGHT CRAVING, NO SEARCHING" · amarillo "ONE BOX. FOUR MOMENTS A DAY." · rojo "MONCHIS: FOUR CHANCES TO CONVERT".
+- **Acentos Monchis:** `--sk-n` rojo de acción `#E8143C` (texto `#C8102E`; dark `#FF5C7A`/`#FF7A93`) y `--sk-o` ámbar `#F5A623` para la luz del día (dark `#FFC15E`). Se suma `.sk-wash-night` (azul tenue) para la viñeta de la noche.
+- **Técnica:** la persona es un `<symbol id="mc-person">` reutilizado con `<use>` 4 veces (mismo personaje garantizado), y el interior de la caja también (`#mc-box-inner`). `min-width:820px` en mobile.
+- **Wireframes de la exploración recortados:** quedó solo la card "Where the box lives — after the user, before the catalogue", centrada a 760px (`.wf-explore--single`). Se eliminaron "Same component, four moments" (junto con su callout violeta "Why this mattered") y "One context engine, two surfaces": la escena ya cuenta los cuatro momentos.
+- **Pensamientos en inglés** (idioma de la página); los textos de la app en español, tal cual el producto. Los pensamientos ("I skipped lunch again", etc.) son narrativos, no citas de research.
+
 ### Cambios en `muv-case.html` en esta pasada (Septiembre 2026)
 
 - Se implementó la **escena 3** en Process, antes del stepper de 5 estados.

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>monchis — Home Redesign Showcase</title>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -442,48 +442,6 @@ body{
   display:flex;justify-content:space-between;align-items:center;
 }
 .footer-t{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
-
-/* ─── Sketch scenes (storytelling illustrations) ───
-   Portfolio system: graphite + two brand accents. See bible → "LENGUAJE VISUAL v3".
-   Monchis: --sk-n = action red (app voice), --sk-o = warm amber (light of the day). */
-.sketch-fig{margin-block:clamp(32px,5vw,56px);}
-.sketch{
-  --sk-paper:#FBF9F4; --sk-grid:rgba(20,20,20,.05);
-  --sk-ink:#2B2B2B; --sk-soft:rgba(43,43,43,.38);
-  --sk-o:#F5A623; --sk-o-ink:#9A5B00; --sk-n:#E8143C; --sk-n-ink:#C8102E;
-  --sk-user:#EFEEEA; --sk-app:#FCE8EC; --sk-idea:#FBEFB8;
-  border-radius:var(--r,12px);overflow-x:auto;background:var(--sk-paper);
-  box-shadow:var(--sh-card,0 1px 2px rgba(0,0,0,.03),2px 4px 12px rgba(0,0,0,.08));
-}
-.sketch svg{display:block;width:100%;min-width:820px;height:auto;}
-body.dark-mode .sketch{
-  --sk-paper:#2A2A33; --sk-grid:rgba(244,244,246,.045);
-  --sk-ink:#E6E6EC; --sk-soft:rgba(230,230,236,.34);
-  --sk-o:#FFC15E; --sk-o-ink:#FFC15E; --sk-n:#FF5C7A; --sk-n-ink:#FF7A93;
-  --sk-user:#34343E; --sk-app:#3A2830; --sk-idea:#5A4E1E;
-}
-.sketch .sk-paper{fill:var(--sk-paper);}
-.sketch .sk-gridline{stroke:var(--sk-grid);stroke-width:1;}
-.sketch .sk-wash-o{fill:var(--sk-o);opacity:.14;}
-.sketch .sk-wash-n{fill:var(--sk-n);opacity:.09;}
-.sketch .sk-wash-night{fill:#3B4A8A;opacity:.12;}
-body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
-.sketch .sk-ink{stroke:var(--sk-ink);}
-.sketch .sk-soft{stroke:var(--sk-soft);}
-.sketch .sk-o{stroke:var(--sk-o);}
-.sketch .sk-n{stroke:var(--sk-n);}
-.sketch .sk-fill-paper{fill:var(--sk-paper);}
-.sketch .sk-fill-ink{fill:var(--sk-ink);}
-.sketch .sk-fill-o{fill:var(--sk-o);}
-.sketch .sk-fill-n{fill:var(--sk-n);}
-.sketch .sk-bubble-user,.sketch .sk-pill-user{fill:var(--sk-user);}
-.sketch .sk-pill-app{fill:var(--sk-app);stroke:var(--sk-n);}
-.sketch .sk-pill-idea{fill:var(--sk-idea);}
-.sketch .sk-hand{font-family:'Caveat','Segoe Print','Comic Sans MS',cursive;font-weight:600;fill:var(--sk-ink);}
-.sketch .sk-t-n{fill:var(--sk-n-ink);}
-.sketch .sk-t-soft{fill:var(--sk-ink);opacity:.7;}
-.sketch-fig{margin:0 0 clamp(40px,5vw,64px);}
-.sketch-fig figcaption{margin-top:.875rem;font-size:.875rem;line-height:1.6;color:var(--ash);max-width:70ch;}
 </style>
 
 <style>
@@ -640,7 +598,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
       <div class="phone-wrap">
         <div class="phone-shell" style="width:230px;max-height:560px;">
           <div class="phone-notch"></div>
-          <img src="assets/monchis_case_001.webp" loading="lazy" decoding="async" alt="Old Monchis home — full scroll" class="db-av-photo" style="aspect-ratio:760/2705;width:100%;height:auto;display:block;">
+          <img src="assets/monchis/monchis_case_001.webp" loading="lazy" decoding="async" alt="Old Monchis home — full scroll" class="db-av-photo" style="aspect-ratio:760/2705;width:100%;height:auto;display:block;">
           <div style="position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(to bottom,rgba(255,255,255,0),#fff);pointer-events:none;z-index:2;"></div>
         </div>
         <div class="badge badge-r" style="margin-top:8px;">Outdated · Disorganized</div>
@@ -1200,7 +1158,6 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
 .wf-note-l{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:#5B3DF5;flex-shrink:0;padding-top:.15rem;}
 .wf-note-t{font-size:.8125rem;line-height:1.7;color:var(--ink);}
 @media(max-width:1000px){.wf-hero,.wf-explore{grid-template-columns:1fr;gap:2rem;}}
-.wf-explore--single{grid-template-columns:minmax(0,1fr);max-width:760px;margin-inline:auto;}
 </style>
 
 <div class="section">
@@ -1225,191 +1182,9 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
     </div>
   </div>
 
-    <!-- ─── Sketch scene · "A day with Monchis" (time-of-day contextual box) ─── -->
-    <figure class="sketch-fig">
-      <div class="sketch sketch--monchis">
-        <svg viewBox="0 0 1200 690" role="img" aria-labelledby="mcday-t mcday-d">
-          <title id="mcday-t">A day with Monchis: one box, four moments</title>
-          <desc id="mcday-d">The same person across one day, with the sun moving from sunrise to night above her. At 8:40, with a coffee, she thinks "Something to start the day…" and her phone shows the box "¿Qué te tienta esta mañana?" with desayunos, café and 2x1. At 12:30, at her laptop, she thinks "I skipped lunch again" and the box reads "¿No almorzaste aún?" with quick options and menú del día. At 17:10, next to a slice of cake, she thinks "I need something sweet" and the box reads "Merienda con algo dulce" with cafeterías, postres and helados. At 21:00, by a window with the moon, she thinks "Not cooking tonight" and the box reads "Cena sin vueltas" with pizza, hamburguesas and mercado 24h. Labels at the bottom: for her, the right craving without searching; one box, four moments a day; for Monchis, four chances a day to convert.</desc>
-          <defs>
-            <filter id="mc-wobble" x="-5%" y="-5%" width="110%" height="110%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/>
-              <feDisplacementMap in="SourceGraphic" scale="3"/>
-            </filter>
-            <filter id="mc-wash" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="3"/>
-              <feDisplacementMap in="SourceGraphic" scale="18"/>
-              <feGaussianBlur stdDeviation="3"/>
-            </filter>
-            <pattern id="mc-grid" width="28" height="28" patternUnits="userSpaceOnUse">
-              <path d="M28 0H0V28" fill="none" class="sk-gridline"/>
-            </pattern>
-            <!-- the same person in every moment (bust, facing right) -->
-            <symbol id="mc-person" overflow="visible">
-              <path d="M-60 132q4-66 48-70h26q44 4 48 70" class="sk-fill-paper"/>
-              <path d="M-18 36v26M-2 36v26"/>
-              <path d="M-30 1q0-40 32-40q30 0 30 36q0 10 6 16q-6 4-8 4q2 14-10 18q-8 3-20 2q-30-4-30-36z" class="sk-fill-paper"/>
-              <path d="M-30 5q-8-44 36-46q24 0 28 20q-18-6-34 4q-8 6-12 24q-6-4-10 0q-4 4-8-2z" class="sk-fill-ink"/>
-              <circle cx="-34" cy="-35" r="13" class="sk-fill-ink"/>
-              <path d="M16 5q4 2 8 0" stroke-width="2"/>
-              <path d="M18 23q4 2 7-1" stroke-width="1.8"/>
-              <!-- phone in hand -->
-              <rect x="22" y="64" width="17" height="28" rx="4" transform="rotate(-12 30 78)" class="sk-fill-ink" stroke-width="2"/>
-              <path d="M16 92q12 8 28-2" stroke-width="2.2"/>
-            </symbol>
-          </defs>
-
-          <rect width="1200" height="690" class="sk-paper"/>
-          <rect width="1200" height="690" fill="url(#mc-grid)"/>
-
-          <!-- washes: the light changes through the day -->
-          <g filter="url(#mc-wash)" aria-hidden="true">
-            <ellipse cx="172" cy="250" rx="120" ry="95" class="sk-wash-o" opacity=".9"/>
-            <ellipse cx="457" cy="250" rx="120" ry="95" class="sk-wash-o" opacity="1.3"/>
-            <ellipse cx="742" cy="250" rx="120" ry="95" class="sk-wash-n"/>
-            <ellipse cx="1027" cy="250" rx="120" ry="95" class="sk-wash-night"/>
-          </g>
-
-          <g filter="url(#mc-wobble)" class="sk-ink" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-
-            <!-- sun path across the day -->
-            <path d="M70 112C120 96 150 90 172 88S380 42 457 42S680 50 742 60S960 82 1027 90S1100 104 1135 114" class="sk-soft" stroke-width="1.6" stroke-dasharray="4 9"/>
-            <g class="sk-o" stroke-width="2">
-              <circle cx="172" cy="88" r="12" class="sk-fill-o"/>
-              <path d="M172 66v-6M172 110v6M150 88h-6M194 88h6M157 73l-4-4M187 73l4-4"/>
-              <circle cx="457" cy="42" r="14" class="sk-fill-o"/>
-              <path d="M457 18v-6M457 66v6M433 42h-6M481 42h6M440 25l-4-4M474 25l4-4M440 59l-4 4M474 59l4 4"/>
-              <circle cx="742" cy="60" r="13" class="sk-fill-o" opacity=".75"/>
-              <path d="M742 38v-6M720 60h-6M764 60h6M726 44l-4-4M758 44l4-4"/>
-            </g>
-            <path d="M1036 76a15 15 0 1 0 6 22a12 12 0 1 1-6-22z" class="sk-fill-ink" stroke-width="1.8"/>
-            <path d="M1062 70l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z M1002 72l1.5 3.5l3.5 1.5l-3.5 1.5l-1.5 3.5l-1.5-3.5l-3.5-1.5l3.5-1.5z" class="sk-soft" stroke-width="1.2"/>
-
-            <!-- ── four moments ── -->
-            <!-- 1 · morning -->
-            <g transform="translate(40 0)">
-              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
-              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
-              <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
-              <path d="M8 348H256" stroke-width="2.2"/>
-              <!-- mug + steam -->
-              <path d="M178 316h34v24q0 8-8 8h-18q-8 0-8-8z" class="sk-fill-paper" stroke-width="2.2"/>
-              <path d="M212 322q12 0 12 9q0 9-12 8" stroke-width="2"/>
-              <path d="M188 306q-6-7 0-13q6-6 0-13M201 306q-6-7 0-13q6-6 0-13" class="sk-soft" stroke-width="1.6"/>
-            </g>
-            <!-- 2 · midday -->
-            <g transform="translate(325 0)">
-              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
-              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
-              <!-- wall clock at 12:30 -->
-              <circle cx="222" cy="226" r="17" class="sk-fill-paper" stroke-width="2"/>
-              <path d="M222 226v-11M222 226v12M222 226l3-7" stroke-width="1.8"/>
-              <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
-              <path d="M8 348H256" stroke-width="2.2"/>
-              <!-- laptop -->
-              <path d="M170 346l8-40h62l-6 40z" class="sk-fill-paper" stroke-width="2.2"/>
-              <path d="M160 347h92" stroke-width="2.6"/>
-            </g>
-            <!-- 3 · afternoon -->
-            <g transform="translate(610 0)">
-              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
-              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
-              <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
-              <path d="M8 348H256" stroke-width="2.2"/>
-              <!-- plate + slice of cake -->
-              <path d="M168 342q38 10 76 0" stroke-width="2"/>
-              <path d="M178 338h52l-12-30z" class="sk-fill-paper" stroke-width="2.2"/>
-              <path d="M186 324h34" class="sk-n" stroke-width="2"/>
-              <circle cx="218" cy="303" r="4" class="sk-fill-n sk-n" stroke-width="1.5"/>
-            </g>
-            <!-- 4 · night -->
-            <g transform="translate(895 0)">
-              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
-              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
-              <!-- window with moon -->
-              <rect x="186" y="204" width="62" height="70" rx="4" class="sk-fill-paper" stroke-width="2"/>
-              <path d="M217 204v70M186 239h62" class="sk-soft" stroke-width="1.4"/>
-              <path d="M236 214a8 8 0 1 0 4 12a6 6 0 1 1-4-12z" class="sk-fill-ink" stroke-width="1.4"/>
-              <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
-              <path d="M8 348H256" stroke-width="2.2"/>
-              <!-- keys + empty plate: not cooking -->
-              <path d="M170 342q34 9 68 0" stroke-width="2"/>
-              <circle cx="222" cy="330" r="6" stroke-width="1.8"/><path d="M216 334l-14 6" stroke-width="1.8"/>
-            </g>
-
-            <!-- zoom lines from each phone to its box -->
-            <g class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7">
-              <path d="M160 316L54 392M170 320L290 392"/>
-              <path d="M445 316L339 392M455 320L575 392"/>
-              <path d="M730 316L624 392M740 320L860 392"/>
-              <path d="M1015 316L909 392M1025 320L1145 392"/>
-            </g>
-
-            <!-- the contextual box, four times (app voice: red) -->
-            <g class="sk-n" stroke-width="2" stroke-dasharray="7 6">
-              <rect x="52" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-              <rect x="337" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-              <rect x="622" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-              <rect x="907" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-            </g>
-            <g class="sk-soft" stroke-width="1.6">
-              <g id="mc-box-inner">
-                <circle cx="76" cy="474" r="9"/><circle cx="100" cy="474" r="9"/><circle cx="124" cy="474" r="9"/><circle cx="148" cy="474" r="9"/>
-                <rect x="64" y="492" width="106" height="36" rx="7"/><rect x="176" y="492" width="106" height="36" rx="7"/>
-              </g>
-              <use href="#mc-box-inner" x="285"/>
-              <use href="#mc-box-inner" x="570"/>
-              <use href="#mc-box-inner" x="855"/>
-            </g>
-
-            <!-- ── labels ── -->
-            <rect x="30" y="610" width="360" height="44" rx="10" class="sk-pill-user" stroke-width="1.8"/>
-            <path d="M418 622l-16-8M418 632l-20 0M418 642l-16 8M782 622l16-8M782 632l20 0M782 642l16 8" stroke-width="2"/>
-            <path d="M428 610q172-8 344 0l2 44q-174 8-348 0z" class="sk-pill-idea" stroke-width="1.8"/>
-            <rect x="810" y="610" width="360" height="44" rx="10" class="sk-pill-app" stroke-width="1.8"/>
-          </g>
-
-          <!-- real text, outside the wobble -->
-          <g class="sk-hand">
-            <text x="173" y="148" text-anchor="middle" font-size="21">Something to start the day…</text>
-            <text x="458" y="148" text-anchor="middle" font-size="21">I skipped lunch again.</text>
-            <text x="743" y="148" text-anchor="middle" font-size="21">I need something sweet.</text>
-            <text x="1028" y="148" text-anchor="middle" font-size="21">Not cooking tonight.</text>
-
-            <g font-size="14" letter-spacing="1" class="sk-t-soft">
-              <text x="68" y="418">MAÑANA · 8:40</text>
-              <text x="353" y="418">MEDIODÍA · 12:30</text>
-              <text x="638" y="418">TARDE · 17:10</text>
-              <text x="923" y="418">NOCHE · 21:00</text>
-            </g>
-            <g font-size="14" class="sk-t-soft" text-anchor="end">
-              <text x="279" y="418">✕</text><text x="564" y="418">✕</text><text x="849" y="418">✕</text><text x="1134" y="418">✕</text>
-            </g>
-            <g font-size="20" font-weight="600" class="sk-t-n">
-              <text x="66" y="448">¿Qué te tienta esta mañana?</text>
-              <text x="351" y="448">¿No almorzaste aún?</text>
-              <text x="636" y="448">Merienda con algo dulce</text>
-              <text x="921" y="448">Cena sin vueltas</text>
-            </g>
-            <g font-size="15" class="sk-t-soft">
-              <text x="66" y="554">desayunos · café · 2x1</text>
-              <text x="351" y="554">opciones rápidas · menú del día</text>
-              <text x="636" y="554">cafeterías · postres · helados</text>
-              <text x="921" y="554">pizza · hamburguesas · mercado 24h</text>
-            </g>
-
-            <text x="210" y="638" text-anchor="middle" font-size="17" letter-spacing=".5">YOU: THE RIGHT CRAVING, NO SEARCHING</text>
-            <text x="600" y="639" text-anchor="middle" font-size="19" letter-spacing=".5">ONE BOX. FOUR MOMENTS A DAY.</text>
-            <text x="990" y="638" text-anchor="middle" font-size="17" letter-spacing=".5">MONCHIS: FOUR CHANCES TO CONVERT</text>
-          </g>
-        </svg>
-      </div>
-      <figcaption>The same box across one day. For the person, the right craving shows up without searching. For Monchis, every moment of the day is a new chance to turn a craving into an order.</figcaption>
-    </figure>
-
   <div class="section-label"><div class="sl-t">The exploration · Time-of-day box</div><div class="sl-l"></div></div>
 
-  <div class="wf-explore wf-explore--single">
+  <div class="wf-explore">
     <!-- 1a -->
     <div class="wf-card">
       <div class="wf-card-head">
@@ -1455,6 +1230,111 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
       <div class="wf-note">
         <div class="wf-note-l">Rule</div>
         <div class="wf-note-t">The box is dismissible — and if it's closed, it returns the next day with a different moment. Personalization that can't be refused stops being a service and becomes a banner.</div>
+      </div>
+    </div>
+
+    <!-- 1e -->
+    <div>
+      <div class="wf-card" style="margin-bottom:1.5rem;">
+        <div class="wf-card-head">
+          <div class="wf-card-t">Same component, four moments</div>
+          <div class="wf-card-d">Morning, midday, afternoon and night are not four sections — they're one component with different content and copy. "¿Qué te tienta esta mañana?" at 8:40 becomes "¿No almorzaste aún?" at 12:30, "Merienda con algo dulce" at 17:10, "Cena sin vueltas" at 21:00.</div>
+        </div>
+        <div class="wf-card-img">
+          <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Mañana · 8:40</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">¿Qué te tienta esta mañana?</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">desayunos · café · 2x1</div>
+            </div>
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Mediodía · 12:30</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">¿No almorzaste aún?</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">opciones rápidas · menú del día</div>
+            </div>
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Tarde · 17:10</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">Merienda con algo dulce</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">cafeterías · postres · helados</div>
+            </div>
+            <div style="border:1px dashed var(--red);border-radius:10px;padding:9px;background:var(--bg);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash);">Noche · 21:00</span><span style="font-size:9px;color:var(--ash);">×</span></div>
+              <div style="font-size:9px;font-weight:600;color:var(--ink);margin-bottom:6px;">Cena sin vueltas</div>
+              <div style="display:flex;gap:3px;margin-bottom:6px;"><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div><div style="width:12px;height:12px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);"></div></div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;"><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:30px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+              <div style="font-size:7px;color:var(--ash);">pizza · hamburguesas · mercado 24h</div>
+            </div>
+          </div>
+        </div>
+        <div class="wf-note">
+          <div class="wf-note-l">Rules</div>
+          <div class="wf-note-t">Time of day × order history × stock and delivery time. When there's no signal strong enough to personalise, it falls back to "más pedidos cerca tuyo" — the component never shows an empty or generic state pretending to be personal.</div>
+        </div>
+      </div>
+
+      <div style="padding:1.75rem 2rem;background:var(--bg2);border:1px solid var(--line2);border-left:3px solid #5B3DF5;border-radius:0 8px 8px 0;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:#5B3DF5;margin-bottom:.75rem;">Why this mattered</div>
+        <p style="font-size:.875rem;line-height:1.8;color:var(--ash);">
+          Defining one component with four content states — instead of four hardcoded sections — is what made time-awareness affordable to build and to maintain. The rules and the fallback were written at wireframe stage, before a single visual decision, which is why the feature survived scoping.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-card" style="margin-bottom:3rem;">
+    <div style="display:grid;grid-template-columns:1fr 1.35fr;gap:0;align-items:stretch;">
+      <div class="wf-card-head" style="border-bottom:none;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:2rem 2.25rem;">
+        <div class="wf-card-t">One context engine, two surfaces</div>
+        <div class="wf-card-d" style="margin-bottom:1.25rem;">Intent chips move up next to the search bar — desayuno · café · mercado — and opening search reveals a sheet built from the same signals as the box: "A esta hora se pide" (café con medialunas, desayuno saludable, tostado + jugo), then last orders, then what's trending nearby.</div>
+        <div class="wf-note" style="border-top:1px solid var(--line);padding:1.25rem 0 0;">
+          <div class="wf-note-l">Key</div>
+          <div class="wf-note-t">The sheet suggestions <em>are</em> the box suggestions — one engine, rendered twice. That's what turned the animated placeholder from a copy trick into a system, and it's the direct ancestor of the dynamic search that shipped.</div>
+        </div>
+      </div>
+      <div class="wf-card-img" style="padding:2rem;">
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:100%;">
+          <div style="width:200px;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);flex-shrink:0;"></div>
+              <div style="flex:1;height:18px;border-radius:9px;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;padding-left:6px;"><span style="font-size:6.5px;color:var(--ash);">¿Qué almorzás hoy?</span></div>
+              <div style="width:18px;height:18px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);flex-shrink:0;"></div>
+            </div>
+            <div style="display:flex;gap:4px;">
+              <div style="border:1px solid var(--line2);border-radius:8px;padding:2px 6px;font-size:6.5px;color:var(--ash);">desayuno</div>
+              <div style="border:1px solid var(--line2);border-radius:8px;padding:2px 6px;font-size:6.5px;color:var(--ash);">café</div>
+              <div style="border:1px solid var(--line2);border-radius:8px;padding:2px 6px;font-size:6.5px;color:var(--ash);">mercado</div>
+            </div>
+            <div style="height:6px;width:55%;border-radius:3px;background:var(--bg3);"></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:36px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:36px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:34px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;"><span style="font-size:6px;color:var(--ash);">promo carousel</span></div><div style="width:11px;height:34px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:7px;font-weight:600;color:var(--ink);">Nuevos cerca tuyo</span><span style="font-size:6.5px;color:var(--red);">Ver más</span></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:7px;font-weight:600;color:var(--ink);">Lunes de pizza al 50% OFF</span><span style="font-size:6.5px;color:var(--red);">Ver más</span></div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:28px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+          </div>
+          <div style="width:200px;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:18px;border-radius:9px;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;padding-left:6px;"><span style="font-size:6.5px;color:var(--ash);">|</span></div>
+              <span style="font-size:6.5px;color:var(--ash);">Cancelar</span>
+            </div>
+            <div style="font-size:6.5px;color:var(--ash);">A esta hora se pide</div>
+            <div style="border:1px solid var(--line2);border-radius:9px;padding:5px 7px;font-size:6.5px;color:var(--ink);">café con medialunas</div>
+            <div style="border:1px solid var(--line2);border-radius:9px;padding:5px 7px;font-size:6.5px;color:var(--ink);">desayuno saludable</div>
+            <div style="border:1px solid var(--line2);border-radius:9px;padding:5px 7px;font-size:6.5px;color:var(--ink);">tostado + jugo</div>
+            <div style="font-size:6.5px;color:var(--ash);margin-top:2px;">Tus últimos pedidos</div>
+            <div style="height:18px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="height:18px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div>
+            <div style="font-size:6.5px;color:var(--ash);margin-top:2px;">Trending ahora cerca tuyo</div>
+            <div style="display:flex;gap:4px;"><div style="flex:1;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div><div style="flex:1;height:26px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);"></div></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1518,7 +1398,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
         <div class="path-d">An extended red header owns the entry: saved address, greeting and search all live inside the brand block. Promo carousel takes the hero slot, verticals follow as an image mosaic.</div>
       </div>
       <div class="path-img" style="display:flex;justify-content:center;">
-        <img src="assets/monchis_path_v1.webp" loading="lazy" decoding="async" alt="V1 — brand-led home" style="aspect-ratio:640/1260;max-width:58%;">
+        <img src="assets/monchis/monchis_path_v1.webp" loading="lazy" decoding="async" alt="V1 — brand-led home" style="aspect-ratio:640/1260;max-width:58%;">
       </div>
       <div class="path-body">
         <div class="pb-l">Where it wins</div>
@@ -1544,7 +1424,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
         <div class="path-d">Neutral surface. Search is the first thing on screen, address one level below it. Labeled vertical cards move up; the promo becomes a module instead of the doorway.</div>
       </div>
       <div class="path-img" style="display:flex;justify-content:center;">
-        <img src="assets/monchis_path_v2.webp" loading="lazy" decoding="async" alt="V2 — task-led home" style="aspect-ratio:626/1298;max-width:58%;">
+        <img src="assets/monchis/monchis_path_v2.webp" loading="lazy" decoding="async" alt="V2 — task-led home" style="aspect-ratio:626/1298;max-width:58%;">
       </div>
       <div class="path-body">
         <div class="pb-l">Where it wins</div>
@@ -1580,7 +1460,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
         </div>
       </div>
       <div>
-        <img src="assets/monchis_path_v1_states.webp" loading="lazy" decoding="async" alt="V1 — proximity alert and offline / loading states" style="aspect-ratio:1155/1078;display:block;width:100%;height:auto;">
+        <img src="assets/monchis/monchis_path_v1_states.webp" loading="lazy" decoding="async" alt="V1 — proximity alert and offline / loading states" style="aspect-ratio:1155/1078;display:block;width:100%;height:auto;">
       </div>
     </div>
   </div>
@@ -1602,7 +1482,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
         </div>
       </div>
       <div>
-        <img src="assets/monchis_path_v2b.webp" loading="lazy" decoding="async" alt="V2 scrolled state and offline state" style="aspect-ratio:1400/1330;display:block;width:100%;height:auto;">
+        <img src="assets/monchis/monchis_path_v2b.webp" loading="lazy" decoding="async" alt="V2 scrolled state and offline state" style="aspect-ratio:1400/1330;display:block;width:100%;height:auto;">
       </div>
     </div>
   </div>
@@ -1664,7 +1544,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
     <div class="phone-wrap">
       <div class="phone-shell" style="width:280px;">
         <div class="phone-notch"></div>
-        <img src="assets/monchis_case_002.webp" loading="lazy" decoding="async" alt="Final monchis home" style="aspect-ratio:405/829;width:100%;height:auto;display:block;border-radius:16px;">
+        <img src="assets/monchis/monchis_case_002.webp" loading="lazy" decoding="async" alt="Final monchis home" style="aspect-ratio:405/829;width:100%;height:auto;display:block;border-radius:16px;">
       </div>
       <div class="badge badge-g" style="margin-top:8px;">Final · V2 spine + V1 safeguards</div>
     </div>
@@ -1880,11 +1760,11 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
     <div class="mds-search-right">
       <div class="mds-comp-card">
         <div class="mds-comp-label">Search input · Static state</div>
-        <div class="mds-comp-img"><img src="assets/monchis_case_003.webp" loading="lazy" decoding="async" alt="Search input" style="aspect-ratio:740/80;"></div>
+        <div class="mds-comp-img"><img src="assets/monchis/monchis_case_003.webp" loading="lazy" decoding="async" alt="Search input" style="aspect-ratio:740/80;"></div>
       </div>
       <div class="mds-comp-card">
         <div class="mds-comp-label">Dynamic placeholder · Variations</div>
-        <div class="mds-comp-img"><img src="assets/monchis_case_004.webp" loading="lazy" decoding="async" alt="Search words" style="aspect-ratio:662/444;"></div>
+        <div class="mds-comp-img"><img src="assets/monchis/monchis_case_004.webp" loading="lazy" decoding="async" alt="Search words" style="aspect-ratio:662/444;"></div>
       </div>
     </div>
   </div>
@@ -1901,15 +1781,15 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
 
     <div class="mds-comp-card">
       <div class="mds-comp-label">Store Carousels · Real photography</div>
-      <div class="mds-comp-img mds-comp-img-xl"><img src="assets/monchis_case_005.webp" loading="lazy" decoding="async" alt="Store carousels" style="aspect-ratio:1136/397;"></div>
+      <div class="mds-comp-img mds-comp-img-xl"><img src="assets/monchis/monchis_case_005.webp" loading="lazy" decoding="async" alt="Store carousels" style="aspect-ratio:1136/397;"></div>
       <div class="mds-comp-meta">Real food photography · Logo overlay · Distance + ETA</div>
     </div>
 
     <div class="mds-comp-card">
       <div class="mds-comp-label">Food Categories · Horizontal scroll</div>
       <div class="mds-comp-img mds-comp-img-xl" style="flex-direction:column;gap:1rem;">
-        <img src="assets/monchis_case_006.webp" loading="lazy" decoding="async" alt="Food categories" style="aspect-ratio:1078/216;">
-        <img src="assets/monchis_case_007.webp" loading="lazy" decoding="async" alt="Food categories" style="aspect-ratio:539/108;">
+        <img src="assets/monchis/monchis_case_006.webp" loading="lazy" decoding="async" alt="Food categories" style="aspect-ratio:1078/216;">
+        <img src="assets/monchis/monchis_case_007.webp" loading="lazy" decoding="async" alt="Food categories" style="aspect-ratio:539/108;">
       </div>
       <div class="mds-comp-meta">11 categories · 3D emoji icons · Carnes · Sushi · Pizza · Burguer</div>
     </div>
@@ -1919,11 +1799,11 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
       <div class="mds-comp-img mds-navbar-compare">
         <div>
           <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;text-align:center;">Old</div>
-          <img src="assets/monchis_case_008.webp" loading="lazy" decoding="async" alt="Old navbar" style="aspect-ratio:402/113;">
+          <img src="assets/monchis/monchis_case_008.webp" loading="lazy" decoding="async" alt="Old navbar" style="aspect-ratio:402/113;">
         </div>
         <div>
           <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;text-align:center;">New</div>
-          <img src="assets/monchis_case_009.webp" loading="lazy" decoding="async" alt="New navbar" style="aspect-ratio:402/113;">
+          <img src="assets/monchis/monchis_case_009.webp" loading="lazy" decoding="async" alt="New navbar" style="aspect-ratio:402/113;">
         </div>
       </div>
       <div class="mds-comp-meta">Cart FAB · 27% taps · Green primary action</div>
@@ -1931,7 +1811,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
 
     <div class="mds-comp-card">
       <div class="mds-comp-label">Snackbar · Error state</div>
-      <div class="mds-comp-img"><img src="assets/monchis_case_010.webp" loading="lazy" decoding="async" alt="Snackbar error" style="aspect-ratio:756/168;"></div>
+      <div class="mds-comp-img"><img src="assets/monchis/monchis_case_010.webp" loading="lazy" decoding="async" alt="Snackbar error" style="aspect-ratio:756/168;"></div>
       <div class="mds-comp-meta">Dark bg · WiFi icon · "Parece que no tenés conexión"</div>
     </div>
 
@@ -1946,7 +1826,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
   <div class="eyebrow">Full Flow · End-to-End Experience</div>
   <div style="font-size:clamp(1.75rem,3.2vw,2.75rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:2rem;">From address to<br><span style="color:var(--red);">checkout, in one flow.</span></div>
   <div style="text-align:center;">
-    <img src="assets/monchis_case_011.webp" loading="lazy" decoding="async" alt="Full app flow" style="aspect-ratio:2000/1048;max-width:100%;height:auto;">
+    <img src="assets/monchis/monchis_case_011.webp" loading="lazy" decoding="async" alt="Full app flow" style="aspect-ratio:2000/1048;max-width:100%;height:auto;">
   </div>
 </div>
 
