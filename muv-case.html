@@ -7,7 +7,7 @@
 <meta name="description" content="Case study: end-to-end redesign of muv's passenger app, a Paraguayan ride-hailing marketplace. Onboarding from 21 steps to 6, and a ride flow that shows what is happening at every state.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
 /* ════════════════════════════════════════════════════════════
    muv case study · v2
@@ -459,6 +459,134 @@ body.dark-mode .decision .media{border-color:transparent;}
 .decision .media.details figcaption{margin-top:.625rem;font-size:.8125rem;color:var(--ash);text-align:center;}
 img.envio{width:100%;height:auto;}
 img.legacy{width:100%;height:auto;}
+
+/* ─── Sketch scenes (storytelling illustrations) ───
+   Graphite + two brand accents. Swap --sk-o / --sk-n per case. */
+.sketch-fig{margin-block:clamp(32px,5vw,56px);}
+.sketch{
+  --sk-paper:#FBF9F4; --sk-grid:rgba(20,20,20,.05);
+  --sk-ink:#2B2B2B; --sk-soft:rgba(43,43,43,.38);
+  --sk-o:#FF6200; --sk-o-ink:#B93E05; --sk-n:#0B1445;
+  --sk-user:#EFEEEA; --sk-app:#E9ECF8; --sk-idea:#FBEFB8;
+  border-radius:var(--r);overflow-x:auto;border:1px solid var(--line);background:var(--sk-paper);
+}
+.sketch svg{display:block;width:100%;min-width:760px;height:auto;}
+body.dark-mode .sketch{
+  --sk-paper:#2A2A33; --sk-grid:rgba(244,244,246,.045);
+  --sk-ink:#E6E6EC; --sk-soft:rgba(230,230,236,.34);
+  --sk-o:#FF7A2E; --sk-o-ink:#FF9A6B; --sk-n:#AFBBFF;
+  --sk-user:#34343E; --sk-app:#2F3350; --sk-idea:#5A4E1E;
+  border-color:transparent;
+}
+.sketch .sk-paper{fill:var(--sk-paper);}
+.sketch .sk-gridline{stroke:var(--sk-grid);stroke-width:1;}
+.sketch .sk-wash-o{fill:var(--sk-o);opacity:.13;}
+.sketch .sk-wash-n{fill:var(--sk-n);opacity:.10;}
+.sketch .sk-ink{stroke:var(--sk-ink);}
+.sketch .sk-soft{stroke:var(--sk-soft);}
+.sketch .sk-o{stroke:var(--sk-o);}
+.sketch .sk-n{stroke:var(--sk-n);}
+.sketch .sk-on-n{stroke:var(--sk-paper);}
+.sketch .sk-fill-paper{fill:var(--sk-paper);}
+.sketch .sk-fill-ink{fill:var(--sk-ink);}
+.sketch .sk-fill-o{fill:var(--sk-o);}
+.sketch .sk-fill-n{fill:var(--sk-n);}
+.sketch .sk-bubble-user{fill:var(--sk-user);}
+.sketch .sk-pill-user{fill:var(--sk-user);}
+.sketch .sk-pill-app{fill:var(--sk-app);stroke:var(--sk-n);}
+.sketch .sk-pill-idea{fill:var(--sk-idea);}
+.sketch .sk-hand{font-family:'Caveat','Segoe Print','Comic Sans MS',cursive;font-weight:600;fill:var(--sk-ink);}
+.sketch .sk-t-n{fill:var(--sk-n);}
+.sketch .sk-t-o{fill:var(--sk-o-ink);}
+.sketch .sk-t-soft{fill:var(--sk-ink);opacity:.7;}
+.sketch .ripple circle{transform-box:fill-box;transform-origin:center;}
+.sketch .flow{animation:sk-march 1.4s linear infinite;}
+.sketch .ripple .r1,.sketch .ripple .r2{animation:sk-ripple 2.4s var(--ease) infinite;}
+.sketch .ripple .r2{animation-delay:.8s;}
+@keyframes sk-march{to{stroke-dashoffset:-32;}}
+@keyframes sk-ripple{0%{opacity:.9;transform:scale(.6);}100%{opacity:0;transform:scale(1.35);}}
+@media (prefers-reduced-motion:reduce){.sketch .flow,.sketch .ripple circle{animation:none;}}
+
+/* ════════════════════════════════════════════════════════════
+   v3 · Portfolio principles (apply to every case)
+   1. Motion with a pause   2. More air
+   3. Apple-style shadows   4. Apple-style gradients
+   ════════════════════════════════════════════════════════════ */
+:root{
+  /* 2 · spacing */
+  --sec:clamp(96px,12vw,176px);
+  --stack:clamp(56px,7vw,112px);
+
+  /* 3 · shadows: soft, wide, low opacity, no hard edge */
+  --sh-card:0 1px 2px rgba(0,0,0,.03),2px 4px 12px rgba(0,0,0,.08);
+  --sh-float:0 2px 6px rgba(0,0,0,.04),0 12px 24px rgba(0,0,0,.06),0 32px 72px rgba(0,0,0,.10);
+  --sh-ring:0 0 0 1px rgba(0,0,0,.04);
+
+  /* 4 · gradients: a tint at the top that melts into the page */
+  --grad-neutral:linear-gradient(180deg,#F5F5F7 0%,#FAFAFB 55%,#FFFFFF 100%);
+  --grad-warm:linear-gradient(180deg,#FFEEE2 0%,#FFF7F1 45%,#FFFFFF 100%);
+  --grad-cool:linear-gradient(180deg,#E9EDF8 0%,#F4F6FB 50%,#FFFFFF 100%);
+  --grad-subtle:linear-gradient(180deg,#F7F7F8 0%,#FBFBFC 50%,#FFFFFF 100%);
+  --grad-navy:radial-gradient(120% 140% at 0% 0%,#22328A 0%,#111C5C 45%,#0B1445 100%);
+  --grad-accent:linear-gradient(100deg,#F05A00 0%,#E04F00 50%,#C94400 100%);   /* every stop ≥3:1 on the warm hero */
+
+  /* 1 · motion: slow start, long settle */
+  --ease-apple:cubic-bezier(.28,.11,.32,1);
+}
+body.dark-mode{
+  --sh-card:0 0 0 1px rgba(255,255,255,.06),0 8px 24px rgba(0,0,0,.35);
+  --sh-float:0 0 0 1px rgba(255,255,255,.06),0 16px 40px rgba(0,0,0,.40),0 40px 90px rgba(0,0,0,.35);
+  --sh-ring:0 0 0 1px rgba(255,255,255,.06);
+  --grad-neutral:linear-gradient(180deg,#2C2C35 0%,#26262E 55%,#24242C 100%);
+  --grad-warm:linear-gradient(180deg,#352822 0%,#2A2527 45%,#24242C 100%);
+  --grad-cool:linear-gradient(180deg,#262B45 0%,#252838 50%,#24242C 100%);
+  --grad-subtle:linear-gradient(180deg,#29292F 0%,#26262D 50%,#24242C 100%);
+  --grad-accent:linear-gradient(100deg,#FFA066 0%,#FF7A2E 50%,#FF6200 100%);
+}
+
+/* 2 · more air */
+.sec > .wrap > * + *{margin-top:var(--stack);}
+.split{gap:clamp(40px,6vw,120px);}
+.decision{padding-block:clamp(56px,7vw,112px);}
+.quotes,.learn,.principles{gap:clamp(32px,4vw,64px);}
+.hero .meta,.hero-video{margin-top:clamp(56px,7vw,104px);}
+.prose + .prose{margin-top:1.25em;}
+
+/* 4 · gradients */
+.hero{background:var(--grad-warm);}
+.sec.tint{background:var(--grad-neutral);}
+#motion{background:var(--grad-subtle);}
+/* two tinted sections in a row: only the first one carries the gradient, the second continues on the page colour */
+.sec.tint + .sec.tint{background:var(--bg);}
+.callout{background:var(--grad-navy);}
+.h1 .accent{background:var(--grad-accent);-webkit-background-clip:text;background-clip:text;color:transparent;}
+body.dark-mode .h1 .accent{color:transparent;}
+
+/* 3 · shadows (borders out, depth in) */
+.panel{border:0;box-shadow:var(--sh-card);}
+.frame{box-shadow:var(--sh-card);}
+.phone{box-shadow:var(--sh-ring),var(--sh-float);}
+.dev{box-shadow:var(--sh-ring),var(--sh-float);}
+.lottie-frame{box-shadow:var(--sh-float);}
+.decision .media{border:0;box-shadow:var(--sh-card);}
+.decision .media img{box-shadow:var(--sh-card);}
+.decision .media img.bare{box-shadow:none;}
+.decision .media.details img{box-shadow:var(--sh-ring),var(--sh-card);}
+.wf-strip .wf{border:0;box-shadow:var(--sh-card);}
+.sketch{border:0;box-shadow:var(--sh-card);}
+
+/* 1 · motion with a pause */
+.reveal{transition:opacity 1s var(--ease-apple),transform 1s var(--ease-apple);}
+.sketch .flow{animation:sk-march 3s linear infinite;}
+.sketch .ripple .r1,.sketch .ripple .r2{animation:sk-ripple-rest 3.6s var(--ease-apple) infinite;}
+.sketch .ripple .r2{animation-delay:.5s;}
+@keyframes sk-ripple-rest{
+  0%{opacity:0;transform:scale(.6);}
+  10%{opacity:.9;}
+  55%{opacity:0;transform:scale(1.35);}
+  100%{opacity:0;transform:scale(1.35);}   /* hold: the pause */
+}
+@media (prefers-reduced-motion:reduce){.reveal{transition:none;}.sketch .flow,.sketch .ripple circle{animation:none;}}
 </style>
 </head>
 <body>
@@ -614,6 +742,183 @@ img.legacy{width:100%;height:auto;}
       <h2 class="h2 wide" id="process-h">Designing the ride as a set of states</h2>
       <p class="prose">A ride is a real-time system, so what the passenger sees has to match what the backend is doing. Before opening Figma I mapped the whole journey as five states, and wrote what the passenger should read in each one.</p>
     </div>
+
+    <!-- ─── Sketch scene 3 · "What you see = what's happening" ─── -->
+    <figure class="sketch-fig">
+      <div class="sketch">
+        <svg viewBox="0 0 1200 580" role="img" aria-labelledby="sk3-t sk3-d">
+          <title id="sk3-t">What you see is what's happening</title>
+          <desc id="sk3-d">A passenger waits on the sidewalk looking at her phone, thinking "OK, it's finding me a driver". Her screen, shown large, reads "Esperando confirmación del conductor…" with a free-cancellation countdown. A dashed arrow carries the request to a driver in a muv car, who sees a new-trip card, and a second arrow brings the status back to her screen. The label in the middle reads: what you see equals what's happening.</desc>
+          <defs>
+            <filter id="sk-wobble" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/>
+              <feDisplacementMap in="SourceGraphic" scale="3"/>
+            </filter>
+            <filter id="sk-wash" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9"/>
+              <feDisplacementMap in="SourceGraphic" scale="18"/>
+              <feGaussianBlur stdDeviation="3"/>
+            </filter>
+            <pattern id="sk-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M28 0H0V28" fill="none" class="sk-gridline"/>
+            </pattern>
+            <marker id="sk-head-o" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M1 1L8 5L1 9" fill="none" class="sk-o" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <marker id="sk-head-n" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M1 1L8 5L1 9" fill="none" class="sk-n" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <clipPath id="sk-screen"><rect x="496" y="78" width="208" height="404" rx="24"/></clipPath>
+          </defs>
+
+          <!-- paper -->
+          <rect width="1200" height="580" class="sk-paper"/>
+          <rect width="1200" height="580" fill="url(#sk-grid)"/>
+
+          <!-- watercolor washes -->
+          <g filter="url(#sk-wash)" aria-hidden="true">
+            <ellipse cx="600" cy="330" rx="170" ry="120" class="sk-wash-o"/>
+            <ellipse cx="986" cy="186" rx="140" ry="64" class="sk-wash-n"/>
+          </g>
+
+          <g filter="url(#sk-wobble)" class="sk-ink" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+
+            <!-- ── LEFT · passenger on the sidewalk ── -->
+            <g class="sk-soft" stroke-width="1.6">
+              <!-- tree -->
+              <path d="M78 468V330"/><path d="M78 380l-18-22M78 360l16-18"/>
+              <path d="M44 330c-18-10-14-40 8-42c-2-26 30-34 42-14c20-10 42 8 32 28c18 12 6 40-16 36c-8 16-34 16-44 4c-12 8-30 0-22-12z"/>
+              <!-- lamp -->
+              <path d="M338 468V250q0-16 16-16h14"/><path d="M362 234l10 0l4 10h-18z"/>
+            </g>
+            <!-- sidewalk -->
+            <path d="M30 470H400" stroke-width="2.2"/>
+            <path d="M30 480H400" class="sk-soft" stroke-width="1.2"/>
+            <path d="M70 490l12-10M150 490l12-10M230 490l12-10M310 490l12-10" class="sk-soft" stroke-width="1.2"/>
+
+            <!-- passenger -->
+            <g stroke-width="2.4">
+              <!-- legs -->
+              <path d="M196 360l-6 104M210 360l-2 104M228 360l4 104M244 360l6 104"/>
+              <path d="M182 466h28M226 466h30" stroke-width="3.4"/>
+              <!-- coat -->
+              <path d="M186 240q34-18 66 0l12 122q-46 10-92 0z" class="sk-fill-paper"/>
+              <path d="M219 232l-2 128" class="sk-soft" stroke-width="1.4"/>
+              <path d="M186 240l-10 72q-2 10 6 12" />
+              <!-- front arm holding phone -->
+              <path d="M252 246q14 30 10 54q-2 8-12 6l-22-14"/>
+              <!-- small phone -->
+              <rect x="226" y="262" width="18" height="30" rx="4" transform="rotate(-14 235 277)" class="sk-fill-n" stroke-width="2"/>
+              <!-- neck + head -->
+              <path d="M212 210v22M228 210v22"/>
+              <path d="M200 176q0-40 32-40q30 0 30 36q0 10 6 16q-6 4-8 4q2 14-10 18q-8 3-20 2q-30-4-30-36z" class="sk-fill-paper"/>
+              <!-- hair + bun -->
+              <path d="M200 180q-8-44 36-46q24 0 28 20q-18-6-34 4q-8 6-12 24q-6-4-10 0q-4 4-8-2z" class="sk-fill-ink"/>
+              <circle cx="196" cy="140" r="13" class="sk-fill-ink"/>
+              <!-- face, looking down at the phone -->
+              <path d="M246 180q4 2 8 0" stroke-width="2"/>
+              <path d="M248 198q4 2 7-1" stroke-width="1.8"/>
+            </g>
+
+            <!-- thought bubble (user voice: neutral) -->
+            <g stroke-width="2" class="sk-bubble-user">
+              <path d="M60 64q0-22 24-22h206q24 0 24 22v34q0 22-24 22h-206q-24 0-24-22z"/>
+              <circle cx="228" cy="136" r="6"/><circle cx="236" cy="152" r="3.5"/>
+            </g>
+
+            <!-- zoom lines from her phone to the big phone -->
+            <path d="M246 262L490 96M250 296L490 468" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+
+            <!-- ── CENTER · her screen, large ── -->
+            <rect x="488" y="70" width="224" height="420" rx="32" class="sk-fill-paper" stroke-width="3"/>
+            <rect x="496" y="78" width="208" height="404" rx="24" stroke-width="1.4" class="sk-soft"/>
+            <rect x="572" y="88" width="56" height="14" rx="7" class="sk-fill-ink" stroke-width="1.5"/>
+
+            <!-- map fragment -->
+            <g clip-path="url(#sk-screen)">
+              <g class="sk-soft" stroke-width="1.2">
+                <path d="M496 150H704M496 196H704M496 242H704M540 110V300M600 110V300M660 110V300"/>
+              </g>
+              <path d="M540 268V196H600V150H660" class="sk-o route" stroke-width="4.5"/>
+              <circle cx="540" cy="268" r="7" class="sk-fill-n" stroke-width="2"/>
+              <path d="M660 150q-11-12-11-22a11 11 0 0 1 22 0q0 10-11 22z" class="sk-fill-o sk-o" stroke-width="2"/>
+            </g>
+
+            <!-- bottom sheet -->
+            <path d="M496 300q0-14 14-14h180q14 0 14 14v158q0 24-24 24h-160q-24 0-24-24z" class="sk-fill-paper" stroke-width="2"/>
+            <path d="M584 298h32" class="sk-soft" stroke-width="3"/>
+            <!-- ripple: matching in progress -->
+            <g class="ripple">
+              <circle cx="600" cy="336" r="10" class="sk-fill-o sk-o" stroke-width="2"/>
+              <circle cx="600" cy="336" r="20" class="sk-o r1" stroke-width="1.8"/>
+              <circle cx="600" cy="336" r="30" class="sk-o r2" stroke-width="1.4"/>
+            </g>
+            <!-- progress bar -->
+            <path d="M522 450H678" class="sk-soft" stroke-width="5"/>
+            <path d="M522 450H588" class="sk-o" stroke-width="5"/>
+
+            <!-- ── RIGHT · the driver ── -->
+            <g class="sk-soft" stroke-width="1.5">
+              <!-- buildings -->
+              <path d="M820 470V248h86v222M906 470V200h92v270M998 470V270h84v200M1082 470V230h70v240"/>
+              <path d="M836 270h18v22h-18zM868 270h18v22h-18zM926 222h20v24h-20zM960 222h20v24h-20zM1016 292h18v22h-18zM1048 292h18v22h-18zM1098 252h16v20h-16zM1124 252h16v20h-16z"/>
+            </g>
+            <path d="M800 470H1180" stroke-width="2.2"/>
+            <!-- car (facing left) -->
+            <g stroke-width="2.4">
+              <path d="M842 446l4-34q16-8 50-10l34-36q10-8 28-8h86q20 0 32 12l26 30q18 4 20 18v28z" class="sk-fill-paper"/>
+              <path d="M940 374h60v28h-84zM1010 374h42q10 2 18 10l16 18h-76z" stroke-width="2"/>
+              <circle cx="968" cy="390" r="9" class="sk-fill-ink" stroke-width="1.5"/>
+              <path d="M862 424H1116" class="sk-o" stroke-width="4"/>
+              <circle cx="892" cy="450" r="22" class="sk-fill-paper"/><circle cx="892" cy="450" r="8"/>
+              <circle cx="1070" cy="450" r="22" class="sk-fill-paper"/><circle cx="1070" cy="450" r="8"/>
+            </g>
+
+            <!-- driver's new-trip card (app voice: navy) -->
+            <g class="sk-n" stroke-width="2.2">
+              <rect x="870" y="138" width="232" height="92" rx="14" class="sk-fill-paper"/>
+              <path d="M960 230l12 18l12-18" class="sk-fill-paper"/>
+              <circle cx="1032" cy="196" r="15" class="sk-fill-n"/>
+              <path d="M1025 196l5 5l9-10" class="sk-on-n" stroke-width="2.4"/>
+              <circle cx="1074" cy="196" r="15"/>
+              <path d="M1068 190l12 12M1080 190l-12 12" stroke-width="2.2"/>
+            </g>
+
+            <!-- ── flow arrows ── -->
+            <path d="M716 170C770 110 820 120 862 160" class="sk-o flow" stroke-width="2.2" stroke-dasharray="8 8" marker-end="url(#sk-head-o)"/>
+            <path d="M866 250C830 320 790 366 722 382" class="sk-n flow" stroke-width="2.2" stroke-dasharray="8 8" marker-end="url(#sk-head-n)"/>
+
+            <!-- ── labels ── -->
+            <rect x="60" y="518" width="300" height="42" rx="10" class="sk-pill-user" stroke-width="1.8"/>
+            <path d="M414 530l-18-8M414 540l-22 0M414 550l-18 8M786 530l18-8M786 540l22 0M786 550l18 8" stroke-width="2"/>
+            <path d="M428 519q172-8 344 0l2 42q-174 8-348 0z" class="sk-pill-idea" stroke-width="1.8"/>
+            <rect x="840" y="518" width="300" height="42" rx="10" class="sk-pill-app" stroke-width="1.8"/>
+          </g>
+
+          <!-- ── real text, kept outside the wobble so it stays crisp ── -->
+          <g class="sk-hand">
+            <text x="187" y="90" text-anchor="middle" font-size="24">OK, it's finding</text>
+            <text x="187" y="114" text-anchor="middle" font-size="24">me a driver.</text>
+
+            <text x="600" y="385" text-anchor="middle" font-size="19" class="sk-t-n">Esperando confirmación</text>
+            <text x="600" y="406" text-anchor="middle" font-size="19" class="sk-t-n">del conductor…</text>
+            <text x="600" y="434" text-anchor="middle" font-size="16" class="sk-t-soft">4:32 · cancelación gratis</text>
+            <text x="518" y="100" font-size="14" class="sk-t-soft">9:41</text>
+
+            <text x="890" y="170" font-size="21" class="sk-t-n">Nuevo viaje</text>
+            <text x="890" y="202" font-size="18" class="sk-t-soft">a 1,2 km</text>
+
+            <text x="786" y="112" text-anchor="middle" font-size="19" class="sk-t-o">request</text>
+            <text x="770" y="318" text-anchor="middle" font-size="20" class="sk-t-n" transform="rotate(-24 770 318)">live status</text>
+
+            <text x="210" y="546" text-anchor="middle" font-size="19" letter-spacing="1">PASSENGER: CALM, INFORMED</text>
+            <text x="600" y="547" text-anchor="middle" font-size="20" letter-spacing="1">WHAT YOU SEE = WHAT'S HAPPENING</text>
+            <text x="990" y="546" text-anchor="middle" font-size="19" letter-spacing="1">DRIVER: DECIDING, 5 MIN</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>The principle behind the five states: the screen only says what the system is actually doing, on both sides of the request.</figcaption>
+    </figure>
 
     <ol class="states">
       <li>
@@ -859,7 +1164,7 @@ img.legacy{width:100%;height:auto;}
 <!-- ═════════ DECISIONS ═════════ -->
 <section class="sec tint" id="decisions" aria-labelledby="decisions-h">
   <div class="wrap">
-    <h2 class="h2 wide" id="decisions-h">Four decisions that shaped the product</h2>
+    <h2 class="h2 wide" id="decisions-h">Three decisions that shaped the product</h2>
 
     <div class="decisions">
       <article class="decision">
@@ -890,16 +1195,7 @@ img.legacy{width:100%;height:auto;}
         </div>
       </article>
 
-      <article class="decision">
-        <div class="stack">
-          <h3 class="h3">Navy for action, orange for the brand</h3>
-          <p class="prose">White text on the brand orange reaches only 3:1 contrast. On navy it clears 17:1. So primary buttons are navy, and orange carries route lines, tags and highlights.</p>
-        </div>
-        <!-- TODO(Paula): old marketing image removed; add the current review screen -->
-        <div class="media"><div class="ph" style="width:min(100%,520px);aspect-ratio:1000/949" role="img" aria-label="Placeholder: current review screen with the navy Finalizar button"><span>Placeholder<br><b>current review screen with the navy Finalizar button</b></span></div></div>
-      </article>
     </div>
-    <!-- TODO(Paula): decision 4 rationale (contrast) is inferred from the shipped UI; the old page said "60/30/10 neutral/orange/navy". Confirm or reword. -->
   </div>
 </section>
 

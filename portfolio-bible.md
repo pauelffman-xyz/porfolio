@@ -1,6 +1,8 @@
 # Paula Elffman — Portfolio OS · Design Bible
 
-*Última actualización: Septiembre 2026 — `index.html` externalizado: pesaba 16.7MB (98% eran imágenes/videos en base64 inline). Se sacaron los 18 assets únicos a una carpeta `assets/` nueva (webp/jpg/webm reales, `src="assets/..."` en vez de data URI), con tres optimizados de paso — el PNG de Monchis (2.3MB→40KB, resize a 900px alto + WebP), la foto de perfil (1.99MB→23KB, se mostraba a 100×100px pero pesaba 2268×4032px) y el video de `muv` (3.43MB→800KB, era 2560×1440 sin necesidad, se bajó a 960×540 y se sacó el audio que igual estaba muted). `index.html` quedó en 282KB. De paso se corrigió un bug preexistente (no introducido en esta sesión): el `<!DOCTYPE html>` y el `<html lang="en">` de apertura venían corrompidos — el favicon en base64 se había comido ese pedazo, dejando literalmente `<!DOassets/favicon.webp"en">` como primera línea del archivo. Ver detalle y la nueva regla de ARCHIVOS en "ÍNDEX — Assets externalizados" dentro de CASE STUDIES / sección general.*
+*Última actualización: Septiembre 2026. Nuevo **lenguaje visual v3 para los case studies**, que pasa a ser regla para todos los cases: (1) cuatro ajustes estilo Apple/Mac (animaciones con pausa y `--ease-apple`, más espacio con `--sec`/`--stack` más grandes, sombras amplias `--sh-card`/`--sh-float` que reemplazan los bordes, degradés que se funden en blanco `--grad-*`, con la regla `.sec.tint + .sec.tint` para no cortar dos fondos seguidos); (2) **escenas tipo dibujo** en SVG inline para contar las situaciones del caso (arco frustración → causa → principio → resolución, como máximo una por sección, código de globos fijo, dos acentos de marca por case). Implementado en `muv-case.html` (escena 3 + bloque v3; además se eliminó la decisión "Navy for action, orange for the brand" y la sección pasó a "Three decisions"). Pendiente en los otros cases. Ver la sección nueva "CASE STUDIES — LENGUAJE VISUAL v3".*
+
+*Última actualización previa: Septiembre 2026 — `index.html` externalizado: pesaba 16.7MB (98% eran imágenes/videos en base64 inline). Se sacaron los 18 assets únicos a una carpeta `assets/` nueva (webp/jpg/webm reales, `src="assets/..."` en vez de data URI), con tres optimizados de paso — el PNG de Monchis (2.3MB→40KB, resize a 900px alto + WebP), la foto de perfil (1.99MB→23KB, se mostraba a 100×100px pero pesaba 2268×4032px) y el video de `muv` (3.43MB→800KB, era 2560×1440 sin necesidad, se bajó a 960×540 y se sacó el audio que igual estaba muted). `index.html` quedó en 282KB. De paso se corrigió un bug preexistente (no introducido en esta sesión): el `<!DOCTYPE html>` y el `<html lang="en">` de apertura venían corrompidos — el favicon en base64 se había comido ese pedazo, dejando literalmente `<!DOassets/favicon.webp"en">` como primera línea del archivo. Ver detalle y la nueva regla de ARCHIVOS en "ÍNDEX — Assets externalizados" dentro de CASE STUDIES / sección general.*
 
 *Última actualización previa: Septiembre 2026 — `sukupay-case.html`: se embebió el prototipo interactivo real (`sukupay-home-prototype.html`, un "Bundled Page" exportado de la herramienta de prototipado — no un case study nuevo) dentro de la sección "Result · Two Directions Explored", debajo del montage estático de "The North" proposal, vía `<iframe src="sukupay-home-prototype.html" width="100%" height="1000">`. Nuevo archivo agregado a ARCHIVOS y nueva sección "Prototipo interactivo embebido (iframe)" dentro de CASE STUDIES con el gotcha de fondo claro fijo del bundle vs. dark mode del case. Ver detalle ahí.*
 
@@ -1046,6 +1048,194 @@ Todos por encima de 4.5:1 sobre `--bg:#24242C` salvo donde el token ya pasaba (e
 **Nota sobre sukupay-ds:** `.cover-title .combo` pinta un gradiente de texto `linear-gradient(90deg, var(--lime) 0%, var(--accent) 100%)` — con `--accent` ahora también en `#61FF61`, ese degradé se ve sólido en dark (los dos extremos son el mismo verde) en vez de bicolor. Es una consecuencia cosmética menor del fix, no un error — si se quiere mantener el efecto de dos tonos en dark habría que darle a `--accent` un verde distinto (más claro o más oscuro) en vez de igualarlo al lime.
 
 **Bug relacionado encontrado de paso:** `sukupay-case.html` y `sukupay-ds-case.html` tenían el mismo bug de ".dim" que smartpass (`.cover-title .dim` con `rgba(21,33,25,.15)` fijo, invisible en dark) — corregido con el mismo patrón: `body.dark-mode .cover-title .dim{ color:var(--accent-o-lime); text-shadow:... }`.
+
+---
+
+## CASE STUDIES — LENGUAJE VISUAL v3: estilo Apple + escenas dibujadas
+
+*Septiembre 2026 · ✅ APROBADO · ✅ IMPLEMENTADO en `muv-case.html` · ⏳ pendiente en los otros cases*
+
+A partir de ahora, **todo case nuevo o revisado sigue estas reglas.** Son dos cosas:
+
+1. **Cuatro ajustes visuales estilo Apple/Mac.** Van en un único bloque CSS que se copia igual en todos los cases.
+2. **Escenas tipo dibujo** para contar las situaciones del caso: el problema, la causa, el principio y la resolución.
+
+Referencias: las páginas de producto de apple.com (iPad Air, MacBook Air, Apple Upgrade). De ahí salen los tintes de fondo que se funden en blanco, las sombras amplias y el aire entre bloques. Para las escenas, la referencia es la lámina de boceto "One task. Two modes. Always in sync.", con lápiz sobre papel, acuarela puntual y rótulos a mano.
+
+---
+
+### Parte 1 — Los cuatro ajustes estilo Apple
+
+Todo vive en un bloque marcado `/* v3 · Portfolio principles */`, al final del primer `<style>` del case. **No se reparte por el archivo**: se copia completo y en cada case se cambia solo lo que dice "por case".
+
+#### 1 · Animaciones con pausa, nunca bruscas
+
+Esto ya se venía haciendo; ahora queda como regla.
+
+- Curva única: `--ease-apple: cubic-bezier(.28,.11,.32,1)`. Arranca lento y se asienta largo.
+- Scroll-reveal (`.reveal`): `opacity` + `transform` en **1s** con `--ease-apple`. Antes era .7s.
+- **Las animaciones en loop llevan pausa.** El movimiento ocupa ~55% del ciclo y el resto queda quieto. Ejemplo, el ripple de las escenas:
+
+```css
+@keyframes sk-ripple-rest{
+  0%{opacity:0;transform:scale(.6);}
+  10%{opacity:.9;}
+  55%{opacity:0;transform:scale(1.35);}
+  100%{opacity:0;transform:scale(1.35);}   /* hold: la pausa */
+}
+```
+
+- Las flechas punteadas que "avanzan" van lentas (3s por ciclo) y lineales.
+- Con `prefers-reduced-motion: reduce`, todo queda quieto y visible (sin `transition` ni `animation`).
+
+#### 2 · Más espacio
+
+| Token / regla | Antes | Ahora |
+| --- | --- | --- |
+| `--sec` (padding vertical de sección) | `clamp(64px,9vw,128px)` | `clamp(96px,12vw,176px)` |
+| `--stack` (entre bloques dentro de una sección) | `clamp(40px,5vw,72px)` | `clamp(56px,7vw,112px)` |
+| `.split` gap | `clamp(32px,5vw,96px)` | `clamp(40px,6vw,120px)` |
+| `.decision` padding vertical | `clamp(40px,5vw,72px)` | `clamp(56px,7vw,112px)` |
+| `.quotes`, `.learn`, `.principles` gap | `clamp(24px,3vw,48px)` | `clamp(32px,4vw,64px)` |
+| Hero: `.meta` y `.hero-video` margin-top | `clamp(40px,5vw,72px)` | `clamp(56px,7vw,104px)` |
+| `.prose + .prose` | — | `margin-top:1.25em` |
+
+La regla es: **ante la duda, más aire.** Una sección tiene que poder respirar como una "página" de apple.com.
+
+#### 3 · Sombras estilo Apple
+
+**Bordes afuera, profundidad adentro.** Los paneles, tarjetas y wireframes dejan el `border:1px` y pasan a sombra. Las sombras son amplias, de muy baja opacidad y sin filo.
+
+| Token | Light | Uso |
+| --- | --- | --- |
+| `--sh-card` | `0 1px 2px rgba(0,0,0,.03), 2px 4px 12px rgba(0,0,0,.08)` | Paneles, `.frame`, wireframes, `.decision .media`, imágenes de detalle, escenas |
+| `--sh-float` | `0 2px 6px rgba(0,0,0,.04), 0 12px 24px rgba(0,0,0,.06), 0 32px 72px rgba(0,0,0,.10)` | Teléfonos y dispositivos (`.phone`, `.dev`, `.lottie-frame`), que tienen que parecer flotar |
+| `--sh-ring` | `0 0 0 1px rgba(0,0,0,.04)` | Filo casi invisible, sumado a `--sh-float` en dispositivos |
+
+**Dark mode:** una sombra oscura sobre fondo oscuro no se ve. En `body.dark-mode` los tokens pasan a un **filo claro** (`0 0 0 1px rgba(255,255,255,.06)`) más una sombra negra más densa. No hay que tocar nada por componente: se redefinen los tokens y listo.
+
+**No lleva sombra:** `img.bare` (imágenes que ya traen su propio recorte o sombra, como los mockups PNG con alpha).
+
+#### 4 · Degradés estilo Apple
+
+**Un tinte arriba que se funde en el color de la página abajo.** Nunca un degradé de dos colores fuertes.
+
+| Token | Light | Dark | Dónde |
+| --- | --- | --- | --- |
+| `--grad-warm` | `#FFEEE2 → #FFF7F1 → #FFF` | `#352822 → #2A2527 → #24242C` | Hero (`.hero`). **Por case:** se tiñe con el color de marca. |
+| `--grad-neutral` | `#F5F5F7 → #FAFAFB → #FFF` | `#2C2C35 → #26262E → #24242C` | Todas las `.sec.tint` |
+| `--grad-subtle` | `#F7F7F8 → #FBFBFC → #FFF` | `#29292F → #26262D → #24242C` | Secciones que piden un gris muy sutil (en muv: `#motion`) |
+| `--grad-cool` | `#E9EDF8 → #F4F6FB → #FFF` | `#262B45 → #252838 → #24242C` | Disponible. En muv se probó en Motion y se cambió por `--grad-subtle`. |
+| `--grad-navy` | radial `#22328A → #111C5C → #0B1445` | — | `.callout` (recuadro oscuro de marca) |
+| `--grad-accent` | `#F05A00 → #E04F00 → #C94400` | `#FFA066 → #FF7A2E → #FF6200` | Texto de acento del título (`.h1 .accent`, con `background-clip:text`) |
+
+**Reglas:**
+
+- **Dos secciones con fondo seguidas: solo la primera lleva degradé.** La segunda sigue sobre el color de la página, así no hay corte. Queda resuelto en general con:
+  ```css
+  .sec.tint + .sec.tint{background:var(--bg);}
+  ```
+- **Texto con degradé: cada parada tiene que pasar el contraste por sí sola.** El `--grad-accent` de muv se oscureció (`#FF8A3D` daba 2.1:1). Ahora todas las paradas dan ≥3:1 sobre el hero cálido, que es el mínimo para texto grande. Se verifica con un script, no a ojo.
+- El degradé cálido del hero y el del acento **son por case**: se reemplazan por el color de marca de cada uno. Los grises (`neutral`, `subtle`) son iguales en todos.
+
+#### Para aplicarlo a otro case
+
+1. Copiar el bloque `v3 · Portfolio principles` completo desde `muv-case.html`.
+2. Cambiar `--grad-warm` y `--grad-accent` por el color de marca del case, light y dark.
+3. Verificar el contraste de cada parada de `--grad-accent` (≥3:1 en título grande).
+4. Revisar si hay selectores con `border:1px` propios del case (como `.decision .media` en muv) y pasarlos a `--sh-card`.
+5. Mirar el case en light **y** dark.
+
+---
+
+### Parte 2 — Escenas dibujadas (storytelling)
+
+#### Qué son y para qué
+
+Son ilustraciones estilo boceto (lápiz, papel crema con grilla, acuarela puntual y rótulos a mano) que **cuentan el momento humano** que las pantallas solas no transmiten. Por ejemplo: esperar en la vereda, frustrarse con un "1 min" que son 10, o la calma de saber que el auto viene.
+
+**Regla central: las escenas cuentan la historia, los wireframes son la evidencia.**
+
+- Los wireframes lo-fi reales, los tests A/B y los screenshots del proceso **quedan como están**. Nunca se redibujan en estilo boceto, porque parecerían hechos a posteriori.
+- Las escenas se usan para contexto, causa, principio y resolución. No reemplazan ninguna pantalla real.
+
+#### Cuántas y dónde
+
+- **Como máximo una escena por sección**, y como máximo cuatro por case.
+- Juntas forman un arco: **frustración → causa → principio → resolución.** Acompañan el texto, no lo repiten.
+
+Plan para muv, como modelo para los demás:
+
+| # | Escena | Sección | Rótulo central | Estado |
+| --- | --- | --- | --- | --- |
+| 1 | "1 minuto" que son 10: la persona en la vereda mira "1 min" y al lado sigue esperando con el reloj en 10+ | Problem, antes de las citas | *THE APP SAYS ONE THING. THE STREET, ANOTHER.* | ⏳ |
+| 2 | 21 pasos: una escalera donde la gente se va bajando | Funnel ("Two sources, two problems") | *21 STEPS. 25% MAKE IT.* | ⏳ |
+| 3 | La pantalla dice lo que pasa: pasajera, teléfono y conductor conectados por el estado | Process, **antes del stepper de 5 estados** | *WHAT YOU SEE = WHAT'S HAPPENING* | ✅ |
+| 4 | Cada espera tiene nombre y fin: espera tranquila, "Juan está en camino · ACG 546TY", el auto dobla la esquina | Decisions o Motion | *KNOWING IT'S COMING CHANGES THE WAIT.* | ⏳ |
+
+#### Sistema visual (igual en todos los cases)
+
+- **Paleta:** grafito más **dos acentos de la marca del case**. En muv son naranja `#FF6200` (ruta, pin, marca, "request") y navy `#0B1445` (acciones, UI, "status"). En otros cases se cambian **solo** esos dos.
+- **Código de globos fijo:**
+  - **Gris neutro:** lo que dice o piensa el usuario.
+  - **Contorno del color de acción (navy en muv):** lo que dice la app o el sistema.
+  - **Rótulo amarillo pálido con "rayitos":** la idea central de la escena, una por escena.
+- **Mismo personaje en todo el case:** mismas proporciones y trazo, mujer con rodete. No cambiar de personaje entre escenas del mismo case.
+- **Papel:** crema `#FBF9F4` con grilla suave de 28px. En dark mode, `#2A2A33` con grilla clara al 4.5%.
+- **Tipografía:** 'Caveat' 500/600 (Google Fonts, se suma al `<link>` que ya existe), en mayúsculas para los rótulos inferiores.
+- **Idioma:** los rótulos y globos van en el idioma de la página (inglés). **Los textos de la app van tal cual aparecen en el producto** ("Esperando confirmación del conductor…", "cancelación gratis"), igual que en el stepper.
+
+#### Cómo se construyen (técnica)
+
+**SVG inline en el HTML, sin imágenes.** Así son livianas, nítidas, accesibles y respetan dark mode.
+
+- **Trazo de lápiz:** filtro `#sk-wobble` (`feTurbulence` baseFrequency .035 + `feDisplacementMap` scale 3) aplicado al grupo del dibujo.
+- **Acuarela:** elipses del color de acento al 10–13% con el filtro `#sk-wash` (turbulencia + desplazamiento 18 + blur 3).
+- **El texto va FUERA del filtro.** Si no, la letra tiembla y se ensucia. El texto es real (`<text>`), no dibujado, así que se lee, se edita y se traduce.
+- **Colores por variables CSS** dentro de `.sketch` (`--sk-paper`, `--sk-ink`, `--sk-soft`, `--sk-o`, `--sk-n`, `--sk-user`, `--sk-app`, `--sk-idea`), redefinidas en `body.dark-mode .sketch`. En dark, el navy pasa a lavanda `#AFBBFF`, porque navy sobre oscuro no se ve.
+- **Contenedor:** `<figure class="sketch-fig"><div class="sketch"><svg viewBox="0 0 1200 580">…</svg></div><figcaption>…</figcaption></figure>`, con `--sh-card` y radio `var(--r)`.
+- **Mobile:** el SVG tiene `min-width:760px` y el contenedor `overflow-x:auto`, igual que la figura del flujo completo. Así el texto nunca se achica hasta ser ilegible.
+- **Accesibilidad:** `role="img"` + `<title>` + `<desc>`. El `desc` **cuenta la escena** (quién, qué ve, qué dice cada globo), no "ilustración de…".
+- **Movimiento:** como mucho uno o dos elementos (ripple, flechas). Siempre con pausa (ver Parte 1) y quietos con reduced motion.
+
+#### Qué NO hacer
+
+- Dibujar pantallas o flujos de la app que **no se diseñaron** como si fueran reales. En la escena 3 de muv, la tarjeta "Nuevo viaje" del conductor es ilustrativa (la app del conductor no es parte del case). Hay que confirmarla o reemplazarla por un globo del conductor.
+- Poner datos en la escena que no estén en el case. Cada número tiene que salir del case: en muv, "5 min" es la cuenta regresiva de cancelación gratis.
+- Redibujar wireframes o evidencia del proceso en estilo boceto.
+- Usar más de dos acentos de color, o cambiar el código de globos.
+
+#### Si en vez de SVG se usa una imagen generada
+
+Se puede, pero con estas condiciones:
+
+- Pedir los globos y rótulos **vacíos**, sin texto (los generadores escriben mal en español), y poner el texto encima en HTML o en Figma.
+- Exportar en WebP a 1600px de ancho (entra en el protocolo de IMÁGENES) y en un `figure` con `figcaption` y un `alt` que cuente la escena.
+- Preparar una variante oscura, o enmarcarla como lámina con radio y sombra, para que el papel crema no encandile en dark mode.
+
+Prompt base (en inglés):
+
+> Hand-drawn pencil sketch illustration, loose confident linework, light cream paper with a faint grid, minimal watercolor spot color only in [ACENTO 1 hex] and [ACENTO 2 hex], everything else graphite grey. Editorial storytelling style, wide 16:9 composition, generous white space. Speech bubbles and labels left EMPTY, no text anywhere. Scene: [escena]
+
+#### Para agregar una escena a un case
+
+1. Elegir el momento del arco (frustración / causa / principio / resolución) y la sección donde va. Como máximo una por sección.
+2. Copiar el bloque CSS `/* ─── Sketch scenes ─── */` y la escena 3 de muv como plantilla.
+3. Cambiar `--sk-o` / `--sk-n` (light y dark) por los acentos del case.
+4. Escribir los globos con el código fijo y un solo rótulo amarillo.
+5. Escribir el `desc` y el `figcaption`.
+6. Mirarla en light, dark y mobile (tiene que desplazarse en horizontal, no achicarse).
+
+---
+
+### Cambios en `muv-case.html` en esta pasada (Septiembre 2026)
+
+- Se implementó la **escena 3** en Process, antes del stepper de 5 estados.
+- Se aplicó el bloque **v3 · Portfolio principles** completo.
+- Hero con `--grad-warm` (durazno) y título con `--grad-accent`.
+- `#motion` con `--grad-subtle`. `#decisions`, que viene justo después, queda sin fondo por la regla `.sec.tint + .sec.tint`.
+- Se **eliminó la decisión "Navy for action, orange for the brand"**: el texto, el placeholder de la review screen y el TODO asociado. La sección pasó de "Four decisions…" a **"Three decisions that shaped the product"**.
+- `.decision .media` y `.wf-strip .wf` pasaron de borde a sombra.
 
 ---
 
