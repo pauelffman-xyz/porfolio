@@ -1053,7 +1053,7 @@ Todos por encima de 4.5:1 sobre `--bg:#24242C` salvo donde el token ya pasaba (e
 
 ## CASE STUDIES — LENGUAJE VISUAL v3: estilo Apple + escenas dibujadas
 
-*Septiembre 2026 · ✅ APROBADO · ✅ IMPLEMENTADO en `muv-case.html` · ⏳ pendiente en los otros cases*
+*Septiembre 2026 · ✅ APROBADO · ✅ IMPLEMENTADO en `muv-case.html` y `vendor-tool-case.html` (solo bloque v3, sin escenas todavía) · ⏳ pendiente en los otros cases*
 
 A partir de ahora, **todo case nuevo o revisado sigue estas reglas.** Son dos cosas:
 
@@ -1236,6 +1236,22 @@ Prompt base (en inglés):
 - `#motion` con `--grad-subtle`. `#decisions`, que viene justo después, queda sin fondo por la regla `.sec.tint + .sec.tint`.
 - Se **eliminó la decisión "Navy for action, orange for the brand"**: el texto, el placeholder de la review screen y el TODO asociado. La sección pasó de "Four decisions…" a **"Three decisions that shaped the product"**.
 - `.decision .media` y `.wf-strip .wf` pasaron de borde a sombra.
+
+### Cambios en `vendor-tool-case.html` (Septiembre 2026)
+
+- **Bloque v3 aplicado.** Colores por case: `--grad-warm` rosado Monchis (`#FFECEF → #FFF6F7 → #FFF`, dark `#36242A → #2A2429 → #24242C`) y `--grad-accent` rojo (`#F0284E → #E8143C → #C8102E`, dark `#FF7A93 → #FF5C7A → #FF3D63`). Todas las paradas dan ≥3.6:1 sobre el hero (verificado con script).
+- Sombras en vez de borde en `.panel`, `.strip` y `.signals`. `.frame` (hero Lottie) pasa a `--sh-float`.
+- Las tarjetas `.comp` del Component library pasan a ser blancas (`var(--panel-light)`) con `--sh-card` sobre el fondo gris, con la miniatura en `--bg2`: tarjeta blanca sobre gris, estilo Apple.
+- No hay dos `.sec.tint` seguidas en este case, pero la regla queda puesta igual.
+- **Component library, nuevo orden:** Status components → Order card → **Queue tabs** → **List rows** → **Category picker** → Stat card.
+  - **Se eliminó "Page header pattern"** (`vt-comp-header-actions.webp` y `vt-comp-header-filters.webp` ya no se usan).
+  - **Queue tabs** pasa a ser un grupo propio con dos imágenes nuevas: `vt-comp-queue-header.webp` (en contexto: búsqueda, orden, tabs, aviso y acciones) y `vt-comp-queue-tabs.webp` (primer plano: activo contra en reposo, en tarjeta angosta `.comp--narrow`). Reemplaza a `vt-comp-tabs.webp`.
+  - **List rows** (nuevo): `vt-comp-list-rows.webp`, con producto sin foto, producto con foto y categoría programada apagada.
+  - **Category picker** (nuevo): `vt-comp-category-picker.webp`, con "Agregar categoría" y búsqueda que va sugiriendo mientras se escribe.
+  - "Small pieces" pasa a llamarse **Stat card** (queda solo la tarjeta de total).
+  - El subtítulo del summary pasa a "Status, cards, lists, pickers and navigation…".
+- **Hero:** se sumó `vt-hero-showcase.webp` (composición de 5 pantallas, 1536×795, 88 KB) como primera imagen, justo después de la fila de meta (Launch · May 2025), dentro de `.frame` con `--sh-float`. Se recortaron las franjas negras y el título "INSTANT SHOWCASE" de la plantilla original. La composición anterior, `vt-hero-composite.webp` (3 ventanas de navegador), se movió a Solution, debajo de "One dashboard for products, orders, status and team.", y reemplaza al collage de 6 pantallas `vt-toolkit-grid.webp`, que se eliminó junto con su TODO.
+- Las cuatro imágenes nuevas venían en PNG con transparencia: se compusieron sobre blanco antes de exportarlas a WebP (si no, el fondo transparente queda negro) y se recortó el margen sobrante. Pesan entre 14 y 41 KB, dentro de protocolo.
 
 ---
 

@@ -234,6 +234,66 @@ html:not(.js) .reveal{opacity:1;transform:none;}
 body.dark-mode .panel,body.dark-mode .strip{border-color:transparent;}
 body.dark-mode .impact div{border-color:var(--paper);}
 body.dark-mode{--panel-light:#2C2C36;}
+
+/* ════════════════════════════════════════════════════════════
+   v3 · Portfolio principles (apply to every case)
+   1. Motion with a pause   2. More air
+   3. Apple-style shadows   4. Apple-style gradients
+   Per case: --grad-warm and --grad-accent (Monchis red here)
+   ════════════════════════════════════════════════════════════ */
+:root{
+  --sec:clamp(96px,12vw,176px);
+  --stack:clamp(56px,7vw,112px);
+  --sh-card:0 1px 2px rgba(0,0,0,.03),2px 4px 12px rgba(0,0,0,.08);
+  --sh-float:0 2px 6px rgba(0,0,0,.04),0 12px 24px rgba(0,0,0,.06),0 32px 72px rgba(0,0,0,.10);
+  --sh-ring:0 0 0 1px rgba(0,0,0,.04);
+  --grad-neutral:linear-gradient(180deg,#F5F5F7 0%,#FAFAFB 55%,#FFFFFF 100%);
+  --grad-subtle:linear-gradient(180deg,#F7F7F8 0%,#FBFBFC 50%,#FFFFFF 100%);
+  --grad-warm:linear-gradient(180deg,#FFECEF 0%,#FFF6F7 45%,#FFFFFF 100%);      /* per case: Monchis red tint */
+  --grad-accent:linear-gradient(100deg,#F0284E 0%,#E8143C 50%,#C8102E 100%);  /* per case: every stop ≥3:1 on the hero */
+  --ease-apple:cubic-bezier(.28,.11,.32,1);
+}
+body.dark-mode{
+  --sh-card:0 0 0 1px rgba(255,255,255,.06),0 8px 24px rgba(0,0,0,.35);
+  --sh-float:0 0 0 1px rgba(255,255,255,.06),0 16px 40px rgba(0,0,0,.40),0 40px 90px rgba(0,0,0,.35);
+  --sh-ring:0 0 0 1px rgba(255,255,255,.06);
+  --grad-neutral:linear-gradient(180deg,#2C2C35 0%,#26262E 55%,#24242C 100%);
+  --grad-subtle:linear-gradient(180deg,#29292F 0%,#26262D 50%,#24242C 100%);
+  --grad-warm:linear-gradient(180deg,#36242A 0%,#2A2429 45%,#24242C 100%);
+  --grad-accent:linear-gradient(100deg,#FF7A93 0%,#FF5C7A 50%,#FF3D63 100%);
+}
+
+/* 2 · more air */
+.sec > .wrap > * + *{margin-top:var(--stack);}
+.split{gap:clamp(40px,6vw,120px);}
+.decision{padding-block:clamp(56px,7vw,112px);}
+.dmedia{margin-top:clamp(40px,5vw,72px);gap:clamp(36px,4.5vw,64px);}
+.learn,.principles,.levers,.impact{gap:clamp(32px,4vw,64px);}
+.hero .meta,.hero-visual{margin-top:clamp(56px,7vw,104px);}
+.lib-body{gap:clamp(56px,7vw,96px);}
+
+/* 4 · gradients */
+.hero{background:var(--grad-warm);}
+.sec.tint{background:var(--grad-neutral);}
+.sec.tint + .sec.tint{background:var(--bg);}
+.h1 .accent{background:var(--grad-accent);-webkit-background-clip:text;background-clip:text;color:transparent;}
+body.dark-mode .h1 .accent{color:transparent;}
+
+/* 3 · shadows (borders out, depth in) */
+.panel,.strip{border:0;box-shadow:var(--sh-card);}
+.signals{border:0;box-shadow:var(--sh-card);}
+.frame{box-shadow:var(--sh-float);}
+.phone{box-shadow:var(--sh-ring),var(--sh-float);}
+.comp{background:var(--panel-light);box-shadow:var(--sh-card);}
+.comp .thumb{background:var(--bg2);}
+.stack-comp .comp--narrow{align-self:flex-start;width:min(100%,440px);}
+.comp--narrow .thumb img{width:min(100%,260px);}
+.hero-showcase + .hero-visual{margin-top:var(--stack);}
+
+/* 1 · motion with a pause */
+.reveal{transition:opacity 1s var(--ease-apple),transform 1s var(--ease-apple);}
+details.lib summary .ico{transition:transform .5s var(--ease-apple);}
+@media (prefers-reduced-motion:reduce){.reveal{transition:none;}}
 </style>
 </head>
 <body>
@@ -275,8 +335,8 @@ body.dark-mode{--panel-light:#2C2C36;}
       <div><dt>Launch</dt><dd>May 2025</dd></div>
     </dl>
 
-    <div class="hero-visual hero-visual--float">
-      <img src="vendor-tool-assets/vt-hero-composite.webp" width="1872" height="835" alt="Three Vendor Tool screens: a photo waiting in review while the product stays live with its previous photo, the product editor for Hamburguesa Bacon XXX with its live preview, and the product-categories list" style="width:100%;height:auto;display:block;">
+    <div class="hero-visual hero-visual--float hero-showcase">
+      <div class="frame"><img src="vendor-tool-assets/vt-hero-showcase.webp" width="1536" height="795" alt="Five Vendor Tool screens laid out on a light grey surface: the order queue with pending orders, the orders list with its totals, the product editor for Hamburguesa Bacon XXX with its live preview, a branch dashboard with the last seven days of metrics, and an order detail" style="width:100%;height:auto;display:block;"></div>
     </div>
   </div>
 </header>
@@ -381,10 +441,9 @@ body.dark-mode{--panel-light:#2C2C36;}
     </div>
 
     <figure class="narrow-fig" style="max-width:1160px">
-      <img src="vendor-tool-assets/vt-toolkit-grid.webp" width="1680" height="905" loading="lazy" decoding="async" alt="Six Vendor Tool screens: the product editor with a live preview, a photo sent to review with old vs new side by side, the product categories list, the new-category dialog, the Promos product list, and the photo-tips guide" style="width:100%;height:auto;border-radius:var(--r);">
-      <figcaption>Menu, photos and categories, all edited from the same place.</figcaption>
+      <img src="vendor-tool-assets/vt-hero-composite.webp" width="1872" height="835" alt="Three Vendor Tool screens: a photo waiting in review while the product stays live with its previous photo, the product editor for Hamburguesa Bacon XXX with its live preview, and the product-categories list" loading="lazy" decoding="async" style="width:100%;height:auto;display:block;">
+      <figcaption>A photo in review while the product stays live, the product editor with its live preview, and the categories list.</figcaption>
     </figure>
-    <!-- TODO(Paula): swapped this spot's figure for your new 6-screen toolkit collage, per your note, and rewrote the paragraph above it to match (it used to describe the franchise dashboard specifically — "what's open this morning" — which no longer sits here). One thing this drops: the franchise-view screenshot with its 33%/95%/metrics breakdown and its caption isn't shown as its own figure anywhere now — it still exists as the Prototype section's fallback thumbnail, but unnarrated. If you want that detail back in the case, tell me where (e.g. right after the "principles" row below, or inside the franchise-view bullet in "principles") and I'll add it back rather than leave it orphaned. -->
 
     <div class="principles">
       <div><h3>Franchise-wide view</h3><p>Real-time operating status across every branch, from a single screen.</p></div>
@@ -641,7 +700,7 @@ body.dark-mode{--panel-light:#2C2C36;}
   <div class="wrap">
     <details class="lib">
       <summary>
-        <span><span class="h3" id="lib-h">Component library</span><span class="sub">Status, cards, headers and navigation, pulled from across the tool</span></span>
+        <span><span class="h3" id="lib-h">Component library</span><span class="sub">Status, cards, lists, pickers and navigation, pulled from across the tool</span></span>
         <span class="ico" aria-hidden="true">+</span>
       </summary>
       <div class="lib-body">
@@ -671,20 +730,35 @@ body.dark-mode{--panel-light:#2C2C36;}
         </div>
 
         <div class="comp-group">
-          <h3>Page header pattern</h3>
-          <p>Every second-level screen in Vendor Tool shares this header: breadcrumb, back arrow, title, and a slot for either actions or filters.</p>
+          <h3>Queue tabs</h3>
+          <p>The queue's four tabs, each with a live count, sitting under the search and sort controls and above the bulk actions.</p>
           <div class="stack-comp">
-            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-header-actions.webp" width="1742" height="300" loading="lazy" decoding="async" alt="Page header with breadcrumb, back arrow, title, subtitle, a franchise selector, dark-mode and mute icons, two secondary Operation buttons and one primary red button"></div><figcaption class="cap"><strong>With actions</strong>Two secondary actions plus one primary, for screens like the product editor.</figcaption></figure>
-            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-header-filters.webp" width="1712" height="284" loading="lazy" decoding="async" alt="The same header pattern with a Filtros row instead of actions: Franquicia, Estado, Periodo, Medio de pago, Transaccion"></div><figcaption class="cap"><strong>With filters</strong>The same slot, filled with Franquicia, Estado, Periodo and more — used on Órdenes and Roles.</figcaption></figure>
+            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-queue-header.webp" width="2236" height="448" loading="lazy" decoding="async" alt="Listado de órdenes header: a Buscar field and an Ordenar por Más nuevas dropdown; tabs Pendientes 10 (active, red), Preparando 99, Delivery/Pick up 99 and Historial 100; a dismissible notice that bulk cancel and print are not available yet; a Seleccionar todas las órdenes checkbox, a Pasar a preparando button and Pedidos agendados (4)"></div><figcaption class="cap"><strong>In context</strong>Search and sort on top, the tabs, then the actions for the selected orders.</figcaption></figure>
+            <figure class="comp comp--narrow"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-queue-tabs.webp" width="568" height="640" loading="lazy" decoding="async" alt="The four tabs close up, each with its icon and count: Pendientes 10 in red with a pink badge and a red underline, then Preparando 99, Delivery/Pick up 99 and Historial 100 in grey"></div><figcaption class="cap"><strong>Active and resting</strong>The active tab turns red, with a tinted badge and an underline. The rest stay neutral.</figcaption></figure>
           </div>
         </div>
 
         <div class="comp-group">
-          <h3>Small pieces</h3>
-          <p>A stat card and the queue's tab navigation, with counts that update live.</p>
+          <h3>List rows</h3>
+          <p>Products and categories share one row: a drag handle to reorder, an on/off switch, and the same edit and delete buttons. A category row adds its item count, its schedule, and a way into its products.</p>
+          <div class="stack-comp">
+            <figure class="comp comp--wide"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-list-rows.webp" width="2168" height="968" loading="lazy" decoding="async" alt="Three list rows. A product without a photo, showing an add-image placeholder, its name and Gs. 50.000, switched on. The same product with a burger photo, switched on. A category row, Nombre de la categoría with # items and a Programado de 18 a 20hs chip, switched off, with edit, delete and Ver productos buttons"></div><figcaption class="cap"><strong>Product and category</strong>Without a photo, with a photo, and a scheduled category switched off.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Category picker</h3>
+          <p>Adding a category starts with a search. As the vendor types, existing categories show up with the typed part in bold.</p>
           <div class="comp-grid">
-            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-comp-total-card.webp" width="528" height="208" loading="lazy" decoding="async" alt="A small stat card reading Gs. 807.976, labelled TOTAL"></div><figcaption class="cap"><strong>Stat card</strong>The same card shows a total, a count, or a time — just the label changes.</figcaption></figure>
-            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-comp-tabs.webp" width="2208" height="92" loading="lazy" decoding="async" alt="Tab navigation: Pendientes 10, Preparando 99, Delivery/Pick up 99, Historial 100, with a red underline on the active tab"></div><figcaption class="cap"><strong>Queue tabs</strong>Pendientes, Preparando, Delivery/Pick up and Historial, each with a live count.</figcaption></figure>
+            <figure class="comp"><div class="thumb thumb--pad"><img src="vendor-tool-assets/vt-comp-category-picker.webp" width="1127" height="664" loading="lazy" decoding="async" alt="A Los más vendidos chip next to an Agregar categoría button. Its dropdown has a search field with Los typed, and four suggestions, Los más, Los más comprados, Los más saludables and Los más vendidos, with Los in bold and the last one highlighted"></div><figcaption class="cap"><strong>Search as you type</strong>Suggestions narrow as the vendor types, matching part in bold.</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="comp-group">
+          <h3>Stat card</h3>
+          <p>The same card shows a total, a count, or a time. Only the label changes.</p>
+          <div class="comp-grid">
+            <figure class="comp"><div class="thumb"><img src="vendor-tool-assets/vt-comp-total-card.webp" width="528" height="208" loading="lazy" decoding="async" alt="A small stat card reading Gs. 807.976, labelled TOTAL"></div><figcaption class="cap"><strong>Total</strong>Gs. 807.976, labelled TOTAL.</figcaption></figure>
           </div>
         </div>
 
