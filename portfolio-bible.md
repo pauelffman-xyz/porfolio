@@ -1241,6 +1241,17 @@ Prompt base (en inglés):
 - **Wireframes de la exploración recortados:** quedó solo la card "Where the box lives — after the user, before the catalogue", centrada a 760px (`.wf-explore--single`). Se eliminaron "Same component, four moments" (junto con su callout violeta "Why this mattered") y "One context engine, two surfaces": la escena ya cuenta los cuatro momentos.
 - **Pensamientos en inglés** (idioma de la página); los textos de la app en español, tal cual el producto. Los pensamientos ("I skipped lunch again", etc.) son narrativos, no citas de research.
 
+### Mobile — cómo armar imágenes y escenas (Septiembre 2026)
+
+**Regla:** en mobile hay como mucho 1 o 2 teléfonos por pantalla, y el texto de una captura tiene que verse a 10–11 px o más. Para probarlo, en Figma se coloca la imagen a 342 px de ancho dentro de un frame de 390: si no se lee, hace falta versión mobile.
+
+- **Pantallas sueltas (strips de flujo):** se exporta una pantalla por archivo, a 2x (≈780 px de ancho), en WebP, con sufijo `-01`, `-02`… Van dentro de `.shots`, que es una fila en desktop y un carrusel con scroll-snap en mobile (74% de ancho, con el siguiente asomando). Nunca se hace una sola imagen con 5 teléfonos.
+- **Composiciones (abanicos, hero):** versión mobile aparte, vertical 4:5 (1080×1350), con 2–3 teléfonos como máximo y sin recortes en los bordes, con sufijo `-mobile`. Se sirve con `<picture><source media="(max-width:640px)">`. No se usa `min-width` + scroll horizontal: se ve cortado y nada indica que se puede deslizar.
+- **Escenas dibujadas:** cada escena tiene dos SVG, `.sk-desktop` (horizontal) y `.sk-mobile` (vertical, con las mismas piezas reutilizadas y apiladas), y el cambio es automático a ≤640px. En muv: pasajera → teléfono → conductor, con las flechas request/live status por los márgenes y el rótulo amarillo al final. En Monchis: los 4 momentos en filas (viñeta + caja) y los 3 rótulos apilados. Los ids del SVG mobile llevan sufijo (`skm-`, `mcm-`) para no chocar con los del desktop.
+- **Padding de secciones:** tiene que bajar en mobile. `monchis-case.html` tenía `.section{padding:5rem 4rem}` fijo (el contenido quedaba en 262 de 390 px); ahora es `3.5rem 1.25rem` a ≤640px.
+- ⚠️ **Pendiente en `monchis-case.html`:** la página desborda en mobile (scrollWidth 726 px en un viewport de 390) por elementos de ancho fijo que ya estaban antes (`.cover-meta`, `.fc-slide`, `.phone-wrap`, `.search-phone-wrap`, `.mb-item`, `.matrix`). Hace falta una pasada mobile completa.
+- En `muv-case.html` quedaron comentados (`<!-- MOBILE (pending … -->`) el carrusel `.shots` de Envío (`muv-envio-01…05.webp`) y el `<picture>` del flujo completo (`muv-full-flow-mobile.webp`), a la espera de las imágenes.
+
 ### Cambios en `muv-case.html` en esta pasada (Septiembre 2026)
 
 - Se implementó la **escena 3** en Process, antes del stepper de 5 estados.
@@ -1249,6 +1260,7 @@ Prompt base (en inglés):
 - `#motion` con `--grad-subtle`. `#decisions`, que viene justo después, queda sin fondo por la regla `.sec.tint + .sec.tint`.
 - Se **eliminó la decisión "Navy for action, orange for the brand"**: el texto, el placeholder de la review screen y el TODO asociado. La sección pasó de "Four decisions…" a **"Three decisions that shaped the product"**.
 - `.decision .media` y `.wf-strip .wf` pasaron de borde a sombra.
+- Se eliminaron del cierre de Results el callout navy ("Every stakeholder wanted to add. Every user wanted less.") y la lista "If I had more time". Results ahora termina en "What I learned".
 
 ### Cambios en `vendor-tool-case.html` (Septiembre 2026)
 

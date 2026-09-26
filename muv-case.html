@@ -587,6 +587,20 @@ body.dark-mode .h1 .accent{color:transparent;}
   100%{opacity:0;transform:scale(1.35);}   /* hold: the pause */
 }
 @media (prefers-reduced-motion:reduce){.reveal{transition:none;}.sketch .flow,.sketch .ripple circle{animation:none;}}
+
+/* sketch scenes: vertical version on phones (same drawing, stacked) */
+.sketch svg.sk-mobile{display:none;}
+@media(max-width:640px){.sketch svg.sk-desktop{display:none;}.sketch svg.sk-mobile{display:block;min-width:0;}}
+
+/* screen carousel (.shots): a row on desktop, a swipeable carousel on phones.
+   One exported phone screen per <img>. See bible → mobile image rules. */
+.shots{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(12px,2vw,24px);align-items:start;}
+.shots img{width:100%;height:auto;display:block;}
+@media(max-width:640px){
+  .shots{grid-auto-columns:74%;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:13%;padding:4px 13% 12px;margin-inline:calc(-1 * var(--gutter));scrollbar-width:none;}
+  .shots::-webkit-scrollbar{display:none;}
+  .shots > *{scroll-snap-align:center;}
+}
 </style>
 </head>
 <body>
@@ -746,7 +760,7 @@ body.dark-mode .h1 .accent{color:transparent;}
     <!-- ─── Sketch scene 3 · "What you see = what's happening" ─── -->
     <figure class="sketch-fig">
       <div class="sketch">
-        <svg viewBox="0 0 1200 580" role="img" aria-labelledby="sk3-t sk3-d">
+        <svg class="sk-desktop" viewBox="0 0 1200 580" role="img" aria-labelledby="sk3-t sk3-d">
           <title id="sk3-t">What you see is what's happening</title>
           <desc id="sk3-d">A passenger waits on the sidewalk looking at her phone, thinking "OK, it's finding me a driver". Her screen, shown large, reads "Esperando confirmación del conductor…" with a free-cancellation countdown. A dashed arrow carries the request to a driver in a muv car, who sees a new-trip card, and a second arrow brings the status back to her screen. The label in the middle reads: what you see equals what's happening.</desc>
           <defs>
@@ -916,6 +930,167 @@ body.dark-mode .h1 .accent{color:transparent;}
             <text x="990" y="546" text-anchor="middle" font-size="19" letter-spacing="1">DRIVER: DECIDING, 5 MIN</text>
           </g>
         </svg>
+        <svg class="sk-mobile" viewBox="0 0 600 1690" role="img" aria-labelledby="sk3m-t sk3m-d">
+          <title id="sk3m-t">What you see is what's happening</title>
+          <desc id="sk3m-d">A passenger waits on the sidewalk thinking "OK, it's finding me a driver". Below, her screen reads "Esperando confirmación del conductor…" with a free-cancellation countdown. Below that, a driver in a muv car sees a new-trip card. An orange arrow carries the request down to the driver and a navy arrow brings the live status back up to her screen. The closing label reads: what you see equals what's happening.</desc>
+          <defs>
+            <filter id="skm-wobble" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/>
+              <feDisplacementMap in="SourceGraphic" scale="3"/>
+            </filter>
+            <filter id="skm-wash" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9"/>
+              <feDisplacementMap in="SourceGraphic" scale="18"/>
+              <feGaussianBlur stdDeviation="3"/>
+            </filter>
+            <pattern id="skm-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M28 0H0V28" fill="none" class="sk-gridline"/>
+            </pattern>
+            <marker id="skm-head-o" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M1 1L8 5L1 9" fill="none" class="sk-o" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <marker id="skm-head-n" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M1 1L8 5L1 9" fill="none" class="sk-n" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <clipPath id="skm-screen"><rect x="496" y="78" width="208" height="404" rx="24"/></clipPath>
+          </defs>
+
+
+          <rect width="600" height="1690" class="sk-paper"/>
+          <rect width="600" height="1690" fill="url(#skm-grid)"/>
+          <g filter="url(#skm-wash)" aria-hidden="true">
+            <ellipse cx="300" cy="850" rx="190" ry="150" class="sk-wash-o"/>
+            <ellipse cx="286" cy="1190" rx="160" ry="70" class="sk-wash-n"/>
+          </g>
+          <g filter="url(#skm-wobble)" class="sk-ink" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <g transform="translate(100 0)">
+            <!-- ── LEFT · passenger on the sidewalk ── -->
+            <g class="sk-soft" stroke-width="1.6">
+              <!-- tree -->
+              <path d="M78 468V330"/><path d="M78 380l-18-22M78 360l16-18"/>
+              <path d="M44 330c-18-10-14-40 8-42c-2-26 30-34 42-14c20-10 42 8 32 28c18 12 6 40-16 36c-8 16-34 16-44 4c-12 8-30 0-22-12z"/>
+              <!-- lamp -->
+              <path d="M338 468V250q0-16 16-16h14"/><path d="M362 234l10 0l4 10h-18z"/>
+            </g>
+            <!-- sidewalk -->
+            <path d="M30 470H400" stroke-width="2.2"/>
+            <path d="M30 480H400" class="sk-soft" stroke-width="1.2"/>
+            <path d="M70 490l12-10M150 490l12-10M230 490l12-10M310 490l12-10" class="sk-soft" stroke-width="1.2"/>
+
+            <!-- passenger -->
+            <g stroke-width="2.4">
+              <!-- legs -->
+              <path d="M196 360l-6 104M210 360l-2 104M228 360l4 104M244 360l6 104"/>
+              <path d="M182 466h28M226 466h30" stroke-width="3.4"/>
+              <!-- coat -->
+              <path d="M186 240q34-18 66 0l12 122q-46 10-92 0z" class="sk-fill-paper"/>
+              <path d="M219 232l-2 128" class="sk-soft" stroke-width="1.4"/>
+              <path d="M186 240l-10 72q-2 10 6 12" />
+              <!-- front arm holding phone -->
+              <path d="M252 246q14 30 10 54q-2 8-12 6l-22-14"/>
+              <!-- small phone -->
+              <rect x="226" y="262" width="18" height="30" rx="4" transform="rotate(-14 235 277)" class="sk-fill-n" stroke-width="2"/>
+              <!-- neck + head -->
+              <path d="M212 210v22M228 210v22"/>
+              <path d="M200 176q0-40 32-40q30 0 30 36q0 10 6 16q-6 4-8 4q2 14-10 18q-8 3-20 2q-30-4-30-36z" class="sk-fill-paper"/>
+              <!-- hair + bun -->
+              <path d="M200 180q-8-44 36-46q24 0 28 20q-18-6-34 4q-8 6-12 24q-6-4-10 0q-4 4-8-2z" class="sk-fill-ink"/>
+              <circle cx="196" cy="140" r="13" class="sk-fill-ink"/>
+              <!-- face, looking down at the phone -->
+              <path d="M246 180q4 2 8 0" stroke-width="2"/>
+              <path d="M248 198q4 2 7-1" stroke-width="1.8"/>
+            </g>
+
+            <!-- thought bubble (user voice: neutral) -->
+            <g stroke-width="2" class="sk-bubble-user">
+              <path d="M60 64q0-22 24-22h206q24 0 24 22v34q0 22-24 22h-206q-24 0-24-22z"/>
+              <circle cx="228" cy="136" r="6"/><circle cx="236" cy="152" r="3.5"/>
+            </g>
+
+            </g>
+            <path d="M346 262L188 594M350 296L412 594" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <g transform="translate(-300 520)">
+            <!-- ── CENTER · her screen, large ── -->
+            <rect x="488" y="70" width="224" height="420" rx="32" class="sk-fill-paper" stroke-width="3"/>
+            <rect x="496" y="78" width="208" height="404" rx="24" stroke-width="1.4" class="sk-soft"/>
+            <rect x="572" y="88" width="56" height="14" rx="7" class="sk-fill-ink" stroke-width="1.5"/>
+
+            <!-- map fragment -->
+            <g clip-path="url(#skm-screen)">
+              <g class="sk-soft" stroke-width="1.2">
+                <path d="M496 150H704M496 196H704M496 242H704M540 110V300M600 110V300M660 110V300"/>
+              </g>
+              <path d="M540 268V196H600V150H660" class="sk-o route" stroke-width="4.5"/>
+              <circle cx="540" cy="268" r="7" class="sk-fill-n" stroke-width="2"/>
+              <path d="M660 150q-11-12-11-22a11 11 0 0 1 22 0q0 10-11 22z" class="sk-fill-o sk-o" stroke-width="2"/>
+            </g>
+
+            <!-- bottom sheet -->
+            <path d="M496 300q0-14 14-14h180q14 0 14 14v158q0 24-24 24h-160q-24 0-24-24z" class="sk-fill-paper" stroke-width="2"/>
+            <path d="M584 298h32" class="sk-soft" stroke-width="3"/>
+            <!-- ripple: matching in progress -->
+            <g class="ripple">
+              <circle cx="600" cy="336" r="10" class="sk-fill-o sk-o" stroke-width="2"/>
+              <circle cx="600" cy="336" r="20" class="sk-o r1" stroke-width="1.8"/>
+              <circle cx="600" cy="336" r="30" class="sk-o r2" stroke-width="1.4"/>
+            </g>
+            <!-- progress bar -->
+            <path d="M522 450H678" class="sk-soft" stroke-width="5"/>
+            <path d="M522 450H588" class="sk-o" stroke-width="5"/>
+
+            </g>
+            <g transform="translate(-700 1000)">
+            <!-- ── RIGHT · the driver ── -->
+            <g class="sk-soft" stroke-width="1.5">
+              <!-- buildings -->
+              <path d="M820 470V248h86v222M906 470V200h92v270M998 470V270h84v200M1082 470V230h70v240"/>
+              <path d="M836 270h18v22h-18zM868 270h18v22h-18zM926 222h20v24h-20zM960 222h20v24h-20zM1016 292h18v22h-18zM1048 292h18v22h-18zM1098 252h16v20h-16zM1124 252h16v20h-16z"/>
+            </g>
+            <path d="M800 470H1180" stroke-width="2.2"/>
+            <!-- car (facing left) -->
+            <g stroke-width="2.4">
+              <path d="M842 446l4-34q16-8 50-10l34-36q10-8 28-8h86q20 0 32 12l26 30q18 4 20 18v28z" class="sk-fill-paper"/>
+              <path d="M940 374h60v28h-84zM1010 374h42q10 2 18 10l16 18h-76z" stroke-width="2"/>
+              <circle cx="968" cy="390" r="9" class="sk-fill-ink" stroke-width="1.5"/>
+              <path d="M862 424H1116" class="sk-o" stroke-width="4"/>
+              <circle cx="892" cy="450" r="22" class="sk-fill-paper"/><circle cx="892" cy="450" r="8"/>
+              <circle cx="1070" cy="450" r="22" class="sk-fill-paper"/><circle cx="1070" cy="450" r="8"/>
+            </g>
+
+            <!-- driver's new-trip card (app voice: navy) -->
+            <g class="sk-n" stroke-width="2.2">
+              <rect x="870" y="138" width="232" height="92" rx="14" class="sk-fill-paper"/>
+              <path d="M960 230l12 18l12-18" class="sk-fill-paper"/>
+              <circle cx="1032" cy="196" r="15" class="sk-fill-n"/>
+              <path d="M1025 196l5 5l9-10" class="sk-on-n" stroke-width="2.4"/>
+              <circle cx="1074" cy="196" r="15"/>
+              <path d="M1068 190l12 12M1080 190l-12 12" stroke-width="2.2"/>
+            </g>
+
+            </g>
+            <path d="M418 770C570 820 570 1110 412 1176" class="sk-o flow" stroke-width="2.4" stroke-dasharray="8 8" marker-end="url(#skm-head-o)"/>
+            <path d="M166 1200C24 1140 24 870 182 836" class="sk-n flow" stroke-width="2.4" stroke-dasharray="8 8" marker-end="url(#skm-head-n)"/>
+            <rect x="80" y="498" width="440" height="54" rx="12" class="sk-pill-user" stroke-width="1.8"/>
+            <rect x="80" y="1500" width="440" height="54" rx="12" class="sk-pill-app" stroke-width="1.8"/>
+            <path d="M44 1612l-18-8M44 1624l-22 0M44 1636l-18 8M556 1612l18-8M556 1624l22 0M556 1636l18 8" stroke-width="2"/>
+            <path d="M58 1596q242-8 484 0l2 56q-244 8-488 0z" class="sk-pill-idea" stroke-width="1.8"/>
+          </g>
+          <g class="sk-hand">
+            <text x="287" y="90" text-anchor="middle" font-size="26">OK, it's finding</text>
+            <text x="287" y="116" text-anchor="middle" font-size="26">me a driver.</text>
+            <text x="300" y="905" text-anchor="middle" font-size="20" class="sk-t-n">Esperando confirmación</text>
+            <text x="300" y="927" text-anchor="middle" font-size="20" class="sk-t-n">del conductor…</text>
+            <text x="300" y="954" text-anchor="middle" font-size="17" class="sk-t-soft">4:32 · cancelación gratis</text>
+            <text x="218" y="620" font-size="15" class="sk-t-soft">9:41</text>
+            <text x="190" y="1170" font-size="23" class="sk-t-n">Nuevo viaje</text>
+            <text x="190" y="1203" font-size="19" class="sk-t-soft">a 1,2 km</text>
+            <text x="556" y="975" text-anchor="middle" font-size="22" class="sk-t-o" transform="rotate(90 556 975)">request</text>
+            <text x="44" y="1020" text-anchor="middle" font-size="22" class="sk-t-n" transform="rotate(-90 44 1020)">live status</text>
+            <text x="300" y="533" text-anchor="middle" font-size="26" letter-spacing="1">PASSENGER: CALM, INFORMED</text>
+            <text x="300" y="1535" text-anchor="middle" font-size="26" letter-spacing="1">DRIVER: DECIDING, 5 MIN</text>
+            <text x="300" y="1633" text-anchor="middle" font-size="25" letter-spacing=".5">WHAT YOU SEE = WHAT'S HAPPENING</text>
+          </g>
+        </svg>
       </div>
       <figcaption>The principle behind the five states: the screen only says what the system is actually doing, on both sides of the request.</figcaption>
     </figure>
@@ -946,6 +1121,7 @@ body.dark-mode .h1 .accent{color:transparent;}
     <!-- TODO(Paula): confirm what the UI shows on cancellation, if you want it named here -->
 
     <figure>
+      <!-- MOBILE (pending image): wrap the img in <picture><source media="(max-width:640px)" srcset="muv-assets/muv-full-flow-mobile.webp" width="1080" height="1350"> … </picture> and drop "scroll" from the panel -->
       <div class="panel scroll" style="padding:clamp(8px,2vw,24px)"><img src="muv-assets/muv-full-flow.webp" width="2012" height="926" loading="lazy" decoding="async" alt="The whole passenger app across its states: saved-card prompt, trip summary and review, matching with the search route, the home with the driver-confirmed banner and services, the category list with the Recomendado option, and the driver card with the five-minute free wait"></div>
       <figcaption>The whole passenger app, from home and categories to matching, driver assigned and review.</figcaption>
     </figure>
@@ -1019,6 +1195,14 @@ body.dark-mode .h1 .accent{color:transparent;}
       </div>
       <!-- TODO(Paula): the small text inside this composite looks soft/warped at full width; if you have a clean export from Figma, swap it in -->
       <figure>
+        <!-- MOBILE (pending images): replace the strip below with one image per screen:
+        <div class="shots">
+          <img src="muv-assets/muv-envio-01.webp" width="780" height="1690" loading="lazy" decoding="async" alt="Home asking to add a card">
+          <img src="muv-assets/muv-envio-02.webp" width="780" height="1690" loading="lazy" decoding="async" alt="Addresses">
+          <img src="muv-assets/muv-envio-03.webp" width="780" height="1690" loading="lazy" decoding="async" alt="Categories: Moto, Económico, Muv">
+          <img src="muv-assets/muv-envio-04.webp" width="780" height="1690" loading="lazy" decoding="async" alt="Package details">
+          <img src="muv-assets/muv-envio-05.webp" width="780" height="1690" loading="lazy" decoding="async" alt="Delivery rating">
+        </div> -->
         <img class="envio" src="muv-assets/muv-envio-flow.webp" width="1600" height="691" loading="lazy" decoding="async" alt="The Envío flow in five screens: the home asking to add a card and showing the Viaje and Envío services, the address entry titled Tu envío en muv, the category list with Moto, Económico and Muv and their prices, the package details with Envío and Recibo tabs, and the delivered screen with a rating prompt">
         <figcaption>Envío: add a card, enter the addresses, pick a category (Moto, Económico or Muv), review the package details, and rate the delivery.</figcaption>
       </figure>
@@ -1312,20 +1496,6 @@ body.dark-mode .h1 .accent{color:transparent;}
           <p>Annotating design against implementation in Figma Dev Mode turned QA from a confrontation into a shared task.</p>
         </div>
       </div>
-    </div>
-
-    <div class="callout">
-      <p class="big">Every stakeholder wanted to add. Every user wanted less.</p>
-      <p class="sub">Holding that line, and backing it with data, is a design skill as important as any visual craft.</p>
-    </div>
-
-    <div>
-      <h3 class="h3" style="margin-bottom:1.25rem">If I had more time</h3>
-      <ul class="next">
-        <li><strong>Measure the change.</strong> Re-run the survey after launch, with a sample that isn't mostly B2B-brand customers.</li>
-        <li><strong>Research the supply side.</strong> Riders' biggest complaint was drivers not accepting trips, so a driver survey is the next study.</li>
-        <li><strong>Close what testing flagged.</strong> Replace icon-only entry points with icon plus label, and clarify how stops work.</li>
-      </ul>
     </div>
 
   </div>

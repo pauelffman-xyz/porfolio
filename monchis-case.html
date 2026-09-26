@@ -60,6 +60,7 @@ body{
 /* ── SHARED ── */
 .section{padding:5rem 4rem;}
 .section+.section{border-top:1px solid var(--line2);}
+@media(max-width:640px){.section{padding:3.5rem 1.25rem;}}
 .eyebrow{
   font-family:'Space Grotesk',sans-serif;
   font-size:.5625rem;letter-spacing:.18em;text-transform:uppercase;
@@ -484,6 +485,10 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
 .sketch .sk-t-soft{fill:var(--sk-ink);opacity:.7;}
 .sketch-fig{margin:0 0 clamp(40px,5vw,64px);}
 .sketch-fig figcaption{margin-top:.875rem;font-size:.875rem;line-height:1.6;color:var(--ash);max-width:70ch;}
+
+/* sketch scenes: vertical version on phones (same drawing, stacked) */
+.sketch svg.sk-mobile{display:none;}
+@media(max-width:640px){.sketch svg.sk-desktop{display:none;}.sketch svg.sk-mobile{display:block;min-width:0;}}
 </style>
 
 <style>
@@ -1228,7 +1233,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
     <!-- ─── Sketch scene · "A day with Monchis" (time-of-day contextual box) ─── -->
     <figure class="sketch-fig">
       <div class="sketch sketch--monchis">
-        <svg viewBox="0 0 1200 690" role="img" aria-labelledby="mcday-t mcday-d">
+        <svg class="sk-desktop" viewBox="0 0 1200 690" role="img" aria-labelledby="mcday-t mcday-d">
           <title id="mcday-t">A day with Monchis: one box, four moments</title>
           <desc id="mcday-d">The same person across one day, with the sun moving from sunrise to night above her. At 8:40, with a coffee, she thinks "Something to start the day…" and her phone shows the box "¿Qué te tienta esta mañana?" with desayunos, café and 2x1. At 12:30, at her laptop, she thinks "I skipped lunch again" and the box reads "¿No almorzaste aún?" with quick options and menú del día. At 17:10, next to a slice of cake, she thinks "I need something sweet" and the box reads "Merienda con algo dulce" with cafeterías, postres and helados. At 21:00, by a window with the moon, she thinks "Not cooking tonight" and the box reads "Cena sin vueltas" with pizza, hamburguesas and mercado 24h. Labels at the bottom: for her, the right craving without searching; one box, four moments a day; for Monchis, four chances a day to convert.</desc>
           <defs>
@@ -1401,6 +1406,149 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
             <text x="210" y="638" text-anchor="middle" font-size="17" letter-spacing=".5">YOU: THE RIGHT CRAVING, NO SEARCHING</text>
             <text x="600" y="639" text-anchor="middle" font-size="19" letter-spacing=".5">ONE BOX. FOUR MOMENTS A DAY.</text>
             <text x="990" y="638" text-anchor="middle" font-size="17" letter-spacing=".5">MONCHIS: FOUR CHANCES TO CONVERT</text>
+          </g>
+        </svg>
+        <svg class="sk-mobile" viewBox="0 0 560 1394" role="img" aria-labelledby="mcdaym-t mcdaym-d">
+          <title id="mcdaym-t">A day with Monchis: one box, four moments</title>
+          <desc id="mcdaym-d">The same person at four moments of one day, each next to the Monchis box it gets. At 8:40, with a coffee: "Something to start the day…" and "¿Qué te tienta esta mañana?". At 12:30, at her laptop: "I skipped lunch again" and "¿No almorzaste aún?". At 17:10, next to a slice of cake: "I need something sweet" and "Merienda con algo dulce". At 21:00, by a window with the moon: "Not cooking tonight" and "Cena sin vueltas". Labels: for her, the right craving without searching; for Monchis, four chances to convert; one box, four moments a day.</desc>
+          <defs>
+            <filter id="mcm-wobble" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/>
+              <feDisplacementMap in="SourceGraphic" scale="3"/>
+            </filter>
+            <filter id="mcm-wash" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="3"/>
+              <feDisplacementMap in="SourceGraphic" scale="18"/>
+              <feGaussianBlur stdDeviation="3"/>
+            </filter>
+            <pattern id="mcm-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M28 0H0V28" fill="none" class="sk-gridline"/>
+            </pattern>
+            <!-- the same person in every moment (bust, facing right) -->
+            <symbol id="mcm-person" overflow="visible">
+              <path d="M-60 132q4-66 48-70h26q44 4 48 70" class="sk-fill-paper"/>
+              <path d="M-18 36v26M-2 36v26"/>
+              <path d="M-30 1q0-40 32-40q30 0 30 36q0 10 6 16q-6 4-8 4q2 14-10 18q-8 3-20 2q-30-4-30-36z" class="sk-fill-paper"/>
+              <path d="M-30 5q-8-44 36-46q24 0 28 20q-18-6-34 4q-8 6-12 24q-6-4-10 0q-4 4-8-2z" class="sk-fill-ink"/>
+              <circle cx="-34" cy="-35" r="13" class="sk-fill-ink"/>
+              <path d="M16 5q4 2 8 0" stroke-width="2"/>
+              <path d="M18 23q4 2 7-1" stroke-width="1.8"/>
+              <!-- phone in hand -->
+              <rect x="22" y="64" width="17" height="28" rx="4" transform="rotate(-12 30 78)" class="sk-fill-ink" stroke-width="2"/>
+              <path d="M16 92q12 8 28-2" stroke-width="2.2"/>
+            </symbol>
+          </defs>
+          <rect width="560" height="1394" class="sk-paper"/>
+          <rect width="560" height="1394" fill="url(#mcm-grid)"/>
+          <g filter="url(#mcm-wash)" aria-hidden="true">
+            <ellipse cx="140" cy="166" rx="120" ry="95" class="sk-wash-o" opacity=".9"/>
+            <ellipse cx="140" cy="456" rx="120" ry="95" class="sk-wash-o" opacity="1.3"/>
+            <ellipse cx="140" cy="746" rx="120" ry="95" class="sk-wash-n"/>
+            <ellipse cx="140" cy="1036" rx="120" ry="95" class="sk-wash-night"/>
+          </g>
+          <g filter="url(#mcm-wobble)" class="sk-ink" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <g transform="translate(2 -84)">
+              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
+              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
+              <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
+              <path d="M8 348H256" stroke-width="2.2"/>
+              <!-- mug + steam -->
+              <path d="M178 316h34v24q0 8-8 8h-18q-8 0-8-8z" class="sk-fill-paper" stroke-width="2.2"/>
+              <path d="M212 322q12 0 12 9q0 9-12 8" stroke-width="2"/>
+              <path d="M188 306q-6-7 0-13q6-6 0-13M201 306q-6-7 0-13q6-6 0-13" class="sk-soft" stroke-width="1.6"/>
+            </g>
+
+            <rect x="292" y="90" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
+            <g class="sk-soft" stroke-width="1.6">
+              <circle cx="314" cy="174" r="9"/><circle cx="338" cy="174" r="9"/><circle cx="362" cy="174" r="9"/><circle cx="386" cy="174" r="9"/>
+              <rect x="304" y="192" width="112" height="36" rx="7"/><rect x="424" y="192" width="112" height="36" rx="7"/>
+            </g>
+            <path d="M142 232L292 150" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <g transform="translate(2 206)">
+              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
+              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
+              <!-- wall clock at 12:30 -->
+              <circle cx="222" cy="226" r="17" class="sk-fill-paper" stroke-width="2"/>
+              <path d="M222 226v-11M222 226v12M222 226l3-7" stroke-width="1.8"/>
+              <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
+              <path d="M8 348H256" stroke-width="2.2"/>
+              <!-- laptop -->
+              <path d="M170 346l8-40h62l-6 40z" class="sk-fill-paper" stroke-width="2.2"/>
+              <path d="M160 347h92" stroke-width="2.6"/>
+            </g>
+
+            <rect x="292" y="380" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
+            <g class="sk-soft" stroke-width="1.6">
+              <circle cx="314" cy="464" r="9"/><circle cx="338" cy="464" r="9"/><circle cx="362" cy="464" r="9"/><circle cx="386" cy="464" r="9"/>
+              <rect x="304" y="482" width="112" height="36" rx="7"/><rect x="424" y="482" width="112" height="36" rx="7"/>
+            </g>
+            <path d="M142 522L292 440" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <g transform="translate(2 496)">
+              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
+              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
+              <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
+              <path d="M8 348H256" stroke-width="2.2"/>
+              <!-- plate + slice of cake -->
+              <path d="M168 342q38 10 76 0" stroke-width="2"/>
+              <path d="M178 338h52l-12-30z" class="sk-fill-paper" stroke-width="2.2"/>
+              <path d="M186 324h34" class="sk-n" stroke-width="2"/>
+              <circle cx="218" cy="303" r="4" class="sk-fill-n sk-n" stroke-width="1.5"/>
+            </g>
+
+            <rect x="292" y="670" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
+            <g class="sk-soft" stroke-width="1.6">
+              <circle cx="314" cy="754" r="9"/><circle cx="338" cy="754" r="9"/><circle cx="362" cy="754" r="9"/><circle cx="386" cy="754" r="9"/>
+              <rect x="304" y="772" width="112" height="36" rx="7"/><rect x="424" y="772" width="112" height="36" rx="7"/>
+            </g>
+            <path d="M142 812L292 730" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <g transform="translate(2 786)">
+              <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
+              <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
+              <!-- window with moon -->
+              <rect x="186" y="204" width="62" height="70" rx="4" class="sk-fill-paper" stroke-width="2"/>
+              <path d="M217 204v70M186 239h62" class="sk-soft" stroke-width="1.4"/>
+              <path d="M236 214a8 8 0 1 0 4 12a6 6 0 1 1-4-12z" class="sk-fill-ink" stroke-width="1.4"/>
+              <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
+              <path d="M8 348H256" stroke-width="2.2"/>
+              <!-- keys + empty plate: not cooking -->
+              <path d="M170 342q34 9 68 0" stroke-width="2"/>
+              <circle cx="222" cy="330" r="6" stroke-width="1.8"/><path d="M216 334l-14 6" stroke-width="1.8"/>
+            </g>
+
+            <rect x="292" y="960" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
+            <g class="sk-soft" stroke-width="1.6">
+              <circle cx="314" cy="1044" r="9"/><circle cx="338" cy="1044" r="9"/><circle cx="362" cy="1044" r="9"/><circle cx="386" cy="1044" r="9"/>
+              <rect x="304" y="1062" width="112" height="36" rx="7"/><rect x="424" y="1062" width="112" height="36" rx="7"/>
+            </g>
+            <path d="M142 1102L292 1020" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <rect x="20" y="1186" width="520" height="52" rx="12" class="sk-pill-user" stroke-width="1.8"/>
+            <rect x="20" y="1252" width="520" height="52" rx="12" class="sk-pill-app" stroke-width="1.8"/>
+            <path d="M20 1318q260-8 520 0l2 54q-262 8-524 0z" class="sk-pill-idea" stroke-width="1.8"/>
+          </g>
+          <g class="sk-hand">
+            <text x="135" y="64" text-anchor="middle" font-size="22">Something to start the day…</text>
+            <text x="306" y="116" font-size="15" letter-spacing="1" class="sk-t-soft">MAÑANA · 8:40</text>
+            <text x="534" y="116" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
+            <text x="306" y="146" font-size="21" font-weight="600" class="sk-t-n">¿Qué te tienta esta mañana?</text>
+            <text x="306" y="254" font-size="16" class="sk-t-soft">desayunos · café · 2x1</text>
+            <text x="135" y="354" text-anchor="middle" font-size="22">I skipped lunch again.</text>
+            <text x="306" y="406" font-size="15" letter-spacing="1" class="sk-t-soft">MEDIODÍA · 12:30</text>
+            <text x="534" y="406" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
+            <text x="306" y="436" font-size="21" font-weight="600" class="sk-t-n">¿No almorzaste aún?</text>
+            <text x="306" y="544" font-size="16" class="sk-t-soft">opciones rápidas · menú del día</text>
+            <text x="135" y="644" text-anchor="middle" font-size="22">I need something sweet.</text>
+            <text x="306" y="696" font-size="15" letter-spacing="1" class="sk-t-soft">TARDE · 17:10</text>
+            <text x="534" y="696" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
+            <text x="306" y="726" font-size="21" font-weight="600" class="sk-t-n">Merienda con algo dulce</text>
+            <text x="306" y="834" font-size="16" class="sk-t-soft">cafeterías · postres · helados</text>
+            <text x="135" y="934" text-anchor="middle" font-size="22">Not cooking tonight.</text>
+            <text x="306" y="986" font-size="15" letter-spacing="1" class="sk-t-soft">NOCHE · 21:00</text>
+            <text x="534" y="986" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
+            <text x="306" y="1016" font-size="21" font-weight="600" class="sk-t-n">Cena sin vueltas</text>
+            <text x="306" y="1124" font-size="16" class="sk-t-soft">pizza · hamburguesas · mercado 24h</text>
+            <text x="280" y="1220" text-anchor="middle" font-size="22" letter-spacing=".5">YOU: THE RIGHT CRAVING, NO SEARCHING</text>
+            <text x="280" y="1286" text-anchor="middle" font-size="22" letter-spacing=".5">MONCHIS: FOUR CHANCES TO CONVERT</text>
+            <text x="280" y="1353" text-anchor="middle" font-size="24" letter-spacing=".5">ONE BOX. FOUR MOMENTS A DAY.</text>
           </g>
         </svg>
       </div>
