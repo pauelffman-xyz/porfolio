@@ -353,6 +353,96 @@ body.dark-mode .process-grid .proc-step:nth-child(1) .proc-num{
   .color-swatches{grid-template-columns:repeat(4,1fr);}
 }
 </style>
+<style id="v3-principles">
+/* ════════════════════════════════════════════════════════════
+   v3 · Portfolio principles (adapter for the .section/.cover template)
+   Same rules as muv-case.html: 1. motion with a pause  2. more air
+   3. Apple-style shadows (borders out, depth in)  4. Apple-style gradients
+   Per case: only --brand (and the page colour) changes.
+   ════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#FFFFFF;--bg2:#F5F5F7;--bg3:#E8E8ED;
+  --brand:#17A25D;
+  --sec:clamp(96px,12vw,176px);
+  --stack:clamp(48px,6vw,96px);
+  --r-card:16px;
+  --card:#FFFFFF;
+  --sh-card:0 1px 2px rgba(0,0,0,.03),2px 4px 12px rgba(0,0,0,.08);
+  --sh-float:0 2px 6px rgba(0,0,0,.04),0 12px 24px rgba(0,0,0,.06),0 32px 72px rgba(0,0,0,.10);
+  --sh-ring:0 0 0 1px rgba(0,0,0,.04);
+  --ease-apple:cubic-bezier(.28,.11,.32,1);
+}
+/* gradients live on body so they follow the dark-mode --bg */
+body{
+  --grad-hero:linear-gradient(180deg,color-mix(in srgb,var(--brand) 14%,var(--bg)) 0%,color-mix(in srgb,var(--brand) 5%,var(--bg)) 45%,var(--bg) 100%);
+  --grad-neutral:linear-gradient(180deg,color-mix(in srgb,#8E8E93 9%,var(--bg)) 0%,color-mix(in srgb,#8E8E93 3%,var(--bg)) 55%,var(--bg) 100%);
+}
+body.dark-mode{
+  --card:var(--bg3);
+  --sh-card:0 0 0 1px rgba(255,255,255,.06),0 8px 24px rgba(0,0,0,.35);
+  --sh-float:0 0 0 1px rgba(255,255,255,.06),0 16px 40px rgba(0,0,0,.40),0 40px 90px rgba(0,0,0,.35);
+  --sh-ring:0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* 2 · more air */
+.section{padding-top:var(--sec);padding-bottom:var(--sec);}
+.section + .section{border-top:0;}
+.cover{padding-top:clamp(96px,12vw,160px);padding-bottom:clamp(72px,9vw,128px);}
+.section-label{margin-bottom:clamp(40px,5vw,72px);}
+.eyebrow{margin-bottom:1.5rem;}
+.decisions-grid,.dec-grid,.dd-grid,.insights-grid,.ins-grid,.impact-grid,.panel-grid,
+.sketch-strip,.persona-grid,.attr-grid,.collision,.compare-row,.fix-table,.ui-flow-labels{margin-top:var(--stack);}
+.overview-grid{gap:clamp(40px,6vw,96px);}
+
+/* 4 · gradients: a brand tint at the top that melts into the page */
+.cover{background:var(--grad-hero);}
+.cover + div[style*="height:1px"]{display:none;}
+.section[style*="background:var(--bg2)"]{background:var(--grad-neutral)!important;}
+/* two tinted sections in a row: only the first carries the gradient */
+.section[style*="background:var(--bg2)"] + .section[style*="background:var(--bg2)"]{background:var(--bg)!important;}
+/* dark brand boxes keep their colour and gain a soft top-left light */
+.callout,.quote-block,.accent-card,.panel-foot{
+  background-image:radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 55%);
+  border-radius:20px;
+}
+
+/* 3 · shadows: hairline grids become separate floating cards */
+.decisions-grid,.dec-grid,.dd-grid,.metrics-bento,.impact-strip,.quotes-grid,.principles-row{
+  gap:clamp(12px,1.5vw,20px);background:transparent;border:0;border-radius:0;overflow:visible;
+}
+.decisions-grid > *,.dec-grid > *,.dd-grid > *,.metrics-bento > *,.impact-strip > *,.quotes-grid > *,.principles-row > *{
+  background:var(--card);border-radius:var(--r-card);box-shadow:var(--sh-card);
+}
+.ins,.ui-label,.panel-card,.impact-card,.col-card,.step-card,.direction-card,.unlock-card,.email-card,
+.pill-card,.audit-item,.goal-item,.use-case{
+  background:var(--card);border-color:transparent;border-radius:var(--r-card);box-shadow:var(--sh-card);
+}
+.sketch-item,.wire-shell-full,.wire-shell,.fix-table,.bench-shell,.roles-mini,.config-panel,.ds-comp,.vds-comp-card,
+.ds-type-card,.ds-principles,.comp-grid,.diag-grid,.pillars-grid,.layer-card,.norte-card,.proto-demo,.reaction-pair{
+  border-color:transparent;box-shadow:var(--sh-card);
+}
+/* media: frames get the card shadow, devices float */
+.img-frame,.browser-shell,.shot-frame,.proto-embed-frame,.cover-video-frame,.video-frame{
+  border:0;border-radius:var(--r-card);box-shadow:var(--sh-card);
+}
+.phone-shell,.phone-shell-sm,.otp-phone,.hugo-phone,.proto-phone,.device-phone,.device-laptop{
+  border-color:transparent;box-shadow:var(--sh-ring),var(--sh-float);
+}
+
+/* 1 · motion with a pause: slow start, long settle (delays are kept) */
+.reveal{transition-duration:1s;transition-timing-function:var(--ease-apple);}
+@media (prefers-reduced-motion:reduce){.reveal{transition:none;}}
+
+/* dark-mode leftovers from the old template */
+body.dark-mode .cover-title .dim{color:rgba(244,244,246,.14);}
+body.dark-mode .section[style*="#fff 100%"]{background:var(--bg)!important;}
+body.dark-mode .back-nav{background:color-mix(in srgb,var(--bg) 90%,transparent);border-bottom-color:rgba(244,244,246,.08);}
+body.dark-mode .nav-right,body.dark-mode .back-nav-right{color:rgba(244,244,246,.4);}
+.browser-bar,.browser-topbar{background:var(--bg2);}
+
+body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
+
+</style>
 </head>
 <body>
 <div id="wipe-overlay"></div>
