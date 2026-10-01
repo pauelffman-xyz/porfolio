@@ -639,6 +639,54 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
   .mds-components { grid-template-columns:1fr; }
 }
 </style>
+<style>
+/* ── Mobile fixes: context grid, problem carousel, nav ── */
+.ctx-grid{display:grid;grid-template-columns:270px minmax(0,1fr);gap:4rem;align-items:start;}
+.pl-dots{display:none;}
+@media(max-width:900px){
+  .ctx-grid{grid-template-columns:minmax(0,1fr);gap:2.5rem;}
+  .ctx-grid > div:first-child{display:flex;flex-direction:column;align-items:center;}
+}
+@media(max-width:640px){
+  .back-nav{padding:1rem 1.25rem;}
+  .nav-title,.nav-right{display:none;}
+  .problem-list{flex-direction:row;gap:.75rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+    margin-inline:-1.25rem;padding:0 1.25rem .25rem;scroll-padding-inline:1.25rem;}
+  .problem-list::-webkit-scrollbar{display:none;}
+  .problem-list .problem-item{flex:0 0 84%;scroll-snap-align:start;}
+  .pl-dots{display:flex;justify-content:center;gap:6px;margin-top:1rem;}
+  .pl-dots i{width:6px;height:6px;border-radius:50%;background:var(--line2);transition:width .3s,background .3s;}
+  .pl-dots i.on{width:18px;border-radius:3px;background:var(--red);}
+}
+
+@media(max-width:640px){
+  .cover{grid-template-columns:minmax(0,1fr);gap:2.5rem;padding:3rem 1.25rem 2.5rem;}
+  .cover-title{font-size:clamp(3.5rem,18vw,5rem);}
+  .cover-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem 1rem;}
+  .search-hero{padding:3.5rem 1.25rem;}
+  .search-hero-inner{grid-template-columns:minmax(0,1fr);gap:2.5rem;}
+  .search-phone{max-width:100%;}
+  .search-annotations{position:static;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:1.5rem;}
+  .ann-line{display:none;}
+  .metrics-bento{grid-template-columns:1fr 1fr;}
+  .mb-item{padding:1.5rem 1.125rem;}
+  .mb-val{font-size:1.75rem;}
+  .cat-name{width:118px;font-size:.75rem;}
+  .ph-var-grid{grid-template-columns:1fr 1fr !important;}
+}
+@media(max-width:900px){
+  /* two-column image + text blocks: one column, image first, text below */
+  [style*="grid-template-columns:1fr 1.15fr"],
+  [style*="grid-template-columns:1fr 1fr;gap:4rem"]{grid-template-columns:minmax(0,1fr) !important;gap:2rem !important;}
+  [style*="grid-template-columns:1fr 1.15fr"] > :has(img),
+  [style*="grid-template-columns:1fr 1fr;gap:4rem"] > :has(img){order:-1;display:flex;flex-direction:column;align-items:center;}
+  [style*="grid-template-columns:1fr 1.15fr"] img{max-width:520px;margin-inline:auto;}
+}
+@media(max-width:640px){
+  [style*="padding:2.5rem;background:var(--bg2)"]{padding:1.5rem 1.25rem !important;}
+  [style*="grid-template-columns:repeat(4,1fr);gap:1px"]{grid-template-columns:1fr 1fr !important;}
+}
+</style>
 </head>
 <body>
 <div id="wipe-overlay"></div>
@@ -676,7 +724,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
     The homepage was our entry point.<br><span style="color:var(--red);">It felt like a dead end.</span>
   </div>
 
-  <div style="display:grid;grid-template-columns:270px 1fr;gap:4rem;align-items:start;">
+  <div class="ctx-grid">
     <div>
       <div class="ba-label-old">❌ Current home — before</div>
       <div class="phone-wrap">
@@ -699,7 +747,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
         </p>
       </div>
 
-      <div class="problem-list" style="margin-top:0;">
+      <div class="problem-list" style="margin-top:0;" id="problem-list">
         <div class="problem-item">
           <div class="pi-t">Outdated &amp; unattractive UI</div>
           <div class="pi-d">Disorganized layout. Icons don't match their categories. A negative first impression that costs trust before the first tap.</div>
@@ -717,6 +765,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
           <div class="pi-d">The same promos at 8am and 8pm, for every user. Merchandising that ignores time, preference and location.</div>
         </div>
       </div>
+      <div class="pl-dots" id="pl-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
     </div>
   </div>
 </div>
@@ -1868,7 +1917,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
   <!-- Search states row -->
   <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--line2);">
     <div class="section-label"><div class="sl-t">Search placeholder variations</div><div class="sl-l"></div></div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
+    <div class="ph-var-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
       <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
         <div style="font-size:1.25rem;margin-bottom:.5rem;">🌅</div>
         <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Morning</div>
@@ -2392,5 +2441,17 @@ body.dark-mode{
 })();
 </script>
 
+<script>
+/* problem carousel dots (mobile) */
+(function(){
+  var l=document.getElementById('problem-list'),d=document.getElementById('pl-dots');
+  if(!l||!d)return;var dots=d.children;
+  l.addEventListener('scroll',function(){
+    var items=l.children,best=0,min=1e9;
+    for(var i=0;i<items.length;i++){var x=Math.abs(items[i].offsetLeft-l.offsetLeft-l.scrollLeft);if(x<min){min=x;best=i;}}
+    for(var j=0;j<dots.length;j++)dots[j].classList.toggle('on',j===best);
+  },{passive:true});
+})();
+</script>
 </body>
 </html>
