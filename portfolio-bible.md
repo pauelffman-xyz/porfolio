@@ -1,6 +1,8 @@
 # Paula Elffman — Portfolio OS · Design Bible
 
-*Última actualización: Septiembre 2026 — bloque v3 (degradés, aire, sombras y animaciones con pausa estilo Apple) aplicado a los 13 cases restantes con un "adaptador" para el template viejo `.section`/`.cover`. Ver "Adaptador v3 para el template viejo" dentro de "CASE STUDIES — LENGUAJE VISUAL v3".*
+*Última actualización: Octubre 2026 — **dark mode accesible en los cases**, empezando por `monchis-case.html`: auditoría WCAG AA automática (238 textos fallaban en dark, 218 en light → 0 en ambos), capa `<style id="theme-a11y">` con tokens nuevos (`--surface`, `--red-fill`, `--green-ink`, `--mock-ink`), regla de "mockups claros en ambos modos" y script `a11y-audit.py`. Ver la sección nueva "DARK MODE ACCESIBLE EN CASES" dentro de CASE STUDIES.*
+
+*Última actualización previa: Septiembre 2026 — bloque v3 (degradés, aire, sombras y animaciones con pausa estilo Apple) aplicado a los 13 cases restantes con un "adaptador" para el template viejo `.section`/`.cover`. Ver "Adaptador v3 para el template viejo" dentro de "CASE STUDIES — LENGUAJE VISUAL v3".*
 
 *Última actualización previa: Septiembre 2026. Nuevo **lenguaje visual v3 para los case studies**, que pasa a ser regla para todos los cases: (1) cuatro ajustes estilo Apple/Mac (animaciones con pausa y `--ease-apple`, más espacio con `--sec`/`--stack` más grandes, sombras amplias `--sh-card`/`--sh-float` que reemplazan los bordes, degradés que se funden en blanco `--grad-*`, con la regla `.sec.tint + .sec.tint` para no cortar dos fondos seguidos); (2) **escenas tipo dibujo** en SVG inline para contar las situaciones del caso (arco frustración → causa → principio → resolución, como máximo una por sección, código de globos fijo, dos acentos de marca por case). Implementado en `muv-case.html` (escena 3 + bloque v3; además se eliminó la decisión "Navy for action, orange for the brand" y la sección pasó a "Three decisions"). Pendiente en los otros cases. Ver la sección nueva "CASE STUDIES — LENGUAJE VISUAL v3".*
 
@@ -1041,7 +1043,7 @@ Ninguno de estos cuatro es un patrón a replicar en los otros 11 cases — son c
 | `vendor-tool-case.html` | `--red` | `#E8143C` | ~3.4:1 | `#E6224F` |
 | `everyone-case.html` | `--purple` / `--purple-2` | `#8B5CF6` / `#964BFE` | ~3.6:1 / ~3.5:1 | `#C6A6F6` / `#D6B6FF` |
 | `memorable-case.html` | `--accent` (+ `--grad`, literal aparte) | `#9846FF` | ~3.4:1 | `#C699FF` (tint 45% hacia blanco del original — sin valor pedido, derivado) |
-| `monchis-case.html` / `monchis-drivers-case.html` | `--red` (mismo hex que vendor-tool) | `#E8143C` | ~3.4:1 | `#F06680` |
+| `monchis-case.html` / `monchis-drivers-case.html` | `--red` (mismo hex que vendor-tool) | `#E8143C` | ~3.4:1 | `#F06680` en drivers · **monchis: `#FF6F8A` (Oct 2026)** — el override nunca había llegado al archivo, ver "DARK MODE ACCESIBLE EN CASES" |
 | `thefork-reviews-case.html` / `theforkshortlistcase.html` | `--red` (verde de marca reusando el alias `--red`) | `#0B8457` | ~3.3:1 | `#6DB59A` |
 | `sukupay-case.html` / `sukupay-ds-case.html` | `--accent` | `#0E6B4A` / `#005043` | casi 1:1 | `#61FF61` (el lime que sukupay-ds ya tenía hardcodeado en otro lugar) |
 
@@ -1050,6 +1052,73 @@ Todos por encima de 4.5:1 sobre `--bg:#24242C` salvo donde el token ya pasaba (e
 **Nota sobre sukupay-ds:** `.cover-title .combo` pinta un gradiente de texto `linear-gradient(90deg, var(--lime) 0%, var(--accent) 100%)` — con `--accent` ahora también en `#61FF61`, ese degradé se ve sólido en dark (los dos extremos son el mismo verde) en vez de bicolor. Es una consecuencia cosmética menor del fix, no un error — si se quiere mantener el efecto de dos tonos en dark habría que darle a `--accent` un verde distinto (más claro o más oscuro) en vez de igualarlo al lime.
 
 **Bug relacionado encontrado de paso:** `sukupay-case.html` y `sukupay-ds-case.html` tenían el mismo bug de ".dim" que smartpass (`.cover-title .dim` con `rgba(21,33,25,.15)` fijo, invisible en dark) — corregido con el mismo patrón: `body.dark-mode .cover-title .dim{ color:var(--accent-o-lime); text-shadow:... }`.
+
+---
+
+### ✅ Octubre 2026 — DARK MODE ACCESIBLE EN CASES (empezando por `monchis-case.html`)
+
+**Síntoma reportado (mobile, dark):** texto gris casi invisible (eyebrows, labels, descripciones), bloques que seguían blancos dentro de la página oscura ("Animated dynamic search", tarjetas de reglas, variaciones del placeholder, chips de anotación), header sticky crema sobre página oscura, y textos dentro de los mockups que se volvían blancos sobre fondo blanco. O sea: no era accesible y **por momentos se mezclaba con light**.
+
+**Lo que encontró la auditoría** (script automático, ver abajo — mide contraste real de cada texto contra el fondo que tiene detrás, sumando transparencias):
+
+| | Antes | Después |
+| --- | --- | --- |
+| Textos bajo AA en **dark** | 238 | 0 |
+| Textos bajo AA en **light** | 218 | 0 |
+| Bloques claros "colados" en dark (fuera de mockups) | 13 | 0 |
+
+**Hallazgo importante: light tampoco pasaba.** El `--ash` heredado (`rgba(26,24,20,.5)`) da 3.3:1 sobre `--bg` — casi todo el texto secundario del case estaba bajo AA *también en light*. Arreglar solo el dark habría dejado el problema a medias.
+
+**Causas raíz (cinco, todas repetibles en otros cases):**
+1. **Tokens de texto con poco contraste en los dos modos** — `--ash` light (3.3:1) y `--ash` dark `#7A7A90` (3.7:1). El bug de Sept 2026 cubrió que los tokens *existieran* en dark, no que *contrastaran*.
+2. **`#fff` literal en superficies** (`.se-rule`, `.ann-bubble`, `.mds-search-hero`, `.mds-comp-card`, `.search-hero` con gradiente `#fff → #FFF5F7`, tarjetas inline `background:#fff`). No pasan por variables → el script de tokens de Sept no las detecta → quedan blancas en dark. **Esto es lo que se ve como "se mezcla con light".**
+3. **Fixes documentados que nunca llegaron al archivo** — la biblia decía que monchis ya tenía `--red` dark `#F06680`, `.back-nav` dark y `.nav-right` con `var(--ash)`; el archivo no tenía ninguno (probablemente se pisaron al reemplazar el HTML). **Lección: la tabla de "estado por archivo" no reemplaza volver a auditar.**
+4. **Un solo token rojo para dos usos** — `--red` se usaba como *texto* (necesita aclararse en dark) y como *fondo con texto blanco encima* (`.mb-item.accent`, `.kd-result`, `.callout`, `.badge-r` — necesita mantenerse profundo). Con un solo token, cualquier valor rompe uno de los dos usos.
+5. **Mockups de UI que heredaban colores de la página** — dentro de `.search-phone` / `.phone-shell` (pantallas de la app, fondo blanco fijo) había texto en `var(--ink)` → en dark, blanco sobre blanco. Y al revés, `#999` fijo daba 2.8:1 aunque el fondo fuera blanco.
+
+**Reglas nuevas (para todos los cases):**
+
+1. **AA en los dos modos, siempre.** Texto ≥ 4.5:1; texto grande (≥24px, o ≥18.66px bold) ≥ 3:1. Se mide, no se estima. Decorativo puro (números gigantes de fondo tipo `.fc-num` al 12% de opacidad) va con `aria-hidden="true"` y queda exento — el contenido real tiene que estar en texto aparte.
+2. **Superficies = tokens, nunca `#fff` literal.** `--surface` (tarjeta elevada: `#FFFFFF` light / `#2C2C36` dark) y `--surface-2` (campo dentro de tarjeta: `#F5F5F5` / `#34343F`). Gradientes de sección en dark se arman desde `var(--bg)`.
+3. **Dos tokens por color de marca:** `--red` = **texto/íconos** (se aclara en dark: `#C8102E` → `#FF6F8A`) y `--red-fill` = **superficie con texto blanco** (fijo `#C8102E` en los dos modos, blanco encima 5.9:1). Mismo patrón para cualquier marca que se use de las dos formas. Verde: `--green-ink` (`#14713F` light / `#4ADE80` dark) reemplaza al `#27ae60` literal (2.6:1).
+4. **Mockups de UI son pantallas reales → claros en los dos modos, con texto fijo oscuro** (`--mock-ink:#1A1814`, `--mock-ash:#6B6B6B` = 5.3:1 sobre blanco). Nunca `var(--ink)`/`var(--ash)` adentro de un mockup. Se leen como "una pantalla dentro de la página", igual que una screenshot — no son un seam, son contenido. (Mismo criterio que ya tenía `.flow-node` en smartpass.)
+5. **Colores categóricos (tags, leyendas) necesitan par dark explícito.** Ej. tags de quotes: light `#8A5F00` / `#335DB8` / `#5E3FB8`, dark `#F5C451` / `#8FB0FF` / `#C2A8FF`.
+6. **Un solo bloque `body.dark-mode{}` de tokens** (el del final del archivo). Los ajustes de componentes van en `<style id="theme-a11y">` justo antes de `</head>`, para ganar por cascada sin tocar reglas existentes (mismo patrón que el adaptador v3).
+
+**Tokens finales en `monchis-case.html`:**
+
+```css
+/* light (:root, en <style id="theme-a11y">) */
+--ash:rgba(26,24,20,.68);   /* 5.9:1  (antes .5 = 3.3:1) */
+--red:#C8102E;              /* texto: 5.4:1 (el #E8143C de marca daba 4.2:1) */
+--red-fill:#C8102E;  --red2:rgba(200,16,46,.08);
+--green-ink:#14713F;
+--surface:#FFFFFF;  --surface-2:#F5F5F5;
+--mock-ink:#1A1814; --mock-ash:#6B6B6B;
+
+/* dark (body.dark-mode{}, bloque único al final) */
+--ash:#A3A3B6;  --ash-2:#8C8CA0;   /* 6.2:1 / 4.6:1 sobre #24242C (antes #7A7A90 = 3.7:1) */
+--red:#FF6F8A;  --red-fill:#C8102E;  --red2:rgba(255,111,138,.12);
+--green-ink:#4ADE80;
+--surface:#2C2C36;  --surface-2:#34343F;
+/* + body.dark-mode .back-nav{background:rgba(36,36,44,.88);} */
+```
+
+**Nota de marca:** el rojo de texto en light pasó de `#E8143C` a `#C8102E` (un poco más profundo). El `#E8143C` de marca se sigue viendo en los mockups y screenshots; en el chrome de la página se usa la versión accesible. La diferencia es mínima a la vista y deja de fallar AA.
+
+**Excepción aceptada:** emojis dentro de mockups (ej. 🛒 sobre el FAB rojo) — son íconos, no texto; el script los marca pero no aplican.
+
+**Cómo auditar (obligatorio antes de cerrar cualquier case):** `a11y-audit.py` (Playwright + Chromium, en la misma carpeta que la biblia). Recorre cada texto visible, calcula el fondo real detrás (compone transparencias y gradientes hasta el `body`) y reporta los que no pasan, más los bloques claros que quedan en dark:
+
+```bash
+python3 a11y-audit.py /ruta/al/archivo-case.html dark  1440   # desktop dark
+python3 a11y-audit.py /ruta/al/archivo-case.html light 1440   # desktop light
+python3 a11y-audit.py /ruta/al/archivo-case.html dark  390    # mobile
+```
+
+Salida JSON: `fails` (texto, contraste medido, mínimo requerido, clase) y `seams` (bloques claros en dark — revisar a mano: si es un mockup, está bien; si es chrome o tarjeta, es un bug). Objetivo: `fails: []` en los dos modos.
+
+**Pendiente:** aplicar las mismas reglas a los otros cases. Por lo que muestran los bugs de Sept, los candidatos seguros son los que tienen `--ash` heredado con alpha `.5` y superficies `#fff` literales: `monchis-drivers`, `vendor-tool`, `thefork-*`, `smartpass` (ya tiene `--ash` en .62 — puede que solo falten las superficies), `muv`.
 
 ---
 
@@ -1442,6 +1511,19 @@ El case pasó de ser "before/after + design system + métricas" a un caso de **p
 ### Regla de escritura del case
 
 Cada hallazgo tiene código (F01–F05) y la matriz de decisión los cita. Si se agrega un hallazgo, hay que agregar su fila en la matriz — si no, el argumento se rompe.
+
+---
+
+
+### Octubre 2026 — pasada de revisión final
+
+- **Escena "A day with Monchis":** al 70% de ancho, en escala de grises, papel liso (sin grilla) y versión minimal (sin sol/luna, manchas de acuarela, líneas de zoom ni placeholders dentro de las cajas).
+- **Eliminado:** bloque "Personalized banners system" (wireframe de 3 banners) y la sección "Components built to convert." completa (tarjetas de carruseles, categorías, navbar, FAB, snackbar) → reemplazada por una foto a ancho completo (`assets/monchis_in_hand.webp`, 71KB).
+- **Two paths:** las dos homes ya no van dentro de cada card. Una imagen hero central con los dos teléfonos (`assets/monchis_paths_hero.webp`, `.paths-hero`) y debajo las dos columnas de info. Reemplaza la regla de agosto ("teléfono hero al 58% en cada card").
+- **What actually shipped:** el teléfono dibujado por código (`.phone-shell` + `monchis_case_002`) se reemplazó por el mockup inclinado `assets/monchis_final_home.webp`.
+- **Decisions & Learnings:** rediseño a `.kd-*` — lista numerada de 7 decisiones (1 línea c/u + dato o etiqueta), franja "The result" con una sola frase (sin repetir métricas de la sección anterior) y 3 aprendizajes en vez de 4.
+- **Mobile:** problemas del carrusel de 4 problemas (`#problem-list`, scroll-snap + dots), regla general "bloque de 2 columnas con imagen → 1 columna, imagen primero" vía selectores de atributo sobre los grids inline, nav reducido a "← Back to portfolio", cover/métricas/search-hero sin overflow. Verificado: `scrollWidth == 390`.
+- **Assets que ya no se usan:** `monchis_path_v1/v2`, `monchis_case_002`, `monchis_case_005`–`010`, `monchis_case_013`.
 
 ---
 

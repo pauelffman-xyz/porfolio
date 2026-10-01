@@ -55,7 +55,7 @@ body{
 .back-btn:hover{gap:1rem;}
 .back-btn span{font-size:.875rem;}
 .nav-title{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);}
-.nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(26,24,20,.3);}
+.nav-right{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
 
 /* ── SHARED ── */
 .section{padding:5rem 4rem;}
@@ -91,7 +91,7 @@ body{
   font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;
 }
 .badge-r{background:var(--red);color:#fff;}
-.badge-g{background:rgba(46,204,113,.15);color:#27ae60;border:1px solid rgba(46,204,113,.25);}
+.badge-g{background:rgba(46,204,113,.15);color:var(--green-ink);border:1px solid rgba(46,204,113,.25);}
 .badge-n{background:var(--bg2);color:var(--ash);border:1px solid var(--line2);}
 
 .plabel{margin-top:1.5rem;text-align:center;max-width:200px;}
@@ -131,7 +131,7 @@ body{
   display:inline-flex;align-items:center;gap:.5rem;
   padding:.3rem 1rem;border-radius:100px;
   background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);
-  font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:#27ae60;
+  font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green-ink);
   margin-bottom:1rem;
 }
 .problem-list{display:flex;flex-direction:column;gap:.75rem;margin-top:2rem;}
@@ -531,7 +531,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
 <style>
 /* ── MONCHIS DESIGN SYSTEM ── */
 .monchis-ds {}
-.mds-header { margin-bottom:2.5rem; margin-top:4rem; padding-top:3.5rem; border-top:2px solid rgba(26,24,20,.08); }
+.mds-header { margin-bottom:2.5rem; margin-top:4rem; padding-top:3.5rem; border-top:2px solid var(--line2); }
 .mds-title {
   font-family:'Geist',sans-serif;font-size:clamp(2.5rem,4vw,4rem);
   font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:.95;margin-bottom:1rem;
@@ -686,6 +686,53 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
   [style*="padding:2.5rem;background:var(--bg2)"]{padding:1.5rem 1.25rem !important;}
   [style*="grid-template-columns:repeat(4,1fr);gap:1px"]{grid-template-columns:1fr 1fr !important;}
 }
+</style>
+<style id="theme-a11y">
+/* ═══ THEME + A11Y LAYER (Oct 2026) — ver biblia "DARK MODE ACCESIBLE EN CASES"
+   Todo texto ≥ 4.5:1 (≥ 3:1 si es ≥24px o ≥18.66px bold) en light Y dark.
+   Superficies = tokens, nunca #fff literal. Mockups de UI = claros fijos en ambos modos. */
+:root{
+  --ash:rgba(26,24,20,.68);          /* 5.9:1 sobre --bg (antes .5 = 3.3:1) */
+  --red:#C8102E;                     /* rojo de texto: 5.4:1 (el #E8143C de marca daba 4.2:1) */
+  --red-fill:#C8102E;                /* superficies rojas con texto blanco: 5.9:1 */
+  --red2:rgba(200,16,46,.08);
+  --green-ink:#14713F;               /* verde de texto (✓, V2, "win"): reemplaza #27ae60 (2.6:1) */
+  --surface:#FFFFFF;                 /* tarjetas elevadas */
+  --surface-2:#F5F5F5;               /* campo dentro de tarjeta */
+  --mock-ink:#1A1814; --mock-ash:#6B6B6B;  /* texto dentro de mockups de UI (fondo blanco fijo) */
+}
+/* tokens dark: viven en el bloque body.dark-mode{} único (final del <body>) */
+/* chrome */
+body.dark-mode .back-nav{background:rgba(36,36,44,.88);}
+body.dark-mode .cover-title .dim{color:rgba(244,244,246,.16);}
+/* superficies rojas: siempre --red-fill + texto blanco */
+.badge-r,.mb-item.accent,.kd-result,.callout{background:var(--red-fill);}
+.kd-result .kd-label{opacity:.9;}
+/* tarjetas que eran #fff fijo */
+.se-rule,.ann-bubble,.mds-search-hero,.mds-comp-card,.mds-search-bar-demo{background:var(--surface);}
+.mds-search-bar-demo{background:var(--surface-2);}
+body.dark-mode .search-hero{background:linear-gradient(135deg,var(--bg) 0%,#2B2029 100%);}
+/* mockups de UI = pantallas reales: claros en ambos modos, texto fijo oscuro */
+.search-phone,.phone-shell{color:var(--mock-ink);}
+.search-phone .sf-time,.search-phone .sp-placeholder,.sp-search-ph,.search-phone [style*="color:#999"]{color:var(--mock-ash) !important;}
+.mds-search-bar-demo span[style*="color:#999"]{color:var(--ash) !important;}
+/* texto "fantasma" que es contenido (wordmark): mínimo 3:1 como texto grande */
+.cover-title .dim{color:rgba(26,24,20,.5);}
+body.dark-mode .cover-title .dim{color:rgba(244,244,246,.42);}
+/* números gigantes decorativos de los hallazgos: aria-hidden, exentos (el "F01" real va en texto) */
+/* etiquetas de color por tema de quote */
+body .ri-quote-tag.t-speed{color:#8A5F00;} body .ri-quote-tag.t-pers{color:#335DB8;} body .ri-quote-tag.t-ctx{color:#5E3FB8;}
+body.dark-mode .ri-quote-tag.t-speed{color:#F5C451;} body.dark-mode .ri-quote-tag.t-pers{color:#8FB0FF;} body.dark-mode .ri-quote-tag.t-ctx{color:#C2A8FF;}
+body.dark-mode .wf-note-l{color:#A99BFF;}
+.mb-item.accent .mb-label{color:rgba(255,255,255,.9);}
+body .paths-hero .ph-v1{color:#A30D25;} body .paths-hero .ph-v2{color:#0F5E33;}
+body.dark-mode .paths-hero .ph-v1{color:var(--red);} body.dark-mode .paths-hero .ph-v2{color:var(--green-ink);}
+/* demo de búsqueda fuera del mockup */
+.mds-ph{color:var(--ash);}
+/* dentro de mockups: grises legibles sobre blanco fijo */
+.ph-word,.sp-nav-item{color:var(--mock-ash);}
+.sp-nav-item.active{color:#C8102E;}
+.sf-logo[style*="#E65100"]{color:#B23C00 !important;} .sf-logo[style*="#F57F17"]{color:#8A4B00 !important;}
 </style>
 </head>
 <body>
@@ -872,7 +919,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
 .ri-quote-tag.t-speed{background:rgba(240,165,0,.08);color:#C08200;}
 .ri-quote-tag.t-pers{background:rgba(91,141,239,.08);color:#4A7AD4;}
 .ri-quote-tag.t-ctx{background:rgba(139,92,246,.08);color:#7C5CCE;}
-.ri-quote-tag.t-promo{background:rgba(46,204,113,.08);color:#27ae60;}
+.ri-quote-tag.t-promo{background:rgba(46,204,113,.08);color:var(--green-ink);}
 
 .ri-quote-text{
   font-size:.875rem;line-height:1.7;
@@ -906,13 +953,13 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
 .paths-hero img{display:block;width:100%;max-width:680px;height:auto;margin:0 auto;filter:drop-shadow(0 30px 40px rgba(20,20,20,.18));}
 .paths-hero figcaption{display:flex;justify-content:center;gap:clamp(4rem,18vw,16rem);margin-top:1.25rem;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;}
 .paths-hero .ph-v1{color:var(--red);}
-.paths-hero .ph-v2{color:#27ae60;}
+.paths-hero .ph-v2{color:var(--green-ink);}
 @media(max-width:640px){.paths-hero figcaption{gap:2.5rem;}}
 .path{border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--bg);}
 .path-head{padding:1.75rem 2rem 1.5rem;border-bottom:1px solid var(--line);}
 .path-tag{display:inline-flex;align-items:center;gap:.5rem;padding:.3rem 1rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
 .path-tag.v1{background:rgba(232,20,60,.08);border:1px solid rgba(232,20,60,.2);color:var(--red);}
-.path-tag.v2{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);color:#27ae60;}
+.path-tag.v2{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);color:var(--green-ink);}
 .path-t{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:.625rem;}
 .path-d{font-size:.8125rem;line-height:1.7;color:var(--ash);}
 .path-img{background:var(--bg2);padding:1.5rem;}
@@ -928,7 +975,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
 .matrix td{padding:.875rem 1.25rem;border-bottom:1px solid var(--line);color:var(--ink);}
 .matrix tr:last-child td{border-bottom:none;}
 .matrix td.crit{color:var(--ash);}
-.matrix td.win{color:#27ae60;font-weight:600;}
+.matrix td.win{color:var(--green-ink);font-weight:600;}
 .verdict{margin-top:2.5rem;padding:2rem 2.25rem;background:var(--bg2);border:1px solid var(--line2);border-left:3px solid var(--red);border-radius:0 8px 8px 0;}
 .verdict-l{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:1rem;}
 .verdict-t{font-size:1.375rem;font-weight:800;letter-spacing:-.03em;line-height:1.25;margin-bottom:1rem;}
@@ -1109,8 +1156,8 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
         <div class="ri-bar-wrap">
           <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:var(--red);" data-w="82%"></div></div>
           <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:#F0A500;" data-w="64%"></div></div>
-          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:rgba(26,24,20,.2);" data-w="28%"></div></div>
-          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:rgba(26,24,20,.12);" data-w="15%"></div></div>
+          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:var(--ash);opacity:.55;" data-w="28%"></div></div>
+          <div class="ri-bar-track"><div class="ri-bar-fill" style="width:0%;background:var(--ash);opacity:.3;" data-w="15%"></div></div>
         </div>
       </div>
       <div class="ri-stat-insight">High intent, low browsing — they already decided</div>
@@ -1186,7 +1233,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <!-- F 01 -->
       <div class="fc-slide">
         <div class="fc-top">
-          <div class="fc-num">01</div>
+          <div class="fc-num" aria-hidden="true">01</div>
           <div class="fc-counter"><span id="fc-counter-text">1 / 5</span><div class="fc-counter-bar"><div class="fc-counter-fill" id="fc-progress" style="width:20%;"></div></div></div>
         </div>
         <div class="fc-content">
@@ -1202,7 +1249,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <!-- F 02 -->
       <div class="fc-slide">
         <div class="fc-top">
-          <div class="fc-num">02</div>
+          <div class="fc-num" aria-hidden="true">02</div>
         </div>
         <div class="fc-content">
           <div class="fc-title">Users arrive with intent, not curiosity</div>
@@ -1217,7 +1264,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <!-- F 03 -->
       <div class="fc-slide">
         <div class="fc-top">
-          <div class="fc-num">03</div>
+          <div class="fc-num" aria-hidden="true">03</div>
         </div>
         <div class="fc-content">
           <div class="fc-title">The product didn't know what time it was</div>
@@ -1232,7 +1279,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <!-- F 04 -->
       <div class="fc-slide">
         <div class="fc-top">
-          <div class="fc-num">04</div>
+          <div class="fc-num" aria-hidden="true">04</div>
         </div>
         <div class="fc-content">
           <div class="fc-title">Zero memory between sessions</div>
@@ -1247,7 +1294,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <!-- F 05 -->
       <div class="fc-slide">
         <div class="fc-top">
-          <div class="fc-num">05</div>
+          <div class="fc-num" aria-hidden="true">05</div>
         </div>
         <div class="fc-content">
           <div class="fc-title">Categories had to be decoded, not read</div>
@@ -1640,9 +1687,9 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <div class="path-body">
         <div class="pb-l">Where it wins</div>
         <div class="pb-list">
-          <div class="pb-i"><span style="color:#27ae60;">✓</span> Address is impossible to miss — lowest risk of ordering to the wrong place</div>
-          <div class="pb-i"><span style="color:#27ae60;">✓</span> The proximity alert ("estás lejos de tu casa") has a natural home inside the header</div>
-          <div class="pb-i"><span style="color:#27ae60;">✓</span> Strongest brand recall on first frame</div>
+          <div class="pb-i"><span style="color:var(--green-ink);">✓</span> Address is impossible to miss — lowest risk of ordering to the wrong place</div>
+          <div class="pb-i"><span style="color:var(--green-ink);">✓</span> The proximity alert ("estás lejos de tu casa") has a natural home inside the header</div>
+          <div class="pb-i"><span style="color:var(--green-ink);">✓</span> Strongest brand recall on first frame</div>
         </div>
         <div class="pb-l">Where it costs</div>
         <div class="pb-list" style="margin-bottom:0;">
@@ -1663,9 +1710,9 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       <div class="path-body">
         <div class="pb-l">Where it wins</div>
         <div class="pb-list">
-          <div class="pb-i"><span style="color:#27ae60;">✓</span> Search, address and all five verticals fit above the fold</div>
-          <div class="pb-i"><span style="color:#27ae60;">✓</span> Photo + label kills the guessing game — Comidas, Mercado, Tiendas, Pick up, ueno</div>
-          <div class="pb-i"><span style="color:#27ae60;">✓</span> Scales: a sixth vertical doesn't break the layout</div>
+          <div class="pb-i"><span style="color:var(--green-ink);">✓</span> Search, address and all five verticals fit above the fold</div>
+          <div class="pb-i"><span style="color:var(--green-ink);">✓</span> Photo + label kills the guessing game — Comidas, Mercado, Tiendas, Pick up, ueno</div>
+          <div class="pb-i"><span style="color:var(--green-ink);">✓</span> Scales: a sixth vertical doesn't break the layout</div>
         </div>
         <div class="pb-l">Where it costs</div>
         <div class="pb-list" style="margin-bottom:0;">
@@ -1918,17 +1965,17 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
   <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--line2);">
     <div class="section-label"><div class="sl-t">Search placeholder variations</div><div class="sl-l"></div></div>
     <div class="ph-var-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
-      <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
+      <div style="padding:1.25rem;background:var(--surface);border:1px solid var(--line2);border-radius:8px;text-align:center;">
         <div style="font-size:1.25rem;margin-bottom:.5rem;">🌅</div>
         <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Morning</div>
         <div style="font-size:.6875rem;color:var(--ash);">"¿Ya desayunaste?"</div>
       </div>
-      <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
+      <div style="padding:1.25rem;background:var(--surface);border:1px solid var(--line2);border-radius:8px;text-align:center;">
         <div style="font-size:1.25rem;margin-bottom:.5rem;">☀️</div>
         <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Lunch</div>
         <div style="font-size:.6875rem;color:var(--ash);">"Hamburguesas o pizza"</div>
       </div>
-      <div style="padding:1.25rem;background:#fff;border:1px solid var(--line2);border-radius:8px;text-align:center;">
+      <div style="padding:1.25rem;background:var(--surface);border:1px solid var(--line2);border-radius:8px;text-align:center;">
         <div style="font-size:1.25rem;margin-bottom:.5rem;">🌆</div>
         <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Afternoon</div>
         <div style="font-size:.6875rem;color:var(--ash);">"¿Algo fresco?"</div>
@@ -2304,8 +2351,11 @@ body.dark-mode{
   --ghost:#2C2C36; --ghost-2:#32323E;
   --paper:#F4F4F6; --paper-2:#DDDDE6;
   --ink:#F4F4F6;
-  --ash:#7A7A90; --ash-2:#56566A;
+  --ash:#A3A3B6; --ash-2:#8C8CA0;   /* AA: 6.2:1 / 4.6:1 sobre #24242C */
   --ash2:rgba(244,244,246,0.15);
+  --red:#FF6F8A; --red-fill:#C8102E; --red2:rgba(255,111,138,.12);
+  --green-ink:#4ADE80;
+  --surface:#2C2C36; --surface-2:#34343F;
   --line:rgba(244,244,246,0.07); --line-md:rgba(244,244,246,0.13);
   --line2:rgba(244,244,246,0.14);
   background:var(--bg); color:var(--paper);
