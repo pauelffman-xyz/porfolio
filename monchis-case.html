@@ -410,6 +410,37 @@ body{
 }
 
 /* ── DECISIONS GRID ── */
+/* ── Key decisions (light version) ── */
+.kd-h{font-size:clamp(2rem,3.5vw,3.25rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin:0 0 3rem;}
+.kd-h span{color:var(--red);}
+.kd-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line2);}
+.kd-list li{display:grid;grid-template-columns:3.5rem minmax(0,1.1fr) minmax(0,1.5fr) 8.5rem;gap:1.5rem;align-items:baseline;padding:1.375rem 0;border-bottom:1px solid var(--line2);}
+.kd-n{font-family:'Space Grotesk',sans-serif;font-size:.8125rem;color:var(--red);letter-spacing:.04em;}
+.kd-t{font-size:1.0625rem;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.3;}
+.kd-d{margin:0;font-size:.9375rem;line-height:1.55;color:var(--ash);}
+.kd-tag{justify-self:end;white-space:nowrap;font-size:.8125rem;font-weight:700;color:var(--red);}
+.kd-tag--soft{font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);}
+.kd-result{display:block;margin-top:4rem;padding:clamp(2rem,4vw,3.25rem);border-radius:16px;background:var(--red);color:#fff;}
+.kd-label{font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:1rem;}
+.kd-result-q p{margin:0;max-width:30ch;font-size:clamp(1.5rem,2.6vw,2.25rem);font-weight:700;letter-spacing:-.025em;line-height:1.25;}
+.kd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:0;}
+.kd-stats dt{font-size:clamp(2rem,3.4vw,2.875rem);font-weight:800;letter-spacing:-.04em;line-height:1;}
+.kd-stats dd{margin:.5rem 0 0;font-size:.8125rem;line-height:1.4;opacity:.85;}
+.kd-learn-head{margin:4.5rem 0 1.5rem;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);}
+.kd-learn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem;}
+.kd-learn > div{border-top:2px solid var(--ink);padding-top:1.25rem;}
+.kd-ln{font-family:'Space Grotesk',sans-serif;font-size:.75rem;color:var(--red);margin-bottom:.75rem;}
+.kd-lt{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;line-height:1.3;margin-bottom:.5rem;color:var(--ink);}
+.kd-learn p{margin:0;font-size:.9375rem;line-height:1.6;color:var(--ash);}
+@media(max-width:900px){
+  .kd-list li{grid-template-columns:2.5rem minmax(0,1fr);gap:.375rem 1rem;}
+  .kd-d,.kd-tag{grid-column:2;}
+  .kd-tag{justify-self:start;margin-top:.25rem;}
+  .kd-result{grid-template-columns:1fr;gap:2rem;}
+  .kd-learn{grid-template-columns:1fr;gap:2rem;}
+}
+@media(max-width:480px){.kd-stats{grid-template-columns:1fr 1fr;}}
+
 .dec-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
   gap:1px;background:var(--line2);
@@ -1696,10 +1727,7 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
       </div>
     </div>
     <div class="phone-wrap">
-      <div class="phone-shell" style="width:280px;">
-        <div class="phone-notch"></div>
-        <img src="assets/monchis_case_002.webp" loading="lazy" decoding="async" alt="Final monchis home" style="aspect-ratio:405/829;width:100%;height:auto;display:block;border-radius:16px;">
-      </div>
+      <img src="assets/monchis_final_home.webp" width="998" height="1406" loading="lazy" decoding="async" alt="Final Monchis home on a tilted phone: search at the top with the saved address below, labeled verticals for Restaurantes, Mercados, Locales and Retiro en el local, a ueno bank promo module, food categories, and the bottom tab bar" style="display:block;width:100%;max-width:380px;height:auto;filter:drop-shadow(0 28px 36px rgba(20,20,20,.18));">
       <div class="badge badge-g" style="margin-top:8px;">Final · V2 spine + V1 safeguards</div>
     </div>
   </div>
@@ -1923,53 +1951,10 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
     </div>
   </div>
 
-  <!-- COMPONENTS HEADER -->
-  <div class="mds-header">
-    <h2 class="mds-title">Components built<br>to <em>convert.</em></h2>
-    <p class="mds-sub">Every element of the new home was designed with a clear purpose: reduce friction, surface relevant content, and drive the user toward their first order.</p>
-  </div>
-
-  <!-- OTHER COMPONENTS — compact grid -->
-  <div class="mds-components">
-    <div class="mds-comp-num" style="margin-bottom:2rem;grid-column:1/-1;">Other key components</div>
-
-    <div class="mds-comp-card">
-      <div class="mds-comp-label">Store Carousels · Real photography</div>
-      <div class="mds-comp-img mds-comp-img-xl"><img src="assets/monchis_case_005.webp" loading="lazy" decoding="async" alt="Store carousels" style="aspect-ratio:1136/397;"></div>
-      <div class="mds-comp-meta">Real food photography · Logo overlay · Distance + ETA</div>
-    </div>
-
-    <div class="mds-comp-card">
-      <div class="mds-comp-label">Food Categories · Horizontal scroll</div>
-      <div class="mds-comp-img mds-comp-img-xl" style="flex-direction:column;gap:1rem;">
-        <img src="assets/monchis_case_006.webp" loading="lazy" decoding="async" alt="Food categories" style="aspect-ratio:1078/216;">
-        <img src="assets/monchis_case_007.webp" loading="lazy" decoding="async" alt="Food categories" style="aspect-ratio:539/108;">
-      </div>
-      <div class="mds-comp-meta">11 categories · 3D emoji icons · Carnes · Sushi · Pizza · Burguer</div>
-    </div>
-
-    <div class="mds-comp-card">
-      <div class="mds-comp-label">Bottom Navbar · Old vs New</div>
-      <div class="mds-comp-img mds-navbar-compare">
-        <div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;text-align:center;">Old</div>
-          <img src="assets/monchis_case_008.webp" loading="lazy" decoding="async" alt="Old navbar" style="aspect-ratio:402/113;">
-        </div>
-        <div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-bottom:.5rem;text-align:center;">New</div>
-          <img src="assets/monchis_case_009.webp" loading="lazy" decoding="async" alt="New navbar" style="aspect-ratio:402/113;">
-        </div>
-      </div>
-      <div class="mds-comp-meta">Cart FAB · 27% taps · Green primary action</div>
-    </div>
-
-    <div class="mds-comp-card">
-      <div class="mds-comp-label">Snackbar · Error state</div>
-      <div class="mds-comp-img"><img src="assets/monchis_case_010.webp" loading="lazy" decoding="async" alt="Snackbar error" style="aspect-ratio:756/168;"></div>
-      <div class="mds-comp-meta">Dark bg · WiFi icon · "Parece que no tenés conexión"</div>
-    </div>
-
-  </div>
+  <!-- FINAL HOME IN HAND -->
+  <figure style="margin:4rem 0 0;">
+    <img src="assets/monchis_in_hand.webp" width="1872" height="1248" loading="lazy" decoding="async" alt="A smiling woman at home holds a phone toward the camera showing the new Monchis home: search at the top, labeled verticals, the ueno bank promo and food categories" style="display:block;width:100%;height:auto;border-radius:16px;">
+  </figure>
 </div>
 
 
@@ -2061,33 +2046,30 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
 <!-- SECTION 06 — DECISIONS + LEARNINGS -->
 <div class="section">
   <div class="eyebrow">Key Design Decisions</div>
-  <div class="dec-grid">
-    <div class="dec"><div class="dec-n">Decision 01</div><div class="dec-t">Two paths instead of one proposal</div><div class="dec-d">V1 brand-led vs V2 task-led, both built to the same findings. It turned the review from a taste debate into an explicit trade-off — and the final home borrows from both.</div></div>
-    <div class="dec"><div class="dec-n">Decision 02</div><div class="dec-t">Animated dynamic search</div><div class="dec-d">Static placeholder → contextual rotating text. Time, user prefs, promotions. 60% click rate validates the investment.</div></div>
-    <div class="dec"><div class="dec-n">Decision 03</div><div class="dec-t">Time-aware carousels</div><div class="dec-d">Beer promos at 8am told users the app didn't know them. Content that adapts to context = trust.</div></div>
-    <div class="dec"><div class="dec-n">Decision 04</div><div class="dec-t">Favorite places as hero feature</div><div class="dec-d">44.6% CVR. The highest performing carousel by far — personalization beats any other content strategy.</div></div>
-    <div class="dec"><div class="dec-n">Decision 05</div><div class="dec-t">Personalized promo banners</div><div class="dec-d">3 types: Top locals with promo, onboarding match, payment incentive. Contextual, never generic.</div></div>
-    <div class="dec"><div class="dec-n">Decision 06</div><div class="dec-t">Rapid execution constraint</div><div class="dec-d">Prioritized aesthetic improvements over new features. Visual facelift first — data then drives feature investment.</div></div>
-    <div class="dec"><div class="dec-n">Decision 07</div><div class="dec-t">Reusable component system</div><div class="dec-d">Documentation reduced QA cycles and enabled team to move faster on next iterations. System = product investment.</div></div>
+  <h2 class="kd-h">Seven decisions,<br><span>one direction.</span></h2>
+
+  <ol class="kd-list">
+    <li><span class="kd-n">01</span><div class="kd-t">Two paths, not one proposal</div><p class="kd-d">V1 and V2 turned a taste debate into an explicit trade-off.</p><span class="kd-tag kd-tag--soft">Process</span></li>
+    <li><span class="kd-n">02</span><div class="kd-t">Animated dynamic search</div><p class="kd-d">A static placeholder became rotating, contextual suggestions.</p><span class="kd-tag">60% click it</span></li>
+    <li><span class="kd-n">03</span><div class="kd-t">Time-aware carousels</div><p class="kd-d">No more beer promos at 8 am. Content follows the moment of the day.</p><span class="kd-tag kd-tag--soft">Trust</span></li>
+    <li><span class="kd-n">04</span><div class="kd-t">Favourite places as the hero</div><p class="kd-d">The best-performing carousel on the page, by far.</p><span class="kd-tag">44.6% CVR</span></li>
+    <li><span class="kd-n">05</span><div class="kd-t">Personalized promo banners</div><p class="kd-d">Three types: top locals, onboarding match, payment incentive.</p><span class="kd-tag kd-tag--soft">Relevance</span></li>
+    <li><span class="kd-n">06</span><div class="kd-t">Facelift first, features later</div><p class="kd-d">Ship the visual upgrade fast, then let data decide what to build.</p><span class="kd-tag kd-tag--soft">Speed</span></li>
+    <li><span class="kd-n">07</span><div class="kd-t">A reusable component system</div><p class="kd-d">Documented components cut QA cycles for the next iterations.</p><span class="kd-tag kd-tag--soft">Scale</span></li>
+  </ol>
+
+  <div class="kd-result">
+    <div class="kd-result-q">
+      <div class="kd-label">The result</div>
+      <p>Personalization was the killer feature. Users convert when the product feels like it knows them.</p>
+    </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:1.75rem;margin-top:2rem;align-items:start;">
-    <div class="ins-grid" style="grid-template-columns:1fr 1fr;gap:.75rem;margin-top:0;">
-      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 01</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Two directions beat one recommendation</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">Brought V1 and V2 fully resolved, states included — turned opinion into an explicit trade-off.</div></div>
-      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 02</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Personalization is the killer feature</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">44.6% CVR came from customization, not visual polish — users convert when the product understands them.</div></div>
-      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 03</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Context-awareness is trust</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">Time-aware carousels weren't aesthetic — they were a trust decision that changed the emotional relationship with the product.</div></div>
-      <div class="ins" style="padding:1.125rem;"><div class="ins-n" style="margin-bottom:.5rem;">Learning 04</div><div class="ins-t" style="font-size:.8125rem;margin-bottom:.3rem;">Documentation ships features</div><div class="ins-d" style="font-size:.75rem;line-height:1.55;">A real design system reduced QA cycles and enabled faster iteration — system thinking is a product investment.</div></div>
-    </div>
-    <div class="callout" style="padding:1.5rem;">
-      <div class="co-l" style="margin-bottom:.625rem;">The result</div>
-      <div class="co-t" style="font-size:1.0625rem;margin-bottom:.625rem;">"Personalization is the killer feature."</div>
-      <div class="co-d" style="font-size:.75rem;line-height:1.55;">The 44.6% CVR came from building a product that feels like it knows the user — every "obvious" decision had a measurable counterpart in the data.</div>
-      <div class="co-stats" style="margin-top:1rem;padding-top:1rem;gap:1.25rem;">
-        <div><div class="cos-v" style="font-size:1.0625rem;">44.6%</div><div class="cos-l">CVR</div></div>
-        <div><div class="cos-v" style="font-size:1.0625rem;">60%</div><div class="cos-l">Search clicks</div></div>
-        <div><div class="cos-v" style="font-size:1.0625rem;">77.8%</div><div class="cos-l">Onboarding</div></div>
-      </div>
-    </div>
+  <div class="kd-learn-head">What I'm taking to the next project</div>
+  <div class="kd-learn">
+    <div><div class="kd-ln">01</div><div class="kd-lt">Show the trade-off, not an opinion.</div><p>Two fully resolved directions made the decision about cost, not taste.</p></div>
+    <div><div class="kd-ln">02</div><div class="kd-lt">Context is trust.</div><p>Knowing the time and the user changed how people felt about the app, and the numbers followed.</p></div>
+    <div><div class="kd-ln">03</div><div class="kd-lt">Documentation ships features.</div><p>A real system is a product investment: less QA, faster iterations.</p></div>
   </div>
 </div>
 
