@@ -821,6 +821,13 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
 .find-imp b{font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:.375rem;font-weight:400;}
 /* ── TWO PATHS ── */
 .paths-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;margin-bottom:3rem;}
+.paths-hero{position:relative;margin:0 0 3rem;padding:clamp(24px,4vw,56px) clamp(16px,3vw,40px) clamp(20px,3vw,32px);border-radius:16px;overflow:hidden;
+  background:radial-gradient(60% 70% at 30% 60%,rgba(232,20,60,.10),transparent 70%),radial-gradient(55% 65% at 72% 38%,rgba(46,204,113,.12),transparent 70%),var(--bg2);}
+.paths-hero img{display:block;width:100%;max-width:680px;height:auto;margin:0 auto;filter:drop-shadow(0 30px 40px rgba(20,20,20,.18));}
+.paths-hero figcaption{display:flex;justify-content:center;gap:clamp(4rem,18vw,16rem);margin-top:1.25rem;font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;}
+.paths-hero .ph-v1{color:var(--red);}
+.paths-hero .ph-v2{color:#27ae60;}
+@media(max-width:640px){.paths-hero figcaption{gap:2.5rem;}}
 .path{border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--bg);}
 .path-head{padding:1.75rem 2rem 1.5rem;border-bottom:1px solid var(--line);}
 .path-tag{display:inline-flex;align-items:center;gap:.5rem;padding:.3rem 1rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
@@ -1537,6 +1544,11 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
     The findings pointed clearly at what the home had to do — but not at how much brand we were willing to trade for speed. Rather than pick for the business, I built both answers to the same brief, each internally consistent down to error and loading states. It moved the review from <em>"I like this one"</em> to <em>"which cost are we choosing".</em>
   </p>
 
+  <figure class="paths-hero">
+    <img src="assets/monchis_paths_hero.webp" width="1307" height="1222" loading="lazy" decoding="async" alt="The two directions side by side on tilted phones: V1 on the left with a red brand header, address, search and a promo carousel over an image mosaic; V2 on the right with a neutral surface, search at the top and labeled vertical cards for Comidas, Mercado, Tiendas, Pick up and ueno">
+    <figcaption><span class="ph-v1">V1 · Brand-led</span><span class="ph-v2">V2 · Task-led</span></figcaption>
+  </figure>
+
   <div class="paths-grid">
     <!-- V1 -->
     <div class="path">
@@ -1544,9 +1556,6 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
         <div class="path-tag v1">Path V1 · Brand-led</div>
         <div class="path-t">The home as<br>a statement.</div>
         <div class="path-d">An extended red header owns the entry: saved address, greeting and search all live inside the brand block. Promo carousel takes the hero slot, verticals follow as an image mosaic.</div>
-      </div>
-      <div class="path-img" style="display:flex;justify-content:center;">
-        <img src="assets/monchis_path_v1.webp" loading="lazy" decoding="async" alt="V1 — brand-led home" style="aspect-ratio:640/1260;max-width:58%;">
       </div>
       <div class="path-body">
         <div class="pb-l">Where it wins</div>
@@ -1570,9 +1579,6 @@ body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
         <div class="path-tag v2">Path V2 · Task-led</div>
         <div class="path-t">The home as<br>a shortcut.</div>
         <div class="path-d">Neutral surface. Search is the first thing on screen, address one level below it. Labeled vertical cards move up; the promo becomes a module instead of the doorway.</div>
-      </div>
-      <div class="path-img" style="display:flex;justify-content:center;">
-        <img src="assets/monchis_path_v2.webp" loading="lazy" decoding="async" alt="V2 — task-led home" style="aspect-ratio:626/1298;max-width:58%;">
       </div>
       <div class="path-body">
         <div class="pb-l">Where it wins</div>
