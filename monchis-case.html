@@ -488,6 +488,12 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
 
 /* sketch scenes: vertical version on phones (same drawing, stacked) */
 .sketch svg.sk-mobile{display:none;}
+/* minimal monochrome version: 30% smaller, grayscale, plain paper */
+.sketch-fig:has(.sketch--monchis){max-width:70%;margin-inline:auto;}
+@media(max-width:640px){.sketch-fig:has(.sketch--monchis){max-width:none;}}
+.sketch--monchis{--sk-paper:#FAFAFA;}
+body.dark-mode .sketch--monchis{--sk-paper:#2C2C2F;}
+.sketch--monchis svg{filter:grayscale(1);min-width:0;}
 @media(max-width:640px){.sketch svg.sk-desktop{display:none;}.sketch svg.sk-mobile{display:block;min-width:0;}}
 </style>
 
@@ -1233,7 +1239,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
     <!-- ─── Sketch scene · "A day with Monchis" (time-of-day contextual box) ─── -->
     <figure class="sketch-fig">
       <div class="sketch sketch--monchis">
-        <svg class="sk-desktop" viewBox="0 0 1200 690" role="img" aria-labelledby="mcday-t mcday-d">
+        <svg class="sk-desktop" viewBox="0 88 1200 532" role="img" aria-labelledby="mcday-t mcday-d">
           <title id="mcday-t">A day with Monchis: one box, four moments</title>
           <desc id="mcday-d">The same person across one day, with the sun moving from sunrise to night above her. At 8:40, with a coffee, she thinks "Something to start the day…" and her phone shows the box "¿Qué te tienta esta mañana?" with desayunos, café and 2x1. At 12:30, at her laptop, she thinks "I skipped lunch again" and the box reads "¿No almorzaste aún?" with quick options and menú del día. At 17:10, next to a slice of cake, she thinks "I need something sweet" and the box reads "Merienda con algo dulce" with cafeterías, postres and helados. At 21:00, by a window with the moon, she thinks "Not cooking tonight" and the box reads "Cena sin vueltas" with pizza, hamburguesas and mercado 24h. Labels at the bottom: for her, the right craving without searching; one box, four moments a day; for Monchis, four chances a day to convert.</desc>
           <defs>
@@ -1264,31 +1270,11 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
             </symbol>
           </defs>
 
-          <rect width="1200" height="690" class="sk-paper"/>
-          <rect width="1200" height="690" fill="url(#mc-grid)"/>
+          <rect width="1200" height="620" class="sk-paper"/>
 
           <!-- washes: the light changes through the day -->
-          <g filter="url(#mc-wash)" aria-hidden="true">
-            <ellipse cx="172" cy="250" rx="120" ry="95" class="sk-wash-o" opacity=".9"/>
-            <ellipse cx="457" cy="250" rx="120" ry="95" class="sk-wash-o" opacity="1.3"/>
-            <ellipse cx="742" cy="250" rx="120" ry="95" class="sk-wash-n"/>
-            <ellipse cx="1027" cy="250" rx="120" ry="95" class="sk-wash-night"/>
-          </g>
 
           <g filter="url(#mc-wobble)" class="sk-ink" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-
-            <!-- sun path across the day -->
-            <path d="M70 112C120 96 150 90 172 88S380 42 457 42S680 50 742 60S960 82 1027 90S1100 104 1135 114" class="sk-soft" stroke-width="1.6" stroke-dasharray="4 9"/>
-            <g class="sk-o" stroke-width="2">
-              <circle cx="172" cy="88" r="12" class="sk-fill-o"/>
-              <path d="M172 66v-6M172 110v6M150 88h-6M194 88h6M157 73l-4-4M187 73l4-4"/>
-              <circle cx="457" cy="42" r="14" class="sk-fill-o"/>
-              <path d="M457 18v-6M457 66v6M433 42h-6M481 42h6M440 25l-4-4M474 25l4-4M440 59l-4 4M474 59l4 4"/>
-              <circle cx="742" cy="60" r="13" class="sk-fill-o" opacity=".75"/>
-              <path d="M742 38v-6M720 60h-6M764 60h6M726 44l-4-4M758 44l4-4"/>
-            </g>
-            <path d="M1036 76a15 15 0 1 0 6 22a12 12 0 1 1-6-22z" class="sk-fill-ink" stroke-width="1.8"/>
-            <path d="M1062 70l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z M1002 72l1.5 3.5l3.5 1.5l-3.5 1.5l-1.5 3.5l-1.5-3.5l-3.5-1.5l3.5-1.5z" class="sk-soft" stroke-width="1.2"/>
 
             <!-- ── four moments ── -->
             <!-- 1 · morning -->
@@ -1297,18 +1283,13 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
               <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
               <path d="M8 348H256" stroke-width="2.2"/>
-              <!-- mug + steam -->
               <path d="M178 316h34v24q0 8-8 8h-18q-8 0-8-8z" class="sk-fill-paper" stroke-width="2.2"/>
               <path d="M212 322q12 0 12 9q0 9-12 8" stroke-width="2"/>
-              <path d="M188 306q-6-7 0-13q6-6 0-13M201 306q-6-7 0-13q6-6 0-13" class="sk-soft" stroke-width="1.6"/>
             </g>
             <!-- 2 · midday -->
             <g transform="translate(325 0)">
               <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
-              <!-- wall clock at 12:30 -->
-              <circle cx="222" cy="226" r="17" class="sk-fill-paper" stroke-width="2"/>
-              <path d="M222 226v-11M222 226v12M222 226l3-7" stroke-width="1.8"/>
               <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
               <path d="M8 348H256" stroke-width="2.2"/>
               <!-- laptop -->
@@ -1324,8 +1305,6 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <!-- plate + slice of cake -->
               <path d="M168 342q38 10 76 0" stroke-width="2"/>
               <path d="M178 338h52l-12-30z" class="sk-fill-paper" stroke-width="2.2"/>
-              <path d="M186 324h34" class="sk-n" stroke-width="2"/>
-              <circle cx="218" cy="303" r="4" class="sk-fill-n sk-n" stroke-width="1.5"/>
             </g>
             <!-- 4 · night -->
             <g transform="translate(895 0)">
@@ -1333,45 +1312,25 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
               <!-- window with moon -->
               <rect x="186" y="204" width="62" height="70" rx="4" class="sk-fill-paper" stroke-width="2"/>
-              <path d="M217 204v70M186 239h62" class="sk-soft" stroke-width="1.4"/>
               <path d="M236 214a8 8 0 1 0 4 12a6 6 0 1 1-4-12z" class="sk-fill-ink" stroke-width="1.4"/>
               <use href="#mc-person" x="92" y="236" stroke-width="2.4"/>
               <path d="M8 348H256" stroke-width="2.2"/>
               <!-- keys + empty plate: not cooking -->
               <path d="M170 342q34 9 68 0" stroke-width="2"/>
-              <circle cx="222" cy="330" r="6" stroke-width="1.8"/><path d="M216 334l-14 6" stroke-width="1.8"/>
-            </g>
-
-            <!-- zoom lines from each phone to its box -->
-            <g class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7">
-              <path d="M160 316L54 392M170 320L290 392"/>
-              <path d="M445 316L339 392M455 320L575 392"/>
-              <path d="M730 316L624 392M740 320L860 392"/>
-              <path d="M1015 316L909 392M1025 320L1145 392"/>
             </g>
 
             <!-- the contextual box, four times (app voice: red) -->
-            <g class="sk-n" stroke-width="2" stroke-dasharray="7 6">
-              <rect x="52" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-              <rect x="337" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-              <rect x="622" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-              <rect x="907" y="392" width="241" height="178" rx="12" class="sk-fill-paper"/>
-            </g>
-            <g class="sk-soft" stroke-width="1.6">
-              <g id="mc-box-inner">
-                <circle cx="76" cy="474" r="9"/><circle cx="100" cy="474" r="9"/><circle cx="124" cy="474" r="9"/><circle cx="148" cy="474" r="9"/>
-                <rect x="64" y="492" width="106" height="36" rx="7"/><rect x="176" y="492" width="106" height="36" rx="7"/>
-              </g>
-              <use href="#mc-box-inner" x="285"/>
-              <use href="#mc-box-inner" x="570"/>
-              <use href="#mc-box-inner" x="855"/>
+            <g class="sk-n" stroke-width="2">
+              <rect x="52" y="392" width="241" height="112" rx="12" class="sk-fill-paper"/>
+              <rect x="337" y="392" width="241" height="112" rx="12" class="sk-fill-paper"/>
+              <rect x="622" y="392" width="241" height="112" rx="12" class="sk-fill-paper"/>
+              <rect x="907" y="392" width="241" height="112" rx="12" class="sk-fill-paper"/>
             </g>
 
             <!-- ── labels ── -->
-            <rect x="30" y="610" width="360" height="44" rx="10" class="sk-pill-user" stroke-width="1.8"/>
-            <path d="M418 622l-16-8M418 632l-20 0M418 642l-16 8M782 622l16-8M782 632l20 0M782 642l16 8" stroke-width="2"/>
-            <path d="M428 610q172-8 344 0l2 44q-174 8-348 0z" class="sk-pill-idea" stroke-width="1.8"/>
-            <rect x="810" y="610" width="360" height="44" rx="10" class="sk-pill-app" stroke-width="1.8"/>
+            <rect x="30" y="544" width="360" height="44" rx="10" class="sk-pill-user" stroke-width="1.8"/>
+            <path d="M428 544q172-8 344 0l2 44q-174 8-348 0z" class="sk-pill-idea" stroke-width="1.8"/>
+            <rect x="810" y="544" width="360" height="44" rx="10" class="sk-pill-app" stroke-width="1.8"/>
           </g>
 
           <!-- real text, outside the wobble -->
@@ -1387,9 +1346,6 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <text x="638" y="418">TARDE · 17:10</text>
               <text x="923" y="418">NOCHE · 21:00</text>
             </g>
-            <g font-size="14" class="sk-t-soft" text-anchor="end">
-              <text x="279" y="418">✕</text><text x="564" y="418">✕</text><text x="849" y="418">✕</text><text x="1134" y="418">✕</text>
-            </g>
             <g font-size="20" font-weight="600" class="sk-t-n">
               <text x="66" y="448">¿Qué te tienta esta mañana?</text>
               <text x="351" y="448">¿No almorzaste aún?</text>
@@ -1397,15 +1353,15 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <text x="921" y="448">Cena sin vueltas</text>
             </g>
             <g font-size="15" class="sk-t-soft">
-              <text x="66" y="554">desayunos · café · 2x1</text>
-              <text x="351" y="554">opciones rápidas · menú del día</text>
-              <text x="636" y="554">cafeterías · postres · helados</text>
-              <text x="921" y="554">pizza · hamburguesas · mercado 24h</text>
+              <text x="66" y="482">desayunos · café · 2x1</text>
+              <text x="351" y="482">opciones rápidas · menú del día</text>
+              <text x="636" y="482">cafeterías · postres · helados</text>
+              <text x="921" y="482">pizza · hamburguesas · mercado 24h</text>
             </g>
 
-            <text x="210" y="638" text-anchor="middle" font-size="17" letter-spacing=".5">YOU: THE RIGHT CRAVING, NO SEARCHING</text>
-            <text x="600" y="639" text-anchor="middle" font-size="19" letter-spacing=".5">ONE BOX. FOUR MOMENTS A DAY.</text>
-            <text x="990" y="638" text-anchor="middle" font-size="17" letter-spacing=".5">MONCHIS: FOUR CHANCES TO CONVERT</text>
+            <text x="210" y="572" text-anchor="middle" font-size="17" letter-spacing=".5">YOU: THE RIGHT CRAVING, NO SEARCHING</text>
+            <text x="600" y="573" text-anchor="middle" font-size="19" letter-spacing=".5">ONE BOX. FOUR MOMENTS A DAY.</text>
+            <text x="990" y="572" text-anchor="middle" font-size="17" letter-spacing=".5">MONCHIS: FOUR CHANCES TO CONVERT</text>
           </g>
         </svg>
         <svg class="sk-mobile" viewBox="0 0 560 1394" role="img" aria-labelledby="mcdaym-t mcdaym-d">
@@ -1439,37 +1395,20 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
             </symbol>
           </defs>
           <rect width="560" height="1394" class="sk-paper"/>
-          <rect width="560" height="1394" fill="url(#mcm-grid)"/>
-          <g filter="url(#mcm-wash)" aria-hidden="true">
-            <ellipse cx="140" cy="166" rx="120" ry="95" class="sk-wash-o" opacity=".9"/>
-            <ellipse cx="140" cy="456" rx="120" ry="95" class="sk-wash-o" opacity="1.3"/>
-            <ellipse cx="140" cy="746" rx="120" ry="95" class="sk-wash-n"/>
-            <ellipse cx="140" cy="1036" rx="120" ry="95" class="sk-wash-night"/>
-          </g>
           <g filter="url(#mcm-wobble)" class="sk-ink" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <g transform="translate(2 -84)">
               <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
               <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
               <path d="M8 348H256" stroke-width="2.2"/>
-              <!-- mug + steam -->
               <path d="M178 316h34v24q0 8-8 8h-18q-8 0-8-8z" class="sk-fill-paper" stroke-width="2.2"/>
               <path d="M212 322q12 0 12 9q0 9-12 8" stroke-width="2"/>
-              <path d="M188 306q-6-7 0-13q6-6 0-13M201 306q-6-7 0-13q6-6 0-13" class="sk-soft" stroke-width="1.6"/>
             </g>
 
-            <rect x="292" y="90" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
-            <g class="sk-soft" stroke-width="1.6">
-              <circle cx="314" cy="174" r="9"/><circle cx="338" cy="174" r="9"/><circle cx="362" cy="174" r="9"/><circle cx="386" cy="174" r="9"/>
-              <rect x="304" y="192" width="112" height="36" rx="7"/><rect x="424" y="192" width="112" height="36" rx="7"/>
-            </g>
-            <path d="M142 232L292 150" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <rect x="292" y="90" width="256" height="112" rx="12" class="sk-n sk-fill-paper" stroke-width="2"/>
             <g transform="translate(2 206)">
               <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
-              <!-- wall clock at 12:30 -->
-              <circle cx="222" cy="226" r="17" class="sk-fill-paper" stroke-width="2"/>
-              <path d="M222 226v-11M222 226v12M222 226l3-7" stroke-width="1.8"/>
               <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
               <path d="M8 348H256" stroke-width="2.2"/>
               <!-- laptop -->
@@ -1477,12 +1416,7 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <path d="M160 347h92" stroke-width="2.6"/>
             </g>
 
-            <rect x="292" y="380" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
-            <g class="sk-soft" stroke-width="1.6">
-              <circle cx="314" cy="464" r="9"/><circle cx="338" cy="464" r="9"/><circle cx="362" cy="464" r="9"/><circle cx="386" cy="464" r="9"/>
-              <rect x="304" y="482" width="112" height="36" rx="7"/><rect x="424" y="482" width="112" height="36" rx="7"/>
-            </g>
-            <path d="M142 522L292 440" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <rect x="292" y="380" width="256" height="112" rx="12" class="sk-n sk-fill-paper" stroke-width="2"/>
             <g transform="translate(2 496)">
               <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
@@ -1491,36 +1425,22 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
               <!-- plate + slice of cake -->
               <path d="M168 342q38 10 76 0" stroke-width="2"/>
               <path d="M178 338h52l-12-30z" class="sk-fill-paper" stroke-width="2.2"/>
-              <path d="M186 324h34" class="sk-n" stroke-width="2"/>
-              <circle cx="218" cy="303" r="4" class="sk-fill-n sk-n" stroke-width="1.5"/>
             </g>
 
-            <rect x="292" y="670" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
-            <g class="sk-soft" stroke-width="1.6">
-              <circle cx="314" cy="754" r="9"/><circle cx="338" cy="754" r="9"/><circle cx="362" cy="754" r="9"/><circle cx="386" cy="754" r="9"/>
-              <rect x="304" y="772" width="112" height="36" rx="7"/><rect x="424" y="772" width="112" height="36" rx="7"/>
-            </g>
-            <path d="M142 812L292 730" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <rect x="292" y="670" width="256" height="112" rx="12" class="sk-n sk-fill-paper" stroke-width="2"/>
             <g transform="translate(2 786)">
               <path d="M18 122q0-14 14-14h202q14 0 14 14v36q0 14-14 14h-202q-14 0-14-14z" class="sk-bubble-user" stroke-width="2"/>
               <circle cx="150" cy="184" r="5" class="sk-bubble-user" stroke-width="1.8"/><circle cx="142" cy="196" r="3" class="sk-bubble-user" stroke-width="1.6"/>
               <!-- window with moon -->
               <rect x="186" y="204" width="62" height="70" rx="4" class="sk-fill-paper" stroke-width="2"/>
-              <path d="M217 204v70M186 239h62" class="sk-soft" stroke-width="1.4"/>
               <path d="M236 214a8 8 0 1 0 4 12a6 6 0 1 1-4-12z" class="sk-fill-ink" stroke-width="1.4"/>
               <use href="#mcm-person" x="92" y="236" stroke-width="2.4"/>
               <path d="M8 348H256" stroke-width="2.2"/>
               <!-- keys + empty plate: not cooking -->
               <path d="M170 342q34 9 68 0" stroke-width="2"/>
-              <circle cx="222" cy="330" r="6" stroke-width="1.8"/><path d="M216 334l-14 6" stroke-width="1.8"/>
             </g>
 
-            <rect x="292" y="960" width="256" height="182" rx="12" class="sk-n sk-fill-paper" stroke-width="2" stroke-dasharray="7 6"/>
-            <g class="sk-soft" stroke-width="1.6">
-              <circle cx="314" cy="1044" r="9"/><circle cx="338" cy="1044" r="9"/><circle cx="362" cy="1044" r="9"/><circle cx="386" cy="1044" r="9"/>
-              <rect x="304" y="1062" width="112" height="36" rx="7"/><rect x="424" y="1062" width="112" height="36" rx="7"/>
-            </g>
-            <path d="M142 1102L292 1020" class="sk-soft" stroke-width="1.2" stroke-dasharray="3 7"/>
+            <rect x="292" y="960" width="256" height="112" rx="12" class="sk-n sk-fill-paper" stroke-width="2"/>
             <rect x="20" y="1186" width="520" height="52" rx="12" class="sk-pill-user" stroke-width="1.8"/>
             <rect x="20" y="1252" width="520" height="52" rx="12" class="sk-pill-app" stroke-width="1.8"/>
             <path d="M20 1318q260-8 520 0l2 54q-262 8-524 0z" class="sk-pill-idea" stroke-width="1.8"/>
@@ -1528,24 +1448,20 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
           <g class="sk-hand">
             <text x="135" y="64" text-anchor="middle" font-size="22">Something to start the day…</text>
             <text x="306" y="116" font-size="15" letter-spacing="1" class="sk-t-soft">MAÑANA · 8:40</text>
-            <text x="534" y="116" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
             <text x="306" y="146" font-size="21" font-weight="600" class="sk-t-n">¿Qué te tienta esta mañana?</text>
-            <text x="306" y="254" font-size="16" class="sk-t-soft">desayunos · café · 2x1</text>
+            <text x="306" y="182" font-size="16" class="sk-t-soft">desayunos · café · 2x1</text>
             <text x="135" y="354" text-anchor="middle" font-size="22">I skipped lunch again.</text>
             <text x="306" y="406" font-size="15" letter-spacing="1" class="sk-t-soft">MEDIODÍA · 12:30</text>
-            <text x="534" y="406" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
             <text x="306" y="436" font-size="21" font-weight="600" class="sk-t-n">¿No almorzaste aún?</text>
-            <text x="306" y="544" font-size="16" class="sk-t-soft">opciones rápidas · menú del día</text>
+            <text x="306" y="472" font-size="16" class="sk-t-soft">opciones rápidas · menú del día</text>
             <text x="135" y="644" text-anchor="middle" font-size="22">I need something sweet.</text>
             <text x="306" y="696" font-size="15" letter-spacing="1" class="sk-t-soft">TARDE · 17:10</text>
-            <text x="534" y="696" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
             <text x="306" y="726" font-size="21" font-weight="600" class="sk-t-n">Merienda con algo dulce</text>
-            <text x="306" y="834" font-size="16" class="sk-t-soft">cafeterías · postres · helados</text>
+            <text x="306" y="762" font-size="16" class="sk-t-soft">cafeterías · postres · helados</text>
             <text x="135" y="934" text-anchor="middle" font-size="22">Not cooking tonight.</text>
             <text x="306" y="986" font-size="15" letter-spacing="1" class="sk-t-soft">NOCHE · 21:00</text>
-            <text x="534" y="986" font-size="15" text-anchor="end" class="sk-t-soft">✕</text>
             <text x="306" y="1016" font-size="21" font-weight="600" class="sk-t-n">Cena sin vueltas</text>
-            <text x="306" y="1124" font-size="16" class="sk-t-soft">pizza · hamburguesas · mercado 24h</text>
+            <text x="306" y="1052" font-size="16" class="sk-t-soft">pizza · hamburguesas · mercado 24h</text>
             <text x="280" y="1220" text-anchor="middle" font-size="22" letter-spacing=".5">YOU: THE RIGHT CRAVING, NO SEARCHING</text>
             <text x="280" y="1286" text-anchor="middle" font-size="22" letter-spacing=".5">MONCHIS: FOUR CHANCES TO CONVERT</text>
             <text x="280" y="1353" text-anchor="middle" font-size="24" letter-spacing=".5">ONE BOX. FOUR MOMENTS A DAY.</text>
@@ -1607,42 +1523,6 @@ body.dark-mode .sketch .sk-wash-night{fill:#8FA0FF;opacity:.10;}
     </div>
   </div>
 
-  <div class="section-label"><div class="sl-t">Personalized banners system</div><div class="sl-l"></div></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
-    <div class="wire-shell" style="display:flex;align-items:center;justify-content:center;padding:2rem;">
-      <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;">
-        <div style="height:9px;width:40%;border-radius:4px;background:var(--bg3);"></div>
-        <div style="border:1px solid var(--line2);border-radius:10px;padding:10px;background:var(--bg);display:flex;gap:10px;align-items:center;">
-          <div style="width:46px;height:46px;border-radius:8px;background:var(--red2);flex-shrink:0;"></div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
-            <div style="height:7px;width:70%;border-radius:3px;background:var(--red);opacity:.5;"></div>
-            <div style="height:6px;width:45%;border-radius:3px;background:var(--line2);"></div>
-          </div>
-        </div>
-        <div style="border:1px solid var(--line2);border-radius:10px;padding:10px;background:var(--bg);display:flex;gap:10px;align-items:center;">
-          <div style="width:46px;height:46px;border-radius:8px;background:var(--bg2);flex-shrink:0;"></div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
-            <div style="height:7px;width:65%;border-radius:3px;background:var(--bg3);"></div>
-            <div style="height:6px;width:40%;border-radius:3px;background:var(--line2);"></div>
-          </div>
-        </div>
-        <div style="border:1px solid var(--line2);border-radius:10px;padding:10px;background:var(--bg);display:flex;gap:10px;align-items:center;">
-          <div style="width:46px;height:46px;border-radius:8px;background:var(--bg2);flex-shrink:0;"></div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
-            <div style="height:7px;width:55%;border-radius:3px;background:var(--bg3);"></div>
-            <div style="height:6px;width:35%;border-radius:3px;background:var(--line2);"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ash);margin-bottom:.875rem;">Wireframe · Banner logic</div>
-      <div style="font-size:1.25rem;font-weight:700;letter-spacing:-.02em;line-height:1.35;margin-bottom:.875rem;">Three banner types, none of them generic.</div>
-      <p style="font-size:.875rem;line-height:1.8;color:var(--ash);">
-        Top locals running a promo, a match against onboarding preferences, and a payment incentive. Defining the three cases at wireframe stage is what kept the slot from turning into undifferentiated ad space once real content arrived.
-      </p>
-    </div>
-  </div>
 </div>
 
 <!-- ══════════════════════════════════════
