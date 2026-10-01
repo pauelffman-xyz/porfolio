@@ -592,6 +592,14 @@ body.dark-mode .h1 .accent{color:transparent;}
 .sketch svg.sk-mobile{display:none;}
 @media(max-width:640px){.sketch svg.sk-desktop{display:none;}.sketch svg.sk-mobile{display:block;min-width:0;}}
 
+/* sketch scene: 20% smaller, grayscale, plain paper (no grid) */
+.sketch-fig{max-width:80%;margin-inline:auto;}
+@media(max-width:640px){.sketch-fig{max-width:none;}}
+.sketch{--sk-paper:#FAFAFA;}
+body.dark-mode .sketch{--sk-paper:#2C2C2F;}
+.sketch svg{filter:grayscale(1);}
+.sketch .sk-gridline{stroke:none;}
+
 /* screen carousel (.shots): a row on desktop, a swipeable carousel on phones.
    One exported phone screen per <img>. See bible → mobile image rules. */
 .shots{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(12px,2vw,24px);align-items:start;}
