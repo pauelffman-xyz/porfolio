@@ -273,7 +273,9 @@ body:not(.light-mode) .theme-toggle .icon-moon { display:none; }
 .project-carousel {
   width: 100%;
   overflow: hidden;
-  padding: 2rem 0 4.5rem;
+  /* el header de abajo se mete hacia arriba con margen negativo (-5rem);
+     el padding tiene que ser mayor para que no tape el borde de las cards */
+  padding: 2rem 0 5.25rem;
   position: relative;
 }
 .project-carousel::before,
@@ -287,25 +289,42 @@ body:not(.light-mode) .theme-toggle .icon-moon { display:none; }
 }
 .project-carousel::before { left:0; background:linear-gradient(to right, var(--void), transparent); }
 .project-carousel::after { right:0; background:linear-gradient(to left, var(--void), transparent); }
+.project-carousel {
+  /* el scroll vertical de la página sigue siendo del navegador;
+     el gesto horizontal lo maneja el carousel */
+  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
+}
 .carousel-track {
   display: flex;
   gap: 1.5rem;
-  animation: carouselScroll 30s linear infinite;
+  animation: carouselScroll 30s linear infinite; /* fallback sin JS */
   width: max-content;
+  will-change: transform;
+  -webkit-user-select: none; user-select: none;
 }
-.carousel-track:hover { animation-play-state: paused; }
+/* Con JS el movimiento lo maneja el script (auto-avance + arrastre) */
+.carousel-track.is-js { animation: none; cursor: grab; }
+.carousel-track.is-js.is-dragging { cursor: grabbing; }
 .carousel-card {
   flex-shrink: 0;
   cursor: pointer;
   transition: transform .4s var(--ease);
 }
-.carousel-card:hover { transform: scale(1.02); }
+.carousel-track.is-dragging .carousel-card { cursor: grabbing; }
+@media(hover:hover){
+  .carousel-track:not(.is-js):hover { animation-play-state: paused; }
+  .carousel-card:hover { transform: scale(1.02); }
+}
 .carousel-card:focus-visible { outline:2px solid var(--accent); outline-offset:4px; border-radius:1rem; }
 .carousel-card img {
   height: 440px;
   width: auto;
   display: block;
   border-radius: 1rem;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none; user-select: none;
 }
 @keyframes carouselScroll {
   0% { transform: translateX(0); }
@@ -313,7 +332,9 @@ body:not(.light-mode) .theme-toggle .icon-moon { display:none; }
 }
 @media(max-width:768px){
   .carousel-card img { height: 250px; }
-  .project-carousel { padding: 1.5rem 0 2rem; }
+  .project-carousel { padding: 1.5rem 0 4.25rem; } /* header sube -4rem en mobile */
+  .project-carousel::before,
+  .project-carousel::after { width: 2rem; }
 }
 
 /* ===== HELLO HERO ===== */
@@ -5243,10 +5264,30 @@ function wipeRevealFrom(x,y){
     });
   });
 }
+var lastWipe=null;
 function wipeAndNavigate(url,x,y){
+  lastWipe={x:x,y:y};
   sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
   wipeCoverFrom(x,y,function(){ window.location.href=url; });
 }
+/* Al volver con "atrás", el navegador restaura la página tal como quedó
+   (back/forward cache), con el overlay todavía cubriendo todo: lo destapamos. */
+function wipeReset(){
+  if(!wipeOverlay) return;
+  wipeOverlay.classList.remove('animate');
+  wipeOverlay.style.clipPath='circle(0% at 50% 50%)';
+}
+window.addEventListener('pageshow',function(e){
+  if(!e.persisted || !wipeOverlay) return;
+  sessionStorage.removeItem('wipeEntry');
+  if(lastWipe){
+    wipeRevealFrom(lastWipe.x,lastWipe.y);
+    setTimeout(wipeReset,750);
+  } else {
+    wipeReset();
+  }
+  lastWipe=null;
+});
 (function(){
   var entry=sessionStorage.getItem('wipeEntry');
   if(entry){
@@ -5283,6 +5324,110 @@ function closeCase(){
   document.getElementById('case-panel').classList.remove('open');
   document.body.style.overflow='';
 }
+
+/* PROJECT CAROUSEL — avanza solo y se puede arrastrar con el dedo o el mouse */
+document.addEventListener('DOMContentLoaded',function(){
+  var wrap=document.querySelector('.project-carousel');
+  var track=wrap&&wrap.querySelector('.carousel-track');
+  if(!track) return;
+  var cards=track.children;
+  if(cards.length<2||cards.length%2) return;       // el track tiene los proyectos duplicados una vez
+  var half=cards.length/2;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LOOP_SECONDS=30;                             // tiempo de una vuelta completa en auto-avance
+  var period=0, offset=0, vel=0, last=0, raf=0;
+  var held=false, moved=false, hovering=false, visible=true;
+  var pid=null, startX=0, startOffset=0, lastX=0, lastT=0, vx=0;
+
+  track.classList.add('is-js');
+  Array.prototype.forEach.call(track.querySelectorAll('img'),function(img){
+    img.setAttribute('draggable','false');
+    img.addEventListener('load',measure);
+  });
+
+  function measure(){
+    var p=cards[half].getBoundingClientRect().left-cards[0].getBoundingClientRect().left;
+    if(p>0) period=p;
+  }
+  function wrapOffset(){
+    if(period>0){ offset%=period; if(offset<0) offset+=period; }
+  }
+  function apply(){
+    track.style.transform='translate3d('+(-offset).toFixed(2)+'px,0,0)';
+  }
+  function frame(t){
+    raf=0;
+    var dt=Math.min(Math.max((t-last)/1000,0),.05); last=t;
+    if(!held&&period>0){
+      var target=(hovering||reduce)?0:period/LOOP_SECONDS;
+      vel=target+(vel-target)*Math.exp(-dt/.4);      // el impulso del swipe se va frenando hasta la velocidad normal
+      if(Math.abs(vel-target)<.5) vel=target;
+      offset+=vel*dt; wrapOffset(); apply();
+    }
+    schedule();
+  }
+  function schedule(){
+    if(!raf&&visible&&!document.hidden) raf=requestAnimationFrame(frame);
+  }
+
+  /* arrastre */
+  function onMove(e){
+    if(e.pointerId!==pid) return;
+    var dx=e.clientX-startX;
+    if(!moved&&Math.abs(dx)>6){ moved=true; track.classList.add('is-dragging'); }
+    if(moved){ offset=startOffset-dx; wrapOffset(); apply(); }
+    var dtm=e.timeStamp-lastT;
+    if(dtm>0){
+      vx=.75*((e.clientX-lastX)/dtm*1000)+.25*vx;
+      lastX=e.clientX; lastT=e.timeStamp;
+    }
+  }
+  function onUp(e){
+    if(e.pointerId!==pid) return;
+    window.removeEventListener('pointermove',onMove);
+    window.removeEventListener('pointerup',onUp);
+    window.removeEventListener('pointercancel',onUp);
+    pid=null; held=false;
+    track.classList.remove('is-dragging');
+    if(moved){
+      vel=(e.timeStamp-lastT>90)?0:Math.max(-4000,Math.min(4000,-vx));
+      setTimeout(function(){ moved=false; },60);
+    } else {
+      vel=0;
+    }
+    schedule();
+  }
+  track.addEventListener('pointerdown',function(e){
+    if(pid!==null) return;
+    if(e.pointerType==='mouse'&&e.button!==0) return;
+    pid=e.pointerId; held=true; moved=false;
+    startX=lastX=e.clientX; startOffset=offset; lastT=e.timeStamp; vx=0;
+    window.addEventListener('pointermove',onMove,{passive:true});
+    window.addEventListener('pointerup',onUp);
+    window.addEventListener('pointercancel',onUp);
+  });
+  /* si fue un arrastre, que no cuente como click sobre el caso */
+  track.addEventListener('click',function(e){
+    if(moved){ e.preventDefault(); e.stopPropagation(); moved=false; }
+  },true);
+
+  /* desktop: pausa al pasar el mouse por encima, como antes */
+  track.addEventListener('pointerenter',function(e){ if(e.pointerType==='mouse') hovering=true; });
+  track.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') hovering=false; });
+
+  /* no gastar batería cuando no se ve */
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){
+      visible=en[en.length-1].isIntersecting; schedule();
+    },{rootMargin:'100px'}).observe(wrap);
+  }
+  document.addEventListener('visibilitychange',schedule);
+  window.addEventListener('pageshow',schedule);
+  window.addEventListener('resize',measure);
+  if('ResizeObserver' in window) new ResizeObserver(measure).observe(track);
+
+  measure(); apply(); schedule();
+});
 
 /* TILE CLICKS */
 var CASE_PAGE_MAP={

@@ -1,6 +1,8 @@
 # Paula Elffman — Portfolio OS · Design Bible
 
-*Última actualización: Octubre 2026 — **dark mode accesible en los cases**, empezando por `monchis-case.html`: auditoría WCAG AA automática (238 textos fallaban en dark, 218 en light → 0 en ambos), capa `<style id="theme-a11y">` con tokens nuevos (`--surface`, `--red-fill`, `--green-ink`, `--mock-ink`), regla de "mockups claros en ambos modos" y script `a11y-audit.py`. Ver la sección nueva "DARK MODE ACCESIBLE EN CASES" dentro de CASE STUDIES.*
+*Última actualización: Octubre 2026 — tres arreglos en la home + un cambio de copy. (1) **Carousel horizontal con auto-avance y arrastre** (dedo o mouse), reescrito en JS: la animación CSS pura se trababa en mobile y no se podía mover a mano. (2) **Pantalla en blanco al volver de un case con «atrás»**: el navegador restauraba la home desde bfcache con el overlay del Wipe todavía tapando todo; ahora un listener `pageshow` lo destapa. (3) **Esquinas inferiores de las cards del carousel cortadas**: no era el `border-radius`, era el `.projects-header` (margen negativo) tapando los últimos 32px (mobile) / 8px (desktop) de cada card; se subió el `padding-bottom` del carousel. Además, el intro de "AI in my workflow" ahora dice "My primary tool is **Figma & Claude**". **Luego se aplicó el mismo arreglo de `pageshow` a los 15 cases con overlay y se arregló el botón volver muerto de `elektra-otp.html`** (ver "Wipe Transition → Volver con «atrás»"). Ver "Carousel — auto-avance + arrastre (Octubre 2026)", "Carousel — esquinas inferiores cortadas", "Wipe Transition → Volver con «atrás»" y "AI in my workflow".*
+
+*Última actualización previa: Octubre 2026 — **dark mode accesible en los cases**, empezando por `monchis-case.html`: auditoría WCAG AA automática (238 textos fallaban en dark, 218 en light → 0 en ambos), capa `<style id="theme-a11y">` con tokens nuevos (`--surface`, `--red-fill`, `--green-ink`, `--mock-ink`), regla de "mockups claros en ambos modos" y script `a11y-audit.py`. Ver la sección nueva "DARK MODE ACCESIBLE EN CASES" dentro de CASE STUDIES.*
 
 *Última actualización previa: Septiembre 2026 — bloque v3 (degradés, aire, sombras y animaciones con pausa estilo Apple) aplicado a los 13 cases restantes con un "adaptador" para el template viejo `.section`/`.cover`. Ver "Adaptador v3 para el template viejo" dentro de "CASE STUDIES — LENGUAJE VISUAL v3".*
 
@@ -146,6 +148,48 @@ Como los cases son páginas separadas (navegación real, no SPA), el punto de cl
 
 **Timing:** 600ms, `cubic-bezier(.65,0,.35,1)`. Es el único número a tocar si el efecto se siente lento/rápido (aparece 2 veces por archivo: el `600` del `setTimeout` y el `.6s` del CSS `.animate`).
 
+### Volver con «atrás» — bfcache (Octubre 2026)
+
+*Octubre 2026 — ✅ corregido, a pedido ("cada vez que voy a un caso y vuelvo a la home se queda en blanco")*
+
+**Síntoma:** en el celular, al tocar un case y volver con el botón «atrás» del navegador, la home quedaba **en blanco** (solo el color de fondo `var(--void)`), sin contenido.
+
+**Causa:** al navegar, `wipeAndNavigate()` primero **cubre** la pantalla con el overlay (`clip-path: circle(150% ...)`) y recién después cambia de página. Al volver con «atrás», el navegador (iOS/Chrome mobile, bfcache) **no recarga la home: la restaura tal como estaba** — con el overlay todavía en `circle(150%)`, o sea tapando todo. Como no es un load nuevo, el bloque que lee `sessionStorage('wipeEntry')` y hace `wipeRevealFrom()` **no corre**.
+
+**Fix (en `index.html`, justo debajo de `wipeAndNavigate`):**
+
+```js
+var lastWipe=null;
+function wipeAndNavigate(url,x,y){
+  lastWipe={x:x,y:y};                 // se recuerda el punto del click
+  sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
+  wipeCoverFrom(x,y,function(){ window.location.href=url; });
+}
+function wipeReset(){ /* saca .animate y deja clip-path:circle(0% at 50% 50%) */ }
+window.addEventListener('pageshow',function(e){
+  if(!e.persisted || !wipeOverlay) return;    // solo cuando viene de bfcache
+  sessionStorage.removeItem('wipeEntry');
+  if(lastWipe){ wipeRevealFrom(lastWipe.x,lastWipe.y); setTimeout(wipeReset,750); }
+  else { wipeReset(); }
+  lastWipe=null;
+});
+```
+
+Si la página restaurada todavía recuerda dónde se tocó, el overlay se **abre desde ese punto** (misma animación de siempre); si no, simplemente se resetea. `e.persisted` es `true` solo cuando la página viene de bfcache, así que en una carga normal el listener no hace nada.
+
+**Regla para el futuro:** cualquier overlay/estado que se anime **antes** de navegar tiene que poder **deshacerse en `pageshow` con `e.persisted`**, porque la página puede volver a mostrarse sin recargar. Aplica a cualquier transición de salida que se agregue.
+
+**Cómo se verificó:** se reprodujo con el archivo original (overlay en `circle(150% at 200px 400px)` → pantalla en blanco igual que la captura) y con el nuevo (overlay en `circle(0%)`, home visible). La restauración se simuló disparando `new PageTransitionEvent('pageshow',{persisted:true})` — **no se probó con un «atrás» real en un iPhone**, queda por confirmar en el dispositivo.
+
+**✅ Aplicado también a los cases (Octubre 2026):** los 15 cases con `#wipe-overlay` (`everyone`, `fancymonas`, `hotaru`, `hugo`, `memorable`, `monchis`, `monchis-drivers`, `muv`, `onboarding`, `smartpass`, `sukupay`, `sukupay-proto`, `thefork-reviews`, `thefork-shortlist`, `vendor-tool`) recibieron un `<script>` nuevo justo antes de `</body>`, marcado con el comentario `BFCACHE FIX`: en `pageshow` con `e.persisted` saca `.animate` y `.dark` del overlay y lo deja en `circle(0% at 50% 50%)` (también borra `wipeEntry`). Es un agregado puro, no toca el bloque Wipe existente de cada case. **Antes del arreglo, los 15 quedaban con el overlay tapando todo** al volver (reproducido simulando la restauración). **Regla para un case nuevo:** pegar también este bloque (ver cualquier case existente).
+
+**Casos especiales detectados en esa revisión:**
+- `elektra-otp.html`: el botón "Volver al portfolio" tenía `href="#"` — **no llevaba a ningún lado**. Ahora apunta a `index.html`. Sigue **sin overlay ni transición** (es un link común), igual que `foody-case.html`; no hace falta el bloque `BFCACHE FIX` en ninguno de los dos porque no tienen overlay que quede tapando.
+- `fancymonas-case.html` y `hotaru-case.html` **no leen `wipeEntry` al cargar**: al llegar desde la home no hay animación de apertura del círculo (los demás cases sí). No genera pantalla en blanco; queda como diferencia de comportamiento, no se tocó.
+- `onboarding.html`, `thefork-reviews-case.html` y `thefork-shortlist-case.html` usan una variante del bloque Wipe (cubren con `classList.toggle('dark',false)` en vez de `coverFrom(...,true,...)`): el `BFCACHE FIX` funciona igual en las dos variantes.
+
+**Verificado:** simulación de restauración (`PageTransitionEvent('pageshow',{persisted:true})`) en los 17 archivos y recorrido home → case → botón volver → «atrás» en un navegador emulando celular: 0 problemas. Ojo: en ese navegador de prueba el «atrás» recarga la página en vez de restaurarla, así que **el bug real de bfcache no se pudo reproducir de punta a punta** — solo la restauración simulada. Falta confirmarlo en un iPhone real.
+
 ### Código (idéntico en los 6 case HTML)
 
 ```css
@@ -245,23 +289,58 @@ Sección dentro de `#projects-view`, **entre** el `.hello-hero` y el `.projects-
 
 **Comportamiento:**
 
-- Scroll horizontal infinito con `@keyframes carouselScroll` (30s linear infinite).
-- Las cards se duplican en el HTML para que el loop sea seamless (`translateX(-50%)` al 100%).
-- Hover sobre el track pausa la animación (`animation-play-state: paused`).
-- Hover sobre una card individual: `scale(1.02)`.
+- **Desde Octubre 2026 el movimiento lo maneja JS** (auto-avance + arrastre, ver subsección "Carousel — auto-avance + arrastre"). El `@keyframes carouselScroll` (30s linear infinite, `translateX(-50%)`) **sigue en el CSS pero solo como fallback**: se usa únicamente si el script no corre o si el track no tiene un número par de cards. Con JS activo el track lleva la clase `.is-js` y la animación CSS se apaga (`animation:none`).
+- Las cards se duplican en el HTML para que el loop sea seamless (el script usa la distancia entre la card 0 y la card `n/2` como período del loop).
+- Hover sobre el track con **mouse** pausa el avance. En touch ya no hay pausa por hover (el `:hover` queda "pegado" en el celular después de tocar).
+- Hover sobre una card individual: `scale(1.02)` — **solo en dispositivos con hover real** (`@media(hover:hover)`).
 
 **Dimensiones:**
 
-- Desktop: imágenes a `height: 440px`, ancho auto (cada imagen determina su propio ancho). Padding del contenedor: `2rem 0 4.5rem`.
+- Desktop: imágenes a `height: 440px`, ancho auto (cada imagen determina su propio ancho). Padding del contenedor: `2rem 0 5.25rem` (mobile: `1.5rem 0 4.25rem`) — el `padding-bottom` NO es decorativo, ver "Carousel — esquinas inferiores cortadas".
 - Mobile (`max-width:768px`): imágenes a `height: 250px`.
 - Las imágenes usan `border-radius: 1rem` directamente en el `<img>` (no en el contenedor), sin `overflow: hidden`, para que las esquinas redondeadas originales se respeten al 100%.
 - **Exportar imágenes a 1520px de alto** (760 × 2 para retina), ancho libre. Formatos actuales: 02 Monchis app (1448×1520 — actualizado Septiembre 2026, antes 744×1520), 03 Monchis desktop (2400×1520), 04 MUV (1198×1520). *(01 Memorable se sacó del carousel en Septiembre 2026 — el case sigue viviendo abajo, en el gallery.)*
 
-**Fade edges:** pseudo-elementos `::before` y `::after` con gradientes de `var(--void)` a transparente (6rem de ancho) para que las cards se desvanezcan en los bordes.
+**Fade edges:** pseudo-elementos `::before` y `::after` con gradientes de `var(--void)` a transparente para que las cards se desvanezcan en los bordes. Ancho: **6rem en desktop, 2rem en mobile** (a 6rem comían ~100px de un celular de 390px y tapaban media card).
 
 **Imágenes actuales:** 02.png (Monchis app), 03.png (Monchis desktop), 04.png (MUV). Están embebidas como base64 a resolución completa 2x (1520px alto) — la mayoría JPEG quality 80; **02.png (Monchis app) es PNG con canal alpha** (el mockup tiene sombra/esquinas transparentes, necesita alpha para no verse con fondo blanco sobre el carousel oscuro).
 
 **Regla para el futuro:** para agregar un proyecto al carousel, agregar un `<div class="carousel-card"><img>` nuevo en **ambas mitades** del track (la original y la duplicada) para mantener el loop. Para quitar los placeholders grises, reemplazar las imágenes 02 y 04 con covers reales de proyectos.
+
+### Carousel — auto-avance + arrastre (Octubre 2026)
+
+*Octubre 2026 — ✅ nuevo, a pedido ("que ande solo y a su vez pueda pasarlo con la mano")*
+
+**Problema:** en mobile el carousel "se trababa un poco" y no se podía mover a mano. Era una animación CSS pura (`translateX` en loop): sin gestos, y el `:hover { animation-play-state:paused }` y el `scale(1.02)` se quedaban pegados después de tocar una card.
+
+**Solución:** un bloque JS nuevo, justo antes de `/* TILE CLICKS */` (comentario `/* PROJECT CAROUSEL ... */`), que reemplaza la animación CSS por un loop con `requestAnimationFrame` y `transform: translate3d(...)`.
+
+- **Auto-avance:** velocidad = `período / LOOP_SECONDS` con `LOOP_SECONDS = 30` (la misma vuelta de 30s que tenía el CSS). **Es el número a tocar** si se quiere más rápido/lento.
+- **Arrastre:** Pointer Events (`pointerdown` en el track; `pointermove`/`pointerup`/`pointercancel` en `window`), así que el mismo código sirve para dedo, lápiz y mouse. El gesto empieza a contar como arrastre pasados **6px** de movimiento.
+- **Scroll vertical:** `.project-carousel` lleva `touch-action: pan-y pinch-zoom` — el navegador sigue manejando el scroll vertical de la página aunque el dedo esté sobre el carousel; solo el gesto horizontal es del script.
+- **Impulso:** al soltar, la velocidad del swipe se conserva (tope ±4000 px/s) y vuelve a la velocidad normal con un decaimiento exponencial de ~0.4s (`Math.exp(-dt/.4)`). Si el dedo estuvo quieto >90ms antes de soltar, no hay impulso.
+- **Drag ≠ click:** si hubo arrastre, un listener `click` en fase de captura lo cancela (`preventDefault` + `stopPropagation`), así que **arrastrar no abre el case**; un toque simple sí lo abre (sigue pasando por `wipeAndNavigate`, ver "Carousel clickeable").
+- **Pausas:** hover de mouse (solo `pointerType==='mouse'`), `prefers-reduced-motion` (queda quieto, solo se mueve a mano), fuera de pantalla (`IntersectionObserver`, `rootMargin:100px`) y pestaña oculta (`visibilitychange`) — no gasta batería cuando no se ve. También se reengancha en `pageshow` (volver con «atrás»).
+- **Medición:** el período se recalcula en `load` de cada imagen, en `resize` y con `ResizeObserver` sobre el track (las cards tienen ancho automático según la imagen, así que el período no se conoce hasta que cargan).
+- **CSS asociado:** `.carousel-track.is-js` (`animation:none; cursor:grab`), `.is-dragging` (`cursor:grabbing`), `will-change:transform`, `user-select:none`, y en las imágenes `-webkit-user-drag:none` + `-webkit-touch-callout:none` (evita el drag nativo de imágenes y el menú de "guardar imagen" al mantener apretado en iOS).
+
+**Requisito:** el track tiene que tener un **número par de cards** (la mitad duplicada). Si no, el script no se activa y queda el fallback CSS. Agregar un proyecto = una card nueva en cada mitad (regla de siempre); el script lo toma solo, no hay que tocar nada.
+
+**Verificado (Chromium emulando mobile 390×844, touch real vía CDP):** auto-avance ≈33.5 px/s (período 1005px / 30s); un arrastre de 200px mueve el track 201.7px; arrastrar no navega; un toque en una card navega al case; 0 errores de consola. **No se probó en un iPhone físico** — queda por confirmar la sensación del gesto/inercia en el dispositivo real.
+
+### Carousel — esquinas inferiores cortadas (Octubre 2026)
+
+*Octubre 2026 — ✅ corregido, a pedido ("que se vean los 4 bordes redondeados iguales, abajo pareciera cortarse")*
+
+**Síntoma:** en mobile (y en menor medida en desktop) las cards del carousel tenían las esquinas de arriba redondeadas y las de abajo rectas. El `border-radius:1rem` del `<img>` estaba bien (computed `16px`, caja de 250px, `overflow` visible).
+
+**Causa real:** el `.projects-header` (el bloque del marquee, `position:relative; z-index:50; background:var(--void)`) tiene **margen superior negativo** para subirse sobre el espacio que deja el carousel: **`-5rem` en desktop, `-4rem` en mobile** (en mobile hay dos reglas, `-2rem` en el bloque `/* ── MOBILE ── */` y `-4rem` en un segundo `@media(max-width:768px)` más abajo; **gana la segunda**, por cascada). El `padding-bottom` del carousel era menor que ese margen (`4.5rem` vs `5rem` en desktop = 8px tapados; `2rem` vs `4rem` en mobile = 32px tapados), así que el header, opaco y con z-index alto, **pintaba encima de la parte baja de las cards** y se llevaba las esquinas.
+
+**Fix:** subir el `padding-bottom` del carousel por encima del margen negativo del header: desktop `4.5rem → 5.25rem`, mobile `2rem → 4.25rem` (0.25rem de aire sobre el límite exacto).
+
+**Regla para el futuro:** `padding-bottom` de `.project-carousel` **siempre mayor** que `|margin-top|` de `.projects-header` en cada breakpoint. Si se cambia uno, cambiar el otro. **Consecuencia visual aceptada:** el bloque "Projects" (marquee + gallery) quedó ~2.25rem más abajo en mobile y ~0.75rem más abajo en desktop que antes.
+
+**Cómo diagnosticarlo si vuelve a pasar:** `document.elementsFromPoint(x, y)` sobre un punto justo encima del borde inferior de una card devuelve, en orden, qué elementos están pintando ahí — acá devolvía `DIV.projects-header` antes que el `IMG`. Cuando un `border-radius` "no se ve" pero el computed style está bien, sospechar de un elemento que tapa, no del radio.
 
 ### Carousel clickeable — cada card lleva a su case
 
@@ -786,6 +865,8 @@ Los 21 chips de estado bajo cada empleo del timeline (ej. `Web3 · Fintech`, `Mu
 Sección nueva en el About Me, **entre About y Core strengths**. Muestra cómo Pau integra AI (Claude) en su flujo de diseño, en formato módulo interactivo tipo "stories" (patrón Linear/Stripe), no como texto plano.
 
 **Estructura HTML:** `.dv-section` (sin `dv-bg`) → `.dv-label` "AI in my workflow" → `.dv-human-h` "AI as a *force multiplier.*" → `.ai-intro` (2 párrafos) → `.ai-lab` (el módulo).
+
+**Copy del intro (Octubre 2026):** el segundo párrafo de `.ai-intro` pasó de "My primary tool is **Claude**, which I use across the whole product design lifecycle. A few of the ways:" a "My primary tool is **Figma &amp; Claude**, which I use across the whole product design lifecycle. A few of the ways:" (a pedido; `&amp;` en el HTML, se ve "Figma & Claude", en negrita igual que antes). Nota de gramática: con dos herramientas, en inglés lo correcto sería "My primary **tools are**..." — se dejó como se pidió; es un cambio de una palabra si se quiere corregir. La barra del módulo (`claude · design-workflow`) y el resto de la sección no se tocaron.
 
 **Módulo** `.ai-lab`**:**
 
@@ -1373,6 +1454,8 @@ Prompt base (en inglés):
 // Orden obligatorio:
 1. Cursor (var cur, ring, tick)
 2. openCase() / closeCase()
+   (+ wipeAndNavigate() y el listener `pageshow` del Wipe — ver "Volver con «atrás»")
+2b. PROJECT CAROUSEL (DOMContentLoaded propio: auto-avance + arrastre) — va antes de TILE CLICKS
 3. DOMContentLoaded (gallery clicks, keyboard, tile stagger, parallax)
 4. switchView()
 5. revealObserver
@@ -1385,7 +1468,7 @@ Prompt base (en inglés):
 
 ```
 
-**Regla crítica:** Ningún carácter especial (═ ─ — etc.) dentro del `<script>`. Solo ASCII básico en comentarios JS.
+**Regla crítica:** Ningún carácter especial (═ ─ — etc.) dentro del `<script>`. Solo ASCII básico en comentarios JS. *(Octubre 2026: los comentarios de los bloques nuevos — `pageshow` y carousel — se escribieron sin tildes para cumplir esta regla. Ojo: el script ya tenía comentarios con tildes anteriores a esta pasada, p. ej. en el handler de tap de los tiles; no se tocaron.)*
 
 **Regla crítica:** No usar `opacity:0` en elementos del dashboard. Todo visible desde CSS puro.
 

@@ -1378,5 +1378,21 @@ body.dark-mode .back-nav{background:rgba(30,30,38,.85);}
 </nav>
 <script>(function(){try{if(localStorage.getItem('pe-theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}})()</script>
 
+<script>
+/* BFCACHE FIX: al volver con atras/adelante el navegador restaura la pagina tal como
+   quedo, con el overlay del wipe todavia tapando todo (pantalla en blanco).
+   Cuando la pagina vuelve de esa cache, se destapa el overlay. */
+(function(){
+  var ov=document.getElementById('wipe-overlay');
+  if(!ov) return;
+  window.addEventListener('pageshow',function(e){
+    if(!e.persisted) return;
+    ov.classList.remove('animate');
+    ov.classList.remove('dark');
+    ov.style.clipPath='circle(0% at 50% 50%)';
+    try{ sessionStorage.removeItem('wipeEntry'); }catch(err){}
+  });
+})();
+</script>
 </body>
 </html>
