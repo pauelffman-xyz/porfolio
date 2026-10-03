@@ -179,6 +179,16 @@ body{
 .pipe-conn-txt{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.04em;color:var(--ash-2);white-space:nowrap;}
 .pipe-conn-arrow{font-size:.9375rem;color:var(--accent);}
 
+/* ─── PIPELINE TRACKS (live chain + next link, one section) ─── */
+.pipe-track{margin-top:clamp(40px,5vw,72px);}
+.pipe-track + .pipe-track{margin-top:var(--stack,clamp(48px,6vw,96px));}
+.pipe-track-h{display:flex;align-items:center;gap:.875rem;flex-wrap:wrap;}
+.pipe-badge{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;border-radius:100px;padding:.35rem .75rem;white-space:nowrap;}
+.pipe-badge.is-live{background:var(--accent);color:var(--bg);}
+.pipe-badge.is-next{color:var(--ash);box-shadow:inset 0 0 0 1px var(--line-md);}
+.pipe-track-t{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;color:var(--paper);}
+.pipe-track .pipe-row{margin-top:1.75rem;}
+
 /* ─── ROLE ROW (who does what in the pipeline) ─── */
 .role-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--line);}
 .role-h{font-family:'Space Grotesk',sans-serif;font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;display:flex;align-items:center;gap:.625rem;}
@@ -296,7 +306,7 @@ body{
 .cos-v{font-size:1.25rem;font-weight:800;letter-spacing:-.03em;color:var(--lime);}
 .cos-l{font-size:.625rem;color:rgba(255,255,255,.4);margin-top:.125rem;}
 
-/* ─── GENESIS PIPELINE STRIP (shipped commands) ─── */
+/* ─── GENESIS STRIP (how it works, high level) ─── */
 .gen-strip{margin-top:3rem;}
 .gen-row{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin-top:1.5rem;}
 .gen-node{flex:1;min-width:150px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.25rem 1.1rem;}
@@ -555,83 +565,75 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
 </div>
 
 <!-- ══════════════════════════════════════════
-     HERO DEMO — Shipped: the Sukupay Genesis plugin
+     HERO DEMO — Shipped: Genesis, the AI prototyper (high level only)
 ══════════════════════════════════════════ -->
 <div class="norte proto-hero">
-  <div class="eyebrow">Shipped · The Sukupay Genesis Plugin</div>
+  <div class="eyebrow">Shipped · Genesis, the AI prototyper</div>
   <div class="norte-title" style="margin-bottom:1rem;">This stopped being<br>a diagram.</div>
-  <p class="norte-lede" style="margin-bottom:0;">Five commands run today against the real repos and the real Notion board — the same skills this system unlocked, orchestrated behind one prompt, from a raw idea to a clickable screen.</p>
+  <p class="norte-lede" style="margin-bottom:0;">The design system now powers Genesis, SukuPay's AI prototyper: describe an idea in plain language and get back a clickable screen that looks like the product — because it's built from the same tokens and components.</p>
 
   <div class="gen-strip">
     <div class="gen-row">
       <div class="gen-node">
-        <div class="gen-cmd">/ideate</div>
+        <div class="gen-cmd">01 · Describe</div>
+        <div class="gen-t">An idea, in plain words</div>
+        <div class="gen-d">Anyone on the team can start from an idea or a complaint — a plain-language conversation, zero technical knowledge needed.</div>
+      </div>
+      <div class="gen-conn">→</div>
+      <div class="gen-node">
+        <div class="gen-cmd">02 · Shape</div>
         <div class="gen-t">Idea → User Story</div>
-        <div class="gen-d">Turns anyone's idea or complaint into a validated-ready User Story — a plain-language conversation, zero technical knowledge needed.</div>
-      </div>
-      <div class="gen-conn">→</div>
-      <div class="gen-node">
-        <div class="gen-cmd">/groom</div>
-        <div class="gen-t">Story → Agent-ready Tasks</div>
-        <div class="gen-d">Breaks a validated User Story into technical Tasks in Notion, grounded in the actual code.</div>
-      </div>
-      <div class="gen-conn">→</div>
-      <div class="gen-node">
-        <div class="gen-cmd">/build · /debug</div>
-        <div class="gen-t">Task → Pull Request</div>
-        <div class="gen-d">Implements a Notion Task across the four repos — micro-plan, test-driven, looping until every acceptance criterion is verified.</div>
+        <div class="gen-d">The idea becomes a clear User Story the team can validate before anything gets built.</div>
       </div>
       <div class="gen-conn">→</div>
       <div class="gen-node gen-active">
-        <div class="gen-cmd">/prototype</div>
-        <div class="gen-t">Idea → Clickable Screen</div>
-        <div class="gen-d">A product-fidelity prototype — colors, type, brand and components read live from suku-webapp, published as one shareable URL.</div>
+        <div class="gen-cmd">03 · Prototype</div>
+        <div class="gen-t">Story → Clickable Screen</div>
+        <div class="gen-d">A product-fidelity prototype — colors, type, brand and components come straight from the design system, published as one shareable link.</div>
       </div>
     </div>
   </div>
 
   <!-- ─── Animated demo: composer (AI-chat-landing pattern) → generated screen ─── -->
-  <div class="proto-demo" data-prompt="/prototype the cashback tiers screen from PRO-1842">
-    <div class="proto-demo-lbl">/prototype — watch it turn a prompt into a screen</div>
+  <div class="proto-demo" data-prompt="Prototype a send-money screen for a first-time sender">
+    <div class="proto-demo-lbl">Genesis — watch it turn a prompt into a screen</div>
     <div class="proto-composer">
-      <div class="proto-composer-field"><span class="ph proto-ph-txt">Describe an idea, a story, or paste a Notion link…</span><span class="proto-typed-txt"></span><span class="proto-caret"></span></div>
+      <div class="proto-composer-field"><span class="ph proto-ph-txt">Describe an idea or a problem…</span><span class="proto-typed-txt"></span><span class="proto-caret"></span></div>
       <div class="proto-chips">
-        <span class="proto-chip" data-c="ideate">/ideate</span>
-        <span class="proto-chip" data-c="groom">/groom</span>
-        <span class="proto-chip" data-c="build">/build</span>
-        <span class="proto-chip" data-c="debug">/debug</span>
-        <span class="proto-chip" data-c="prototype">/prototype</span>
+        <span class="proto-chip" data-c="describe">Describe</span>
+        <span class="proto-chip" data-c="shape">Shape</span>
+        <span class="proto-chip" data-c="prototype">Prototype</span>
       </div>
     </div>
     <div class="proto-stage">
-      <div class="proto-thinking"><div class="proto-dots"><span></span><span></span><span></span></div><span>Reading suku-webapp — colors, type, components…</span></div>
+      <div class="proto-thinking"><div class="proto-dots"><span></span><span></span><span></span></div><span>Reading the design system — colors, type, components…</span></div>
     </div>
     <div class="proto-result">
       <div class="proto-phone">
         <div class="proto-phone-screen">
           <div class="proto-ph-bar"></div>
           <div class="proto-ph-head">
-            <div class="proto-ph-eyebrow">Rewards</div>
-            <div class="proto-ph-title">Cashback tiers</div>
+            <div class="proto-ph-eyebrow">Transfer</div>
+            <div class="proto-ph-title">Send money</div>
           </div>
           <div class="proto-ph-balance">
-            <div class="proto-ph-bal-lbl">This month</div>
-            <div class="proto-ph-bal-val">$42.80 back</div>
-            <div class="proto-ph-tag">Tier 2 · +2% unlocked</div>
+            <div class="proto-ph-bal-lbl">You send</div>
+            <div class="proto-ph-bal-val">$200.00</div>
+            <div class="proto-ph-tag">Arrives in seconds</div>
           </div>
           <div class="proto-ph-list">
-            <div class="proto-ph-row"><div><div class="proto-ph-row-l">Groceries</div><div class="proto-ph-row-s">4% cashback</div></div><div class="proto-ph-row-r">$18.40</div></div>
-            <div class="proto-ph-row"><div><div class="proto-ph-row-l">Transport</div><div class="proto-ph-row-s">2% cashback</div></div><div class="proto-ph-row-r">$9.10</div></div>
-            <div class="proto-ph-row"><div><div class="proto-ph-row-l">Everything else</div><div class="proto-ph-row-s">1% cashback</div></div><div class="proto-ph-row-r">$15.30</div></div>
+            <div class="proto-ph-row"><div><div class="proto-ph-row-l">To</div><div class="proto-ph-row-s">Ana M.</div></div><div class="proto-ph-row-r">Change</div></div>
+            <div class="proto-ph-row"><div><div class="proto-ph-row-l">Delivery</div><div class="proto-ph-row-s">To their phone number</div></div><div class="proto-ph-row-r">Edit</div></div>
+            <div class="proto-ph-row"><div><div class="proto-ph-row-l">Note</div><div class="proto-ph-row-s">Optional</div></div><div class="proto-ph-row-r">Add</div></div>
           </div>
-          <div class="proto-ph-cta">Redeem $42.80</div>
+          <div class="proto-ph-cta">Review transfer</div>
         </div>
       </div>
       <div class="proto-result-r">
         <div class="proto-result-lbl">Published in ~90 seconds</div>
         <div class="proto-result-t">Same colors. Same type. Same components.</div>
-        <p class="proto-result-d">Not a Figma mock — a clickable, product-fidelity screen. It reads live from <code>suku-webapp</code>, so it looks like the app because it's built from the same tokens this whole system unlocked.</p>
-        <div class="proto-result-url">🔗 sukupay-proto.app/cashback-tiers</div>
+        <p class="proto-result-d">Not a Figma mock — a clickable, product-fidelity screen. It looks like the app because it's built from the same tokens this whole system unlocked.</p>
+        <div class="proto-result-url">🔗 One shareable link</div>
       </div>
     </div>
   </div>
@@ -645,7 +647,7 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
       var chipProto = el.querySelector('.proto-chip[data-c="prototype"]');
       var thinking = el.querySelector('.proto-thinking');
       var result = el.querySelector('.proto-result');
-      var text = el.getAttribute('data-prompt') || '/prototype the cashback tiers screen from PRO-1842';
+      var text = el.getAttribute('data-prompt') || 'Prototype a send-money screen for a first-time sender';
       var played = false;
 
       function typeStep(i){
@@ -799,7 +801,7 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
     <div class="layer-chain">↓</div>
     <div class="layer-card">
       <div><div class="layer-name">Themes</div><div class="layer-file">themes/*.json</div></div>
-      <div class="layer-desc">Each partner, its own skin — <code>sukupay · elektra · zigi · zigi-dark</code>. Same skeleton.</div>
+      <div class="layer-desc">Each partner, its own skin — <code>sukupay · zigi · zigi-dark · partner</code>. Same skeleton.</div>
     </div>
   </div>
 
@@ -807,10 +809,10 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
 </div>
 
 <!-- ══════════════════════════════════════════
-     SECTION 05 — FIRST PARTNER: ELEKTRA
+     SECTION 05 — FIRST PARTNER THEME
 ══════════════════════════════════════════ -->
 <div class="section">
-  <div class="eyebrow">Action · 04 First Partner — Elektra</div>
+  <div class="eyebrow">Action · 04 First Partner Theme</div>
   <div class="section-label">
     <div class="sl-text">Tokenized end to end</div>
     <div class="sl-line"></div>
@@ -847,7 +849,7 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
 </div>
 
 <!-- ══════════════════════════════════════════
-     SECTION 07 — THE PIPELINE
+     SECTION 07 — THE PIPELINE (tokens live today + components next, one section)
 ══════════════════════════════════════════ -->
 <div class="section">
   <div class="eyebrow">Action · 06 The Pipeline</div>
@@ -857,21 +859,44 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
     <div class="sl-text">It's alive</div>
   </div>
 
-  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem;">The system no longer updates <span class="accent">by hand.</span></div>
+  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;">The system no longer updates <span class="accent">by hand.</span></div>
 
-  <div class="pipe-row">
-    <div class="pipe-node"><div class="pipe-n">01</div><div class="pipe-t">Figma</div><div class="pipe-d">The variable changes here.</div></div>
-    <div class="pipe-conn">→</div>
-    <div class="pipe-node"><div class="pipe-n">02</div><div class="pipe-t">Tokens Studio</div><div class="pipe-d">Pushes JSON to the repo.</div></div>
-    <div class="pipe-conn">→</div>
-    <div class="pipe-node pipe-commit"><div class="pipe-n">03</div><div class="pipe-t">GitHub · commit</div><div class="pipe-d">The moment of truth.</div></div>
-    <div class="pipe-conn">→</div>
-    <div class="pipe-node"><div class="pipe-n">04</div><div class="pipe-t">GitHub Action</div><div class="pipe-d">Runs inside the repo.</div></div>
-    <div class="pipe-conn">→</div>
-    <div class="pipe-node"><div class="pipe-n">05</div><div class="pipe-t">Slack</div><div class="pipe-d">Notifies #design-system-updates.</div></div>
+  <!-- Track 1 · live today -->
+  <div class="pipe-track">
+    <div class="pipe-track-h"><span class="pipe-badge is-live">Live today</span><span class="pipe-track-t">Tokens flow on their own.</span></div>
+    <div class="pipe-row">
+      <div class="pipe-node"><div class="pipe-n">01</div><div class="pipe-t">Figma</div><div class="pipe-d">The variable changes here.</div></div>
+      <div class="pipe-conn">→</div>
+      <div class="pipe-node"><div class="pipe-n">02</div><div class="pipe-t">Tokens Studio</div><div class="pipe-d">Pushes JSON to the repo.</div></div>
+      <div class="pipe-conn">→</div>
+      <div class="pipe-node pipe-commit"><div class="pipe-n">03</div><div class="pipe-t">GitHub · commit</div><div class="pipe-d">The moment of truth.</div></div>
+      <div class="pipe-conn">→</div>
+      <div class="pipe-node"><div class="pipe-n">04</div><div class="pipe-t">GitHub Action</div><div class="pipe-d">Runs inside the repo.</div></div>
+      <div class="pipe-conn">→</div>
+      <div class="pipe-node"><div class="pipe-n">05</div><div class="pipe-t">Slack</div><div class="pipe-d">Notifies the team.</div></div>
+    </div>
+    <div class="insight-bar">The "I updated the design system" moment is no longer a Figma publish — it's a <code>commit</code> on GitHub. And the notification is handled by a GitHub Action living in the repo. Fewer pieces, easier to maintain.</div>
   </div>
 
-  <div class="insight-bar">The "I updated the design system" moment is no longer a Figma publish — it's a <code>commit</code> on GitHub. And the notification is handled by a GitHub Action living in the repo. Fewer pieces, easier to maintain.</div>
+  <!-- Track 2 · next link (was its own section, "The Full Loop") -->
+  <div class="pipe-track">
+    <div class="pipe-track-h"><span class="pipe-badge is-next">Next link</span><span class="pipe-track-t">Storybook <span class="accent">is</span> the design system — not a mirror of it.</span></div>
+    <p class="ov-body" style="max-width:680px;margin-top:1rem;">The chain doesn't stop at Slack. Once tokens flow on their own, the next link is the components themselves. A component changes in Figma, a token export triggers a PR. Engineering writes the story, designers review it visually in Chromatic. The pipeline builds and deploys — no manual step, no DevOps knowledge required.</p>
+    <div class="pipe-row">
+      <div class="pipe-node"><div class="pipe-n">01</div><div class="pipe-t">Figma</div><div class="pipe-d">Components · Variables</div></div>
+      <div class="pipe-conn pipe-conn-lbl"><div class="pipe-conn-txt">token export</div><div class="pipe-conn-arrow">→</div></div>
+      <div class="pipe-node"><div class="pipe-n">02</div><div class="pipe-t">Design Tokens</div><div class="pipe-d">Style Dictionary · JSON → CSS/JS</div></div>
+      <div class="pipe-conn pipe-conn-lbl"><div class="pipe-conn-txt">git push</div><div class="pipe-conn-arrow">→</div></div>
+      <div class="pipe-node"><div class="pipe-n">03</div><div class="pipe-t">Storybook</div><div class="pipe-d">Stories + MDX · Docs</div></div>
+      <div class="pipe-conn pipe-conn-lbl"><div class="pipe-conn-txt">CI/CD deploy</div><div class="pipe-conn-arrow">→</div></div>
+      <div class="pipe-node pipe-commit"><div class="pipe-n">04</div><div class="pipe-t">Production</div><div class="pipe-d">Chromatic · Published URL</div></div>
+    </div>
+    <div class="role-row">
+      <div><div class="role-h">Designers</div><div class="role-d">Write MDX docs + export tokens.</div></div>
+      <div><div class="role-h">Engineers</div><div class="role-d">Write stories + review PRs.</div></div>
+      <div><div class="role-h">CI/CD</div><div class="role-d">Automates the build + visual diff.</div></div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -890,83 +915,19 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
     <li class="vision-item"><div class="vision-h"><div class="vision-dot"></div>Accessibility by system</div><div class="vision-d">Contrast is guaranteed by the tokens, not by a manual review case by case.</div></li>
   </ul>
 
-  <!-- Phase 3–4: The Prototyper -->
+  <!-- The Prototyper — high level only; orchestration details intentionally left out -->
   <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid rgba(255,255,255,.08);">
-    <div class="nc-phase">The north of the north · Phase 3–4</div>
+    <div class="nc-phase">The north of the north</div>
     <div class="norte-title" style="margin-top:1rem;">From design system<br>to the Prototyper.</div>
-    <p class="norte-lede">With foundations tokenized, the next leap is an agent that prototypes <strong>on top of the system</strong> — and an assembly line that takes the idea all the way to software. The pattern: <strong>agents + connectors</strong>, from problem to solution.</p>
+    <p class="norte-lede" style="margin-bottom:0;">With foundations tokenized, the next leap is an agent that prototypes <strong>on top of the system</strong>: an idea goes in, an on-brand prototype comes out. Genesis, at the top of this page, is the first version of it.</p>
 
     <div class="pipe-row" style="margin-top:2rem;">
       <div class="pipe-node" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);"><div class="pipe-n" style="color:rgba(255,255,255,.4);">Input</div><div class="pipe-t" style="color:#f2f8f4;">Idea / PRD</div><div class="pipe-d" style="color:#8b9b90;">A problem, a hypothesis.</div></div>
       <div class="pipe-conn" style="color:rgba(255,255,255,.2);">→</div>
-      <div class="pipe-node pipe-commit"><div class="pipe-n">Phase 3</div><div class="pipe-t">The Prototyper</div><div class="pipe-d">Asks the right questions, converges into a prototype.</div></div>
+      <div class="pipe-node pipe-commit"><div class="pipe-n">The agent</div><div class="pipe-t">The Prototyper</div><div class="pipe-d">Asks the right questions, converges into a prototype.</div></div>
       <div class="pipe-conn" style="color:rgba(255,255,255,.2);">→</div>
-      <div class="pipe-node" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);"><div class="pipe-n" style="color:rgba(255,255,255,.4);">Bridge</div><div class="pipe-t" style="color:#f2f8f4;">Cards in Notion</div><div class="pipe-d" style="color:#8b9b90;">Direct connector.</div></div>
-      <div class="pipe-conn" style="color:rgba(255,255,255,.2);">→</div>
-      <div class="pipe-node" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);"><div class="pipe-n" style="color:rgba(255,255,255,.4);">Phase 4</div><div class="pipe-t" style="color:#f2f8f4;">Claude Code</div><div class="pipe-d" style="color:#8b9b90;">Takes the cards, generates software.</div></div>
+      <div class="pipe-node" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);"><div class="pipe-n" style="color:rgba(255,255,255,.4);">Output</div><div class="pipe-t" style="color:#f2f8f4;">Prototype</div><div class="pipe-d" style="color:#8b9b90;">Clickable, on-brand, built on the system.</div></div>
     </div>
-
-    <div class="norte-grid">
-      <div class="norte-card">
-        <div class="nc-phase">Phase 3 · the agent</div>
-        <div class="nc-title">The Prototyper</div>
-        <p class="nc-desc">An agent that receives an idea or a PRD, asks the right questions and converges into a prototype. The good news: almost all the building blocks <strong>already exist as skills</strong> — what's left is orchestrating them behind one prompt.</p>
-        <div class="nc-label">Skills we already have</div>
-        <div class="nc-chips">
-          <span class="nc-chip">user-research-panel</span>
-          <span class="nc-chip">ux-writing</span>
-          <span class="nc-chip">ux-critique-expert</span>
-          <span class="nc-chip">elite-ui-designer</span>
-          <span class="nc-chip">pm:write-spec</span>
-          <span class="nc-chip">design:user-research</span>
-          <span class="nc-chip">figma:design-to-code</span>
-        </div>
-      </div>
-      <div class="norte-card">
-        <div class="nc-phase">Phase 4 · the process</div>
-        <div class="nc-title">The Assembly Line</div>
-        <p class="nc-desc">Prototype → cards in Notion → an agent (<strong>Claude Code</strong>) that takes those cards and generates software. The "from problem to solution in 45 minutes." Only makes sense once phases <strong>0–3 are solid</strong> — and that's where everything above comes in.</p>
-        <div class="nc-label">Connectors that hold it together</div>
-        <div class="nc-chips">
-          <span class="nc-chip">Figma</span>
-          <span class="nc-chip">Notion</span>
-          <span class="nc-chip">GitHub</span>
-          <span class="nc-chip">Slack</span>
-          <span class="nc-chip">Claude Code</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     SECTION — THE FULL LOOP (Figma → Design Tokens → Storybook → Production)
-══════════════════════════════════════════ -->
-<div class="section">
-  <div class="eyebrow">The North Star · The Full Loop</div>
-  <div class="section-label">
-    <div class="sl-text">The chain doesn't stop at Slack</div>
-    <div class="sl-line"></div>
-    <div class="sl-text">It reaches a published Storybook — in production</div>
-  </div>
-
-  <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem;">Storybook <span class="accent">is</span> the design system — not a mirror of it.</div>
-  <p class="ov-body" style="max-width:680px;">Once tokens flow on their own, the next link is the components themselves. A component changes in Figma, a token export triggers a PR. Engineering writes the story, designers review it visually in Chromatic. The pipeline builds and deploys — no manual step, no DevOps knowledge required.</p>
-
-  <div class="pipe-row">
-    <div class="pipe-node"><div class="pipe-n">01</div><div class="pipe-t">Figma</div><div class="pipe-d">Components · Variables</div></div>
-    <div class="pipe-conn pipe-conn-lbl"><div class="pipe-conn-txt">token export</div><div class="pipe-conn-arrow">→</div></div>
-    <div class="pipe-node"><div class="pipe-n">02</div><div class="pipe-t">Design Tokens</div><div class="pipe-d">Style Dictionary · JSON → CSS/JS</div></div>
-    <div class="pipe-conn pipe-conn-lbl"><div class="pipe-conn-txt">git push</div><div class="pipe-conn-arrow">→</div></div>
-    <div class="pipe-node"><div class="pipe-n">03</div><div class="pipe-t">Storybook</div><div class="pipe-d">Stories + MDX · Docs</div></div>
-    <div class="pipe-conn pipe-conn-lbl"><div class="pipe-conn-txt">CI/CD deploy</div><div class="pipe-conn-arrow">→</div></div>
-    <div class="pipe-node pipe-commit"><div class="pipe-n">04</div><div class="pipe-t">Production</div><div class="pipe-d">Chromatic · Published URL</div></div>
-  </div>
-
-  <div class="role-row">
-    <div><div class="role-h">Designers</div><div class="role-d">Write MDX docs + export tokens.</div></div>
-    <div><div class="role-h">Engineers</div><div class="role-d">Write stories + review PRs.</div></div>
-    <div><div class="role-h">CI/CD</div><div class="role-d">Automates the build + visual diff.</div></div>
   </div>
 </div>
 
@@ -1029,7 +990,7 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
       <ul>
         <li><span class="status-mk">✓</span>Color — teal functional, lime expressive, WCAG verified</li>
         <li><span class="status-mk">✓</span>Typography — primitives + 11 composites</li>
-        <li><span class="status-mk">✓</span>Elektra — 14 variables, tokenized end to end</li>
+        <li><span class="status-mk">✓</span>First partner theme — 14 variables, tokenized end to end</li>
         <li><span class="status-mk">✓</span>Repo + live pipeline (Figma → GitHub → Slack)</li>
       </ul>
     </div>
@@ -1046,23 +1007,6 @@ body:not(.dark-mode) .back-nav{background:rgba(255,255,255,.82);}
 
   <div class="progress-bar"><i class="progress-fill"></i></div>
   <div class="progress-cap">Foundations migrated · closing dimensions, automatic sync and code consumption.</div>
-
-  <!-- The Ask -->
-  <div style="margin-top:3rem;">
-    <div style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:1.5rem;">To reach the north,<br>we need <span class="accent">two things.</span></div>
-    <div class="ask-grid">
-      <div class="ask-card">
-        <div class="ask-who">From the dev team</div>
-        <div class="ask-h">Start consuming tokens</div>
-        <div class="ask-p">Via Style Dictionary (CSS / code). Stop hardcoding values: the repo is already the source of truth and the pipeline already notifies on every change.</div>
-      </div>
-      <div class="ask-card ask-dec">
-        <div class="ask-who">A decision</div>
-        <div class="ask-h">Approve Tokens Studio Pro</div>
-        <div class="ask-p">Enables automatic multi-file sync with GitHub and eliminates the last manual step in the pipeline.</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ══════════════════════════════════════════
