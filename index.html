@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/webp" href="assets/favicon.webp">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paula Elffman — Product Design OS</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script src="assets/tab.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Muli:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -5270,8 +5273,8 @@ function wipeAndNavigate(url,x,y){
   sessionStorage.setItem('wipeEntry',JSON.stringify({x:x,y:y}));
   wipeCoverFrom(x,y,function(){ window.location.href=url; });
 }
-/* Al volver con "atrás", el navegador restaura la página tal como quedó
-   (back/forward cache), con el overlay todavía cubriendo todo: lo destapamos. */
+/* Al volver con "atras", el navegador restaura la pagina tal como quedo
+   (back/forward cache), con el overlay todavia cubriendo todo: lo destapamos. */
 function wipeReset(){
   if(!wipeOverlay) return;
   wipeOverlay.classList.remove('animate');
@@ -5325,7 +5328,7 @@ function closeCase(){
   document.body.style.overflow='';
 }
 
-/* PROJECT CAROUSEL — avanza solo y se puede arrastrar con el dedo o el mouse */
+/* PROJECT CAROUSEL  avanza solo y se puede arrastrar con el dedo o el mouse */
 document.addEventListener('DOMContentLoaded',function(){
   var wrap=document.querySelector('.project-carousel');
   var track=wrap&&wrap.querySelector('.carousel-track');
@@ -5415,7 +5418,7 @@ document.addEventListener('DOMContentLoaded',function(){
   track.addEventListener('pointerenter',function(e){ if(e.pointerType==='mouse') hovering=true; });
   track.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') hovering=false; });
 
-  /* no gastar batería cuando no se ve */
+  /* no gastar bateria cuando no se ve */
   if('IntersectionObserver' in window){
     new IntersectionObserver(function(en){
       visible=en[en.length-1].isIntersecting; schedule();
